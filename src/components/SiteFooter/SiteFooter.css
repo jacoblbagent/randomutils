@@ -3,17 +3,10 @@
   flex-wrap: wrap;
   gap: var(--s2) var(--s4);
   align-items: baseline;
-  justify-content: space-between;
   padding-top: var(--s4);
   border-top: 1px solid var(--border);
   font-size: var(--t-sm);
   color: var(--text-2);
-}
-
-.site-foot__note {
-  display: grid;
-  gap: var(--s2);
-  min-width: 0;
 }
 
 .site-foot__links {
@@ -33,9 +26,4 @@
   color: var(--text);
   text-decoration: underline;
   text-underline-offset: 2px;
-}
-
-.site-foot__count {
-  font-variant-numeric: tabular-nums;
-  color: var(--text-3);
 }

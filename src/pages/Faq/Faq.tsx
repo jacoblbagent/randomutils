@@ -40,7 +40,8 @@ export default function Faq() {
           <li>
             <strong>It is not a file the tool takes.</strong> TS → MP4 accepts <code>.ts</code>,{' '}
             <code>.mts</code> and <code>.m2ts</code>; MOV → MP4 accepts <code>.mov</code> and{' '}
-            <code>.qt</code>; Video → Audio accepts the usual video containers. A same-named{' '}
+            <code>.qt</code>; Video → Audio takes the common video containers (and audio files,
+            which it simply re-exports). A same-named{' '}
             <code>.jpg</code>/<code>.png</code> beside a recording is used as its thumbnail and a{' '}
             <code>.star</code> sidecar becomes a flag on the row — neither is queued as a video.
           </li>

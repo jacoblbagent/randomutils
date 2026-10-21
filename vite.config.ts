@@ -23,9 +23,9 @@ function spaFallback(): Plugin {
   }
 }
 
-// GitHub Pages serves the project site from /randomutils/; keep dev at the root.
+// Production is served at the apex of randomutils.com, so assets sit at the root.
 export default defineConfig({
-  base: process.env.NODE_ENV === 'production' ? '/randomutils/' : '/',
+  base: '/',
   plugins: [react(), spaFallback()],
   server: {
     // Reachable over the tailnet via `tailscale serve` (Host = <node>.ts.net).

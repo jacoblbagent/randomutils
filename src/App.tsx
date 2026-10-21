@@ -6,7 +6,7 @@ import Home from './pages/Home/Home'
 import NotFound from './pages/NotFound/NotFound'
 import TsToMp4 from './tools/ts-to-mp4/TsToMp4'
 
-// Production is served from https://<user>.github.io/randomutils/; dev from the root.
+// Production is served at the apex of randomutils.com; dev runs at the root too.
 const basename = import.meta.env.BASE_URL.replace(/\/$/, '')
 
 /**

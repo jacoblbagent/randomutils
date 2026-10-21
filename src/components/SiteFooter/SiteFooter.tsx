@@ -14,6 +14,9 @@ export default function SiteFooter() {
         <Link className="site-foot__link" to="/about">
           About
         </Link>
+        <Link className="site-foot__link" to="/faq">
+          FAQ
+        </Link>
         <Link className="site-foot__link" to="/privacy">
           Privacy
         </Link>

@@ -39,9 +39,9 @@ export interface FlagSpec {
 
 export const FLAGS: Record<FlagId, FlagSpec> = {
   'tool-search': {
-    default: false,
+    default: true,
     label: 'Tool search',
-    description: 'Filter box above the home grid — matches tool name, tagline and tags.',
+    description: 'Filter box beside the tag row above the home grid — matches name, tagline and tags.',
   },
   'ts-to-mp4': {
     default: true,

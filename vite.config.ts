@@ -4,10 +4,11 @@ import react from '@vitejs/plugin-react'
 import { defineConfig, type Plugin } from 'vite'
 
 /**
- * GitHub Pages has no rewrite rules, so a deep-link reload such as
- * /randomutils/ts-to-mp4 would 404. Pages does serve /randomutils/404.html for
- * any unknown path under the project, so emitting a byte-identical copy of
- * index.html as 404.html lets React Router take over from the real URL.
+ * GitHub Pages has no rewrite rules, so a deep-link reload of a path with no
+ * prerendered page — /ts-to-mp4/anything, say — would 404. Pages serves
+ * 404.html for any unknown path on the site, so emitting a byte-identical copy
+ * of index.html as 404.html lets React Router take over from the real URL.
+ * (The prerenderer then rewrites that copy to carry noindex and no ad code.)
  */
 function spaFallback(): Plugin {
   let outDir = 'dist'

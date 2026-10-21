@@ -28,6 +28,16 @@ const DIST = resolve(ROOT, 'dist')
 
 const SITEMAP_NS = 'http://www.sitemaps.org/schemas/sitemap/0.9'
 
+/** Absolute origin — social cards need it, since og:image must not be relative. */
+const SITE_URL = 'https://randomutils.com'
+
+/**
+ * The AdSense loader is in index.html's head, so it lands on every page the
+ * template produces. An error page with ad code on it is against AdSense policy
+ * (no content = no ads), so 404.html is written with the loader removed.
+ */
+const ADSENSE_RE = /[ \t]*<!-- Google AdSense -->[\s\S]*?<\/script>\n/
+
 /**
  * The app reads `window` at module scope (the flag store resolves the query
  * string and localStorage once, at import; the favourite lists do the same
@@ -78,7 +88,15 @@ function metaBlock({ title, description, canonical, siteName, noindex = false })
     `    <meta property="og:description" content="${esc(description)}" />`,
   )
   if (canonical) lines.push(`    <meta property="og:url" content="${esc(canonical)}" />`)
-  lines.push(`    <meta name="twitter:card" content="summary" />`)
+  lines.push(
+    `    <meta property="og:image" content="${SITE_URL}/og.png" />`,
+    `    <meta property="og:image:type" content="image/png" />`,
+    `    <meta property="og:image:width" content="1200" />`,
+    `    <meta property="og:image:height" content="630" />`,
+    `    <meta property="og:image:alt" content="${esc(siteName)} — browser tools that never upload your files" />`,
+    `    <meta name="twitter:card" content="summary_large_image" />`,
+    `    <meta name="twitter:image" content="${SITE_URL}/og.png" />`,
+  )
   return `    <!-- site:meta -->\n${lines.join('\n')}\n    <!-- /site:meta -->`
 }
 
@@ -144,15 +162,16 @@ async function main() {
 
     // The SPA fallback is still needed for genuinely unknown paths, but it must
     // not claim to be the home page or invite a crawler to index a 404.
-    writeFile(
-      '404.html',
-      withMeta(template, {
-        title: `Not found — ${SITE.name}`,
-        description: 'That link does not match a page on RandomUtils.',
-        siteName: SITE.name,
-        noindex: true,
-      }),
-    )
+    const notFound = withMeta(template, {
+      title: `Not found — ${SITE.name}`,
+      description: 'That link does not match a page on RandomUtils.',
+      siteName: SITE.name,
+      noindex: true,
+    })
+    if (!ADSENSE_RE.test(notFound)) {
+      throw new Error('index.html is missing the Google AdSense loader block the 404 page has to strip')
+    }
+    writeFile('404.html', notFound.replace(ADSENSE_RE, ''))
 
     const lastmod = new Date().toISOString().slice(0, 10)
     const urls = sitemapPages()

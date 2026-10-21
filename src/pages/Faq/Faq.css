@@ -1,0 +1,12 @@
+/* FAQ — the prose frame lives in App.css (.doc primitives). Only the question
+   spacing needs a nudge: each answer is its own .doc__section, so keep them a
+   little further apart than the prose pages' sections. */
+
+.faq .doc__section h2 {
+  font-size: var(--t-lg);
+  letter-spacing: -0.01em;
+}
+
+.faq .doc__section p + p {
+  margin-top: var(--s3);
+}

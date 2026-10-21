@@ -18,7 +18,6 @@ export interface Tool {
   /** Route path inside the hash router. */
   path: string
   tags: string[]
-  status: 'live' | 'soon'
   /**
    * Feature flag that ships this tool. Omitted = always on. With the flag off
    * the card, the footer count and the route all go away (see config/flags.ts).
@@ -35,7 +34,6 @@ export const tools: Tool[] = [
       'Drop DVR and over-the-air captures in and get MP4s that open in QuickTime, stream-copied as fast as the source allows. Runs on FFmpeg compiled to WebAssembly — the files never leave your machine.',
     path: '/ts-to-mp4',
     tags: ['Video', 'FFmpeg', 'Offline'],
-    status: 'live',
     flag: 'ts-to-mp4',
   },
   {
@@ -46,7 +44,6 @@ export const tools: Tool[] = [
       'Drop QuickTime movies in and get MP4s that play anywhere — H.264, HEVC and AAC copied across untouched, ProRes/DV/PCM re-encoded. Also runs on FFmpeg compiled to WebAssembly, so the files stay on your machine.',
     path: '/mov-to-mp4',
     tags: ['Video', 'FFmpeg', 'Offline'],
-    status: 'live',
     flag: 'mov-to-mp4',
   },
   {
@@ -57,7 +54,6 @@ export const tools: Tool[] = [
       'Drop a video in, pick WAV or MP3, and download the audio track by itself — no upload, no editing suite. Runs on FFmpeg compiled to WebAssembly, so the video never leaves your machine.',
     path: '/audio-extract',
     tags: ['Audio', 'Video', 'FFmpeg', 'Offline'],
-    status: 'live',
     flag: 'audio-extract',
   },
 ]

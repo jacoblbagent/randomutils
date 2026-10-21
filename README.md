@@ -55,8 +55,8 @@ No state library, no CSS framework, no component kit, no analytics. Type checkin
 
 Four files decide what exists. A new tool touches three of them; a new prose page touches two.
 
-1. `src/data/tools.ts` — the **tool registry**. Name, tagline, description, path, tags, status,
-   and the flag that ships it. The home grid, the footer and `pages.ts` all read it.
+1. `src/data/tools.ts` — the **tool registry**. Name, tagline, description, path, tags and the
+   flag that ships it. The home grid, its tag filter row, the footer and `pages.ts` all read it.
 2. `src/data/pages.ts` — the **page registry**: every URL the site answers with a real,
    indexable page, with its `<title>`, meta description and `inSitemap`. Tool pages are derived
    from `tools.ts`, so a tool needs no entry here.
@@ -79,10 +79,11 @@ dist/about/index.html         ← /about
 dist/privacy/index.html       ← /privacy
 dist/terms/index.html         ← /terms
 dist/contact/index.html       ← /contact
+dist/faq/index.html          ← /faq
 dist/ts-to-mp4/index.html     ← /ts-to-mp4     (each tool page, from tools.ts)
 dist/mov-to-mp4/index.html    ← /mov-to-mp4
 dist/audio-extract/index.html ← /audio-extract
-dist/sitemap.xml              ← all 8 routes
+dist/sitemap.xml              ← all 9 routes
 dist/404.html                 ← noindex, for genuinely unknown paths
 ```
 
@@ -251,6 +252,10 @@ enforced and the certificate covers both hosts. `public/CNAME` pins the custom d
   `index.html` and `publisherId` in `src/config/site.ts` must always agree.
 - **`public/robots.txt`** carries the crawl rules and the `Sitemap:` line; its comment enumerates
   which routes have static pages, so update it when a route is added.
+- **Error pages carry no ad code.** The AdSense loader sits in `index.html`'s head, so
+  `scripts/prerender.mjs` strips it when writing `404.html`: AdSense policy does not allow ads on
+  a page with no content. If the loader block in `index.html` is ever reworded, the strip regex in
+  the prerenderer must be updated with it (the build fails loudly if it no longer matches).
 - No ad units are placed yet — only the loader in `index.html`.
 
 ## Layout
@@ -262,11 +267,11 @@ src/
 ├── config/
 │   ├── flags.ts             the flag registry + store
 │   ├── site.ts              origin, repo, owner, contact address, publisher id, siteUrl()
-│   └── FlagsPanel/          the ?flags=1 panel
+│   └── FlagsPanel/          the ?flags=1 panel (tool-search is on by default)
 ├── data/                    tools.ts (tools), pages.ts (every real page)
 ├── icons/Icons.tsx          authored 16px SVG icon set (no unicode glyphs)
 ├── components/              SiteHeader, SiteFooter, ToolCard, ToolGuide, ScrollToTop, PageMetaSync
-├── pages/                   Home, About, Privacy, Terms, Contact, NotFound
+├── pages/                   Home, About, Faq, Privacy, Terms, Contact, NotFound
 └── tools/                   video/ (shared kit), ts-to-mp4/, mov-to-mp4/, audio-extract/
 
 scripts/
@@ -274,18 +279,19 @@ scripts/
 ├── prerender.mjs            one static page per route + sitemap.xml
 └── prerender/entry.tsx      renders AppShell for one route (build-time only)
 
-public/                      .nojekyll, CNAME, ads.txt, robots.txt, favicon.svg
+public/                      .nojekyll, CNAME, ads.txt, robots.txt, site.webmanifest,
+                             favicon.svg/.ico, apple-touch-icon.png, icon-192/512.png, og.png
 TOOL_IDEAS.txt               the backlog of client-side-only tool ideas; shipped ones are marked
 ```
 
 Component styles sit next to their component (`ComponentName/ComponentName.css`). Only
 cross-cutting primitives live in `App.css`: tokens, buttons, `.link`, `.icon`, progress bar,
-chips, and the `.doc` prose frame used by About/Privacy/Terms/Contact and every tool guide.
+chips, and the `.doc` prose frame used by About/Faq/Privacy/Terms/Contact and every tool guide.
 
 ## Local checks before shipping
 
 ```bash
-npm run build     # prerender lists every route and sitemap.xml reports "8 URLs (all routes)"
+npm run build     # prerender lists every route and sitemap.xml reports "9 URLs (all routes)"
 npm run lint      # oxlint — only the pre-existing ConvertQueue/AudioExtract warnings
 npm run preview -- --port 4199
 curl -s -o /dev/null -w '%{http_code}\n' http://localhost:4199/privacy/   # trailing slash matters
@@ -305,3 +311,18 @@ on its own), converted from JSX to strict TypeScript and split into component fo
 MOV → MP4 arrived as the second converter, the engine, queue and row/viewer components moved out
 of `tools/ts-to-mp4/` into the shared `tools/video/` kit driven by a per-format `VideoToolSpec`,
 leaving each tool as a one-line page plus a spec.
+
+## Social cards, icons and install
+
+`index.html` carries the whole static head: `favicon.svg` (the authored mark), `favicon.ico`
+(16/32/48), `apple-touch-icon.png` (180), `site.webmanifest` with 192/512 icons and shortcuts, and
+`theme-color` for both colour schemes. `og.png` is the 1200×630 share card; the `og:image` /
+`twitter:image` tags are emitted by the prerenderer for **every** route, so a shared tool link and
+a shared home link both get a card. The PNGs are built from the same path data as `favicon.svg`
+with `sharp` (outside this repo, in a throwaway directory) — nothing at build time depends on it.
+
+## License
+
+MIT — see [`LICENSE`](LICENSE). Use it, fork it, run your own copy; the only condition is keeping
+the copyright notice. The FFmpeg builds it loads are under their own licenses (LGPL/GPL depending
+on the build); see the `@ffmpeg/core` package for the exact terms.

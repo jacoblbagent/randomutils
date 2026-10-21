@@ -62,6 +62,14 @@ const STATIC_PAGES: PageMeta[] = [
     inSitemap: true,
   },
   {
+    path: '/faq',
+    title: `FAQ — ${SITE.name}`,
+    description:
+      'Why a file is skipped, why the FFmpeg engine reloads mid-batch, whether anything is uploaded, whether big batches are safe, and how to install the site as an app.',
+    heading: 'Frequently asked questions',
+    inSitemap: true,
+  },
+  {
     path: '/terms',
     title: `Terms of use — ${SITE.name}`,
     description:

@@ -16,6 +16,9 @@ export default function SiteHeader() {
         <Link className="site-head__link" to="/about">
           About
         </Link>
+        <Link className="site-head__link" to="/faq">
+          FAQ
+        </Link>
         {/* Reachable without a GitHub account — the repo alone is not enough. */}
         <Link className="site-head__link" to="/contact">
           Contact

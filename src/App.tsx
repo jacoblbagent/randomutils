@@ -7,6 +7,7 @@ import FlagsPanel from './config/FlagsPanel/FlagsPanel'
 import { useFlags } from './config/flags'
 import About from './pages/About/About'
 import Contact from './pages/Contact/Contact'
+import Faq from './pages/Faq/Faq'
 import Home from './pages/Home/Home'
 import NotFound from './pages/NotFound/NotFound'
 import Privacy from './pages/Privacy/Privacy'
@@ -44,6 +45,7 @@ export function AppShell() {
             <Route path="/about" element={<About />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
+            <Route path="/faq" element={<Faq />} />
             <Route path="/contact" element={<Contact />} />
             {flags['ts-to-mp4'] && <Route path="/ts-to-mp4" element={<TsToMp4 />} />}
             {flags['mov-to-mp4'] && <Route path="/mov-to-mp4" element={<MovToMp4 />} />}

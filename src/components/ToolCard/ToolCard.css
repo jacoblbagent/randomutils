@@ -50,10 +50,3 @@
 }
 
 .tool-card__tags { margin-top: var(--s1); }
-
-.tool-card--soon {
-  border-style: dashed;
-  background: transparent;
-}
-
-.tool-card--soon .tool-card__name { color: var(--text-2); }

@@ -1,266 +1,307 @@
 # RandomUtils
 
-A hub for small, single-purpose browser tools. Every tool runs entirely client-side — no accounts, no
-uploads, no server holding your files.
+Small, single-purpose tools that run **entirely in your browser**. Every conversion
+happens on your own machine — there is no upload step because there is no server to
+upload to. No accounts, no queue on someone else's disk, no copy of your file anywhere
+you cannot see.
 
-**🔗 Live:** https://randomutils.com/
+**Live:** https://randomutils.com/ · **Source:** https://github.com/jacoblbagent/randomutils
 
 ## Tools
 
-| Tool | What it does |
-|---|---|
-| **TS → MP4** | Batch-convert MPEG transport stream (`.ts`) recordings to MP4, stream-copying what players accept and re-encoding only the rest. Runs on FFmpeg compiled to WebAssembly. |
-| **MOV → MP4** | Batch-convert QuickTime (`.mov`) video to MP4 — H.264/HEVC/AAC copied across untouched, camera formats (ProRes, DV, PCM) re-encoded. Same ffmpeg.wasm engine, same browser-only privacy. |
-| **Video → Audio** | Pull a video's audio track out as WAV or MP3, without an upload or an editing suite. |
+| Tool | Route | What it does |
+|---|---|---|
+| **TS → MP4** | `/ts-to-mp4` | Batch-convert MPEG transport stream (`.ts`, `.mts`, `.m2ts`) DVR/OTA recordings into MP4 that macOS and every browser player will open. Files under 50 MB are skipped on add. |
+| **MOV → MP4** | `/mov-to-mp4` | Batch-convert QuickTime (`.mov`, `.qt`) video. H.264/HEVC/AAC/MP3 are copied across untouched; ProRes, DV, Motion JPEG and PCM/ALAC audio are re-encoded. No size floor. |
+| **Video → Audio** | `/audio-extract` | Pull a video's audio track out on its own as **WAV** (lossless) or **MP3**. |
 
-## Run
+All three run on FFmpeg compiled to WebAssembly, bundled with the site — no CDN fetch.
+
+## Requirements and quick start
+
+Node `^20.19.0 || >=22.12.0` (what Vite 8 requires; this checkout is developed on 22.x).
 
 ```bash
 npm install
-npm run dev        # http://localhost:5173 (dev server is registered on :5196 in the Hermes web UI)
-npm run build      # tsc -b && vite build && node scripts/prerender.mjs — type-check, bundle, then prerender
-npm run prerender  # re-run just the prerender step against the current dist/
-npm run preview
+npm run dev          # Vite dev server
+npm run build        # tsc -b && vite build && node scripts/prerender.mjs
+npm run preview      # serve the built dist/ locally
+npm run lint         # oxlint
+npm run deploy       # build + publish dist/ to the gh-pages branch
 ```
+
+### Scripts
+
+| Script | What it runs | Notes |
+|---|---|---|
+| `dev` | `vite` | Serves on Vite's default **5173**. The Hermes web UI start script (`~/Code/hermes-web-ui/scripts/start-randomutils.sh`) runs the same server with `--port 5196 --strictPort --host 127.0.0.1` and publishes it on the tailnet, so the Projects row and the tailnet URL both point at **5196**. Both are the same dev server on two ports — nothing in the app depends on either. |
+| `build` | `tsc -b && vite build && node scripts/prerender.mjs` | Type-check, bundle, then write one real static page per route plus `sitemap.xml`. |
+| `prerender` | `node scripts/prerender.mjs` | Re-run just the prerender step against the existing `dist/`. |
+| `lint` | `oxlint` | Pre-existing warnings in `ConvertQueue` and `AudioExtract` are expected. |
+| `preview` | `vite preview` | Serves `dist/` on **4173**. |
+| `deploy` | `bash scripts/deploy.sh` | Publish only — see [Deploy](#deploy). |
 
 ## Stack
 
-React 19 + Vite 8 + TypeScript (strict) + plain CSS with custom-property tokens. Routing is
-`react-router-dom`'s `BrowserRouter` with `basename` taken from Vite's `BASE_URL`, so tool URLs are
-real paths (`/ts-to-mp4`, not `/#/ts-to-mp4`). No state library, no CSS framework.
+React 19 · Vite 8 · TypeScript (strict) · `react-router-dom` 7 (`BrowserRouter`) · plain CSS
+with custom-property tokens · `oxlint` · `@fontsource-variable/instrument-sans` ·
+`@ffmpeg/ffmpeg` + `@ffmpeg/core` + `@ffmpeg/util` · `jszip`.
 
-**Ports:** dev :5196 (Hermes web UI Projects row), preview :4173.
+No state library, no CSS framework, no component kit, no analytics. Type checking runs with
+`strict`, `noUnusedLocals`, `noUnusedParameters`, `verbatimModuleSyntax` and
+`erasableSyntaxOnly` on (`tsconfig.app.json`).
+
+## The registries — where a change lands
+
+Four files decide what exists. A new tool touches three of them; a new prose page touches two.
+
+1. `src/data/tools.ts` — the **tool registry**. Name, tagline, description, path, tags, status,
+   and the flag that ships it. The home grid, the footer and `pages.ts` all read it.
+2. `src/data/pages.ts` — the **page registry**: every URL the site answers with a real,
+   indexable page, with its `<title>`, meta description and `inSitemap`. Tool pages are derived
+   from `tools.ts`, so a tool needs no entry here.
+3. `src/App.tsx` — the `<Route>`, mounted inside `AppShell` so the prerenderer sees the same
+   shell a visitor does. A flagged tool's routes are mounted only while its flag is on.
+4. `src/config/flags.ts` — the **flag registry**. A new tool needs a `FlagId` defaulted to
+   `true`, or its card, footer count and route all vanish.
+
+Miss the route and the page 404s live; miss the registry and it never reaches the sitemap.
 
 ## Pages, metadata and crawlers
 
-GitHub Pages has no rewrite rules: an unknown path is answered with `404.html` **under a 404 status**,
-which is why a single-page SPA on Pages is invisible to search. So the build prerenders one real page
-per route and the 404 copy becomes a backstop rather than the only page:
+GitHub Pages has no rewrite rules: an unknown path is answered with `404.html` **under a 404
+status**, which is why a single-page SPA on Pages is invisible to search. So the build writes
+one real page per route and the 404 copy becomes a backstop instead of the only page:
 
 ```
-dist/index.html              ← /
-dist/privacy/index.html      ← /privacy
-dist/contact/index.html      ← /contact
-dist/ts-to-mp4/index.html    ← /ts-to-mp4
-dist/mov-to-mp4/index.html   ← /mov-to-mp4
-dist/audio-extract/index.html
-dist/sitemap.xml             ← every route above
-dist/404.html                ← noindex, for genuinely unknown paths
+dist/index.html               ← /
+dist/about/index.html         ← /about
+dist/privacy/index.html       ← /privacy
+dist/terms/index.html         ← /terms
+dist/contact/index.html       ← /contact
+dist/ts-to-mp4/index.html     ← /ts-to-mp4     (each tool page, from tools.ts)
+dist/mov-to-mp4/index.html    ← /mov-to-mp4
+dist/audio-extract/index.html ← /audio-extract
+dist/sitemap.xml              ← all 8 routes
+dist/404.html                 ← noindex, for genuinely unknown paths
 ```
 
-`scripts/prerender.mjs` (run by `npm run build`, after `vite build`) renders each route through the
-real app shell with `renderToString` and writes the result into a copy of the built `index.html`, with
-that route's `<title>`, meta description, `rel=canonical`, Open Graph tags and `robots` swapped into
-the marked `<!-- site:meta -->` block. It loads the `.tsx` sources through Vite's own SSR module
-runner (`createServer` in middleware mode), so there is no second build pipeline and no new
-dependency; it installs a small `window` stand-in because the flag store resolves the query string
-and `localStorage` once, at import.
+`scripts/prerender.mjs` (run by `npm run build`, after `vite build`) renders every route through
+the real app shell (`scripts/prerender/entry.tsx`, `renderToString` + `MemoryRouter`) and writes
+the markup into a copy of the **built** `index.html`, with that route's `<title>`, description,
+`rel=canonical`, Open Graph tags and `robots` swapped into the `<!-- site:meta -->` block. It
+refuses to write a page whose markup has no `class="site-head"`, so an empty prerender fails the
+build rather than shipping blank pages. It loads the `.tsx` sources through Vite's own SSR module
+runner (`createServer` in middleware mode), so there is no second build pipeline and no extra
+dependency; a small `window`/`localStorage` stand-in is installed first, because the flag store
+resolves the query string once at import.
 
-Two consequences worth knowing:
+Consequences worth knowing:
 
-- **Each route is a directory**, so `/privacy` is served by GitHub Pages as a 301 to `/privacy/` and
-  then 200. Canonical URLs (and therefore `sitemap.xml`) use that trailing-slash form, the URL that
-  answers 200 directly. `PageMetaSync` writes the same form, so client-side navigation cannot drift
-  from what the crawler was told.
-- **The app mounts over the prerendered markup** on load, which means the first paint is real content
-  instead of an empty box, and a crawler that does not run JavaScript still sees the page.
+- **Every route is a directory**, so GitHub Pages answers `/privacy` with a 301 to `/privacy/`
+  and then 200. Canonical URLs and `sitemap.xml` use that trailing-slash form — the address that
+  answers 200 directly. `siteUrl()` in `src/config/site.ts` is the only place that builds one.
+- **The app mounts over the prerendered markup**, so the first paint is real content and a
+  crawler that does not run JavaScript still sees a populated page.
+- `src/components/PageMetaSync/` keeps the head in step while a visitor clicks between tools
+  (`document.title`, description, `og:*`, `robots`, canonical). Unknown routes get `noindex` and
+  lose the canonical, so the NotFound view is never filed as a page.
+- `public/robots.txt` allows everything, names the AdSense crawlers (`Mediapartners-Google`,
+  `AdsBot-Google`, `Google-adstxt`) and points at the sitemap.
 
-`src/data/pages.ts` is the single source of truth for that metadata: `PageMetaSync`
-(`src/components/PageMetaSync/`) uses it at runtime to keep the tab title and canonical right as a
-visitor clicks between tools, and the prerenderer uses it at build time. A route that isn't in it
-gets `noindex` and no canonical, so the SPA's NotFound view is never filed as a page.
+`vite.config.ts` keeps `base: '/'` (the site is served from the `randomutils.com` apex, so assets
+sit at the root) and appends a `404.html` copy of `index.html` on every build via the local
+`spa-fallback` plugin — which the prerenderer then rewrites to carry `noindex`.
 
-`robots.txt` allows everything and points at the sitemap; the AdSense crawlers and the `ads.txt`
-record are called out explicitly.
+## Feature flags
+
+New features and major changes ship behind a flag: the code merges dark and turning it on is one
+value. The registry is `src/config/flags.ts`; this is the short version.
+
+```ts
+const search = useFlag('tool-search')          // in a component
+import { isEnabled } from './config/flags'     // outside render
+if (isEnabled('tool-search')) { … }
+```
+
+Precedence, highest first:
+
+1. **URL** — `?flags=tool-search` (on), `?flags=!tool-search` (off), comma-separated, page-scoped.
+   Doubles as a shareable preview link and does not stick.
+2. **`localStorage` `randomutils.flags`** — what the flags panel writes, so a flip in a browser
+   survives reloads with no redeploy.
+3. **`FLAGS` in `src/config/flags.ts`** — the committed default, which is what fresh visitors get.
+
+Open the panel with `?flags=1` on any URL or Shift+Alt+F; it shows each flag's live switch and
+where the current value came from, and can copy a preview link carrying the state. From the
+console: `randomutils.flags.set('tool-search', true)` / `.clear(id)` / `.reset()` / `.all()`.
+
+| Flag | Default | What it gates |
+|---|---|---|
+| `ts-to-mp4` | on | Grid card, footer count and `/ts-to-mp4`. |
+| `mov-to-mp4` | on | Grid card, footer count and `/mov-to-mp4`. |
+| `audio-extract` | on | Grid card, footer count and `/audio-extract`. |
+| `tool-search` | off | Filter box above the home grid (matches name, tagline, tags). |
+
+Runtime flags are UI-level gating only. A flag that carries weight — a bundled dataset, MBs of
+assets, another big dependency — must **also** be checked at build time by a module-level `const`
+in a branch the bundler can fold, so the payload is tree-shaken out of `dist/`. A runtime override
+can hide a feature, never un-ship it.
+
+## How a converter is built
+
+Both MP4 tools are the same queue with a different `spec`; the extractor is its own page.
+
+```
+src/tools/
+├── video/                     the shared kit — format-agnostic
+│   ├── ConvertQueue/          the whole converter page: drop zone, modes, queue, bulk zip, viewer
+│   ├── useFFmpeg.ts           the wasm engine: probe → per-stream plan → convert, posters, recycling
+│   ├── types.ts               VideoToolSpec — what a format declares to use the queue
+│   ├── JobRow/ Viewer/ StarButton/ StatusIcon/ Toast/ InfoTip/
+│   └── utils.ts, useFavorites.ts, useDismissedNames.ts
+├── ts-to-mp4/  TsToMp4.tsx + spec.ts     .ts/.mts/.m2ts, 50 MB floor, .star sidecars, paired .jpg
+├── mov-to-mp4/ MovToMp4.tsx + spec.ts    .mov/.qt, no floor, poster frames instead
+└── audio-extract/ AudioExtract.tsx + useAudioFFmpeg.ts + AudioExtract.css
+```
+
+A tool page is one line — `<ConvertQueue spec={TS_SPEC} />` — plus a `VideoToolSpec` and the
+guide prose that sits under it (`src/components/ToolGuide/`, using the shared `.doc` frame). The
+tool stays the first thing on the page; the guide is a sibling below it, not a preamble above it.
+
+What the engine does, in order, per file:
+
+1. **Probe** — `ffmpeg -i` (no output) lists the streams; `parseStreams()` reads them.
+2. **Plan** — `planFor()` copies what a player can take and re-encodes only the rest: H.264
+   8-bit 4:2:0 → `avc1`, H.265 → `hvc1` (ffmpeg's default `hev1` will not open on macOS), AAC and
+   MP3 audio copied, anything else → H.264 `high` CRF 23 `yuv420p` + AAC 160k.
+3. **Convert** — `-movflags +faststart`, so the moov atom is up front.
+4. **Fallback** — in Auto, if the planned copy fails the file is re-encoded whole rather than
+   reported as failed.
+5. **Recycle** — ffmpeg.wasm's linear memory only ever grows inside one instance, so the engine
+   is terminated and reloaded every 6 files or ~1 GB of source (the extractor: 4 files, ~1 GB,
+   plus immediately after any single file over 500 MB). That is what prevents the “memory access
+   out of bounds” trap on a long batch; a trapped instance is recycled at once too.
+
+Modes offered per format: **Auto** (per-stream decision), **Stream copy** (remux; refuses when
+the video must be re-encoded), **Re-encode** (H.264 + AAC, slow, works for anything).
+
+Format differences live entirely in the spec: `minSizeMB`, `adtsAudio` (MPEG-TS frames AAC as
+ADTS, so copying it needs the `aac_adtstoasc` bitstream fix; the filter fails on QuickTime, which
+carries the AudioSpecificConfig inline), `posters` (pull a frame from each source for its row
+thumbnail — MOV tool — versus the DVR-shipped same-named `.jpg` — TS tool), and `sidecar` for the
+`.star` flag files.
+
+Per-tool state lives in `localStorage`, namespaced by tool id: `<id>:favorites` and
+`<id>:dismissed-names`. They keep the keys the standalone `ts-to-mp4` app used, so stars saved
+there still apply on `/ts-to-mp4`. “Download all” zips the finished files with `jszip`.
+
+## Adding a tool
+
+1. `src/tools/<tool-id>/` — the component (and its CSS, beside it).
+2. `src/data/tools.ts` — append an entry, with `flag: '<id>'`. This gives the card, the footer
+   count, the page metadata and a sitemap entry in one edit.
+3. `src/App.tsx` — `<Route path="/<tool-id>" element={<Tool />} />`.
+4. `src/config/flags.ts` — a `FlagId`, defaulted to `true` when the tool is ready to be seen.
+
+A **video → MP4 converter** needs less: write `src/tools/<id>/spec.ts` (extensions, size floor,
+copy rules, drop copy, modes) and a one-line page rendering `<ConvertQueue spec={…} />`. The
+shared kit supplies the engine, queue and viewer.
+
+**A new prose page** (About, Privacy, Terms, Contact all use it): add the `<Route>` in `App.tsx`
+and a `STATIC_PAGES` entry in `src/data/pages.ts`, then reuse the `.doc` frame from `App.css` —
+never a second design.
+
+## Deploy
+
+GitHub Pages, `gh-pages` branch — build output never sits on `main`.
+
+```bash
+npm run deploy
+```
+
+`scripts/deploy.sh` builds, copies `dist/` into a temp dir, `git init`s it and force-pushes
+`gh-pages`. It has no npm dependencies on purpose: the `gh-pages` package pulls in
+`globby > fast-glob > micromatch > braces`, and `braces` carries an unfixed stack-exhaustion
+advisory (GHSA-vfj7-8cjw-p6xm), so dropping the toolchain keeps `npm audit` clean without an
+override. It uses the `gh` CLI token when available, and refuses to run from any branch other than
+`main` — override deliberately with `DEPLOY_BRANCH=gh-pages npm run deploy`.
+
+**Push ≠ live.** Only `npm run deploy` publishes. After deploying, wait ~45 seconds and re-curl
+the live routes. The script's closing `Published …` line reports the temp deploy repo's short
+hash, not your commit's.
+
+**Branches:** `main` is what randomutils.com serves — commit to it. `development` still exists but
+currently trails `main`; it is not part of the publish path.
+
+At Namecheap the DNS is four `A` records on `@` (185.199.108.153 / .109.153 / .110.153 /
+.111.153) plus `CNAME www → jacoblbagent.github.io`; GitHub 301s `www` to the apex, HTTPS is
+enforced and the certificate covers both hosts. `public/CNAME` pins the custom domain.
+
+## Compliance notes
+
+- **Privacy** (`/privacy`) is required, not optional: the site carries Google AdSense, and an
+  ad-serving site is expected to name the vendor, the cookies and the opt-out
+  (`https://adssettings.google.com/`). It is also the page that backs the “nothing is uploaded”
+  line, so its wording must match what the code does — if a second third party is ever added,
+  that page changes in the same commit.
+- **Contact** (`/contact`, address in `src/config/site.ts`) is reachable without a GitHub account,
+  which ad review, takedown and abuse handling all assume.
+- **`public/ads.txt`** (`google.com, pub-7737570630269660, DIRECT, …`), the AdSense loader in
+  `index.html` and `publisherId` in `src/config/site.ts` must always agree.
+- **`public/robots.txt`** carries the crawl rules and the `Sitemap:` line; its comment enumerates
+  which routes have static pages, so update it when a route is added.
+- No ad units are placed yet — only the loader in `index.html`.
 
 ## Layout
 
 ```
 src/
-├── App.tsx                     # shell (AppShell: header + <Routes> + footer) and the BrowserRouter
-├── App.css                     # tokens (colour, 4px space grid, radius, type) + shared primitives
+├── App.tsx / App.css        shell (header + routes + footer), and the tokens + shared primitives
+├── main.tsx                 createRoot, font import, App.css
 ├── config/
-│   ├── flags.ts                # the flag registry + store (see Feature flags)
-│   ├── site.ts                 # site-wide constants: origin, repo, contact address, publisher id
-│   └── FlagsPanel/             # the ?flags=1 panel — one switch per flag
-├── data/
-│   ├── tools.ts                # the tool registry — the one place a tool is announced
-│   └── pages.ts                # every URL with a real page: title, description, canonical, sitemap
-├── icons/Icons.tsx             # authored 16px SVG icon set (no unicode glyphs)
-├── components/                 # SiteHeader, SiteFooter, ToolCard, ScrollToTop, PageMetaSync
-├── pages/                      # Home (the tool grid), Privacy, Contact, NotFound
-└── tools/
-    ├── video/                  # shared video → MP4 kit (format-agnostic)
-    │   ├── ConvertQueue/       # the whole converter page: drop zone, queue, bulk download, viewer
-    │   ├── useFFmpeg.ts        # ffmpeg.wasm engine, per-file plan, posters, engine recycling
-    │   ├── types.ts            # VideoToolSpec — what a format declares to use the queue
-    │   ├── JobRow/, Viewer/, StarButton/, StatusIcon/, Toast/, InfoTip/
-    │   └── utils.ts, useFavorites.ts, useDismissedNames.ts
-    ├── ts-to-mp4/              # the tool = the shared queue + a spec
-    │   ├── TsToMp4.tsx
-    │   └── spec.ts             # .ts/.mts/.m2ts, 50 MB floor, .star sidecars, ADTS audio
-    ├── mov-to-mp4/
-    │   ├── MovToMp4.tsx
-    │   └── spec.ts             # .mov/.qt, no floor, poster frames, plain AAC audio
-    └── audio-extract/
-        ├── AudioExtract.tsx
-        └── useAudioFFmpeg.ts   # the WAV/MP3 path — a different job from the video queue
+│   ├── flags.ts             the flag registry + store
+│   ├── site.ts              origin, repo, owner, contact address, publisher id, siteUrl()
+│   └── FlagsPanel/          the ?flags=1 panel
+├── data/                    tools.ts (tools), pages.ts (every real page)
+├── icons/Icons.tsx          authored 16px SVG icon set (no unicode glyphs)
+├── components/              SiteHeader, SiteFooter, ToolCard, ToolGuide, ScrollToTop, PageMetaSync
+├── pages/                   Home, About, Privacy, Terms, Contact, NotFound
+└── tools/                   video/ (shared kit), ts-to-mp4/, mov-to-mp4/, audio-extract/
 
 scripts/
-├── deploy.sh                   # publish dist/ to the gh-pages branch
-└── prerender.mjs               # one real static page per route + sitemap.xml (see above)
+├── deploy.sh                publish dist/ to gh-pages
+├── prerender.mjs            one static page per route + sitemap.xml
+└── prerender/entry.tsx      renders AppShell for one route (build-time only)
+
+public/                      .nojekyll, CNAME, ads.txt, robots.txt, favicon.svg
+TOOL_IDEAS.txt               the backlog of client-side-only tool ideas; shipped ones are marked
 ```
 
-A converter is now just a `VideoToolSpec` — the extensions it takes, its size floor, its copy
-rules — plus a one-line page that renders `<ConvertQueue spec={…} />`. Everything shared lives in
-`tools/video/`, so a third format (AVI → MP4, MKV → MP4) is a new `spec.ts` and no new logic.
+Component styles sit next to their component (`ComponentName/ComponentName.css`). Only
+cross-cutting primitives live in `App.css`: tokens, buttons, `.link`, `.icon`, progress bar,
+chips, and the `.doc` prose frame used by About/Privacy/Terms/Contact and every tool guide.
 
-Every component with a CSS file lives in its own folder beside that file; only `App.tsx`/`App.css`
-and `main.tsx` are exempt. Shared primitives (buttons, chips, progress bar, prose pages, helpers) live
-in `App.css`; everything else is scoped to its component.
-
-## Adding a tool
-
-1. Create `src/tools/<tool-id>/` with the tool component and its CSS.
-2. Append an entry to `src/data/tools.ts` (the home grid and footer count read it). Add `flag: '<id>'` if
-   the tool should ship behind a flag — see below.
-3. Add a `<Route path="/<tool-id>" element={<Tool />} />` in `src/App.tsx`. Metadata falls out of
-   `src/data/tools.ts` via `src/data/pages.ts`, so the tool gets its own prerendered page and a sitemap
-   entry from that one entry — no second edit.
-
-A **video → MP4 converter** needs only step 1's `spec.ts` plus a one-line page: fill in a
-`VideoToolSpec` (extensions, size floor, copy rules, drop copy, modes) and render
-`<ConvertQueue spec={…} />` from `src/tools/video/`. The shared kit does the rest — no engine,
-queue or viewer code to write or keep in sync.
-
-## Branches
-
-| Branch | What it is |
-|---|---|
-| `main` | What randomutils.com serves. Deploys go from here. |
-| `development` | Where work lands first. Never serves the live site. |
-
-Build on `development`, then merge to `main` to publish. `scripts/deploy.sh` refuses to run from any
-branch other than `main`, so a dev branch cannot clobber the live site by accident — override on
-purpose with `DEPLOY_BRANCH=gh-pages npm run deploy`.
-
-## Feature flags
-
-New features and major changes ship behind a flag: the code merges dark, and turning it on is one
-value. The registry lives in `src/config/flags.ts` — that file is the reference; this is the short
-version.
-
-**Add a flag:** append it to `FLAGS` with `default: false`, gate the code, done.
-
-```ts
-// in a component
-const search = useFlag('tool-search')
-
-// outside render
-import { isEnabled } from '../config/flags'
-if (isEnabled('tool-search')) { … }
-```
-
-**Value resolution,** highest precedence first:
-
-1. **URL** — `?flags=tool-search` (on), `?flags=!tool-search` (off), comma-separated. Page-scoped, so
-   it doubles as a shareable preview link and does not stick afterwards.
-2. **localStorage** `randomutils.flags` — what the flags panel writes, so a flip in your browser
-   survives reloads. Per browser, no redeploy, no server.
-3. **`FLAGS` in `src/config/flags.ts`** — the committed default, which is what fresh visitors and CI
-   get.
-
-**Flip them:** open any URL with `?flags=1` (e.g. https://randomutils.com/?flags=1) or press
-Shift+Alt+F. The panel lists every flag with a live switch, shows whether the current value came from
-the URL, from storage or from the default, and can copy a preview link carrying the state. From the
-console: `randomutils.flags.set('tool-search', true)`.
-
-**Flags that carry weight** — a bundled dataset, MBs of assets, another big dependency — must *also*
-be checked at build time by a module-level `const` in a branch the bundler can fold, so the payload is
-tree-shaken out of `dist/`. Runtime overrides can hide a feature, never un-ship it.
-
-Registered flags:
-
-| Flag | Default | What it gates |
-|---|---|---|
-| `ts-to-mp4` | on | The TS → MP4 converter: grid card, footer count and `/ts-to-mp4` route. |
-| `mov-to-mp4` | on | The MOV → MP4 converter: grid card, footer count and `/mov-to-mp4` route. |
-| `audio-extract` | on | The Video → Audio extractor: grid card, footer count and `/audio-extract` route. |
-| `tool-search` | off | Filter box above the home grid (matches name, tagline, tags). |
-
-Runtime flags are UI-level gating only, so a flag-off tool page is still in `pages.ts` — a disabled
-tool would keep its prerendered page. Take the toolless page out of `pages.ts` when a tool ships dark
-for real.
-
-## Deploy
-
-GitHub Pages, `gh-pages` branch (build output stays out of `main`):
+## Local checks before shipping
 
 ```bash
-npm run deploy     # build + prerender + publish dist/ to the gh-pages branch
+npm run build     # prerender lists every route and sitemap.xml reports "8 URLs (all routes)"
+npm run lint      # oxlint — only the pre-existing ConvertQueue/AudioExtract warnings
+npm run preview -- --port 4199
+curl -s -o /dev/null -w '%{http_code}\n' http://localhost:4199/privacy/   # trailing slash matters
 ```
 
-`scripts/deploy.sh` does this with no npm dependencies: it builds, copies `dist/` into a temp dir,
-inits a repo there and force-pushes `gh-pages`. The `gh-pages` package is deliberately not used — it
-pulls in `globby > fast-glob > micromatch > braces`, and `braces` has an unfixed stack-exhaustion
-advisory (GHSA-vfj7-8cjw-p6xm, no patched release), so `npm audit` stays clean without an override.
+The built routes are directory indexes, so `/privacy` 301s to `/privacy/`. Kill a preview server
+with the bracket trick — `pkill -f "[v]ite preview"` — because a plain `pkill -f "vite preview"`
+matches the calling shell's own command line.
 
-`vite.config.ts` keeps `base: '/'` (the site is served from the `randomutils.com` apex, so assets sit
-at the root) and appends the `404.html` SPA fallback to `dist/` on every build
-(`spaFallback()`, which `scripts/prerender.mjs` then rewrites to carry a `noindex`).
-
-The custom domain is declared by `public/CNAME` (`randomutils.com`), which lands in `dist/` and tells
-GitHub Pages to serve the site at the apex. At Namecheap the DNS is four `A` records on `@`
-(185.199.108.153 / .109.153 / .110.153 / .111.153) plus `CNAME www → jacoblbagent.github.io`; GitHub
-301s `www` to the apex. HTTPS is enforced, cert issued for both hosts.
-
-## Compliance notes
-
-- **Privacy policy** lives at `/privacy` (`src/pages/Privacy/`). It is required, not optional: the
-  site carries Google AdSense, and an ad-serving site is expected to link a disclosure that names the
-  vendor, the cookies and the opt-out (`https://adssettings.google.com/`). It is also the page that
-  backs the "nothing is uploaded" line in the footer, so its wording has to match what the code
-  actually does — if the site ever loads a second third party, that page changes in the same commit.
-- **Contact** is at `/contact` (`src/pages/Contact/`), linked from the header and the footer, with the
-  address in `src/config/site.ts`. Ad review, takedown and abuse handling all assume an owner who can
-  be reached without a GitHub account.
-
-## Video → MP4 notes
-
-Both converters share the engine and queue in `src/tools/video/`; each tool's `spec.ts` supplies the
-differences. Notes that apply to either tool:
-
-- Each file is probed first (`ffmpeg -i`), then per stream: H.264 8-bit 4:2:0 → copied as `avc1`,
-  H.265 → copied as `hvc1` (ffmpeg's default `hev1` won't open on macOS), anything else → re-encoded to
-  H.264 High `yuv420p`. AAC/MP3 audio is copied; the rest is re-encoded to AAC 160k. `-movflags
-  +faststart` puts the moov atom up front. "Auto" does this per stream; "Stream copy" refuses when the
-  video would need re-encoding; "Re-encode" forces H.264 + AAC.
-- The wasm engine is recycled every 6 files / ~1 GB because ffmpeg.wasm's linear memory only grows —
-  that's what prevents the "memory access out of bounds" trap on long batches.
-- Favourites and the "previously removed" list persist in `localStorage`, namespaced by tool id, under
-  the keys the standalone `ts-to-mp4` app used — so stars saved there still apply on `/ts-to-mp4`.
-- Format-specific switches in the spec: `adtsAudio` (MPEG-TS frames copied AAC as ADTS, so it needs the
-  `aac_adtstoasc` bitstream fix; QuickTime carries the AAC config inline and the filter would fail
-  there) and `posters` (pull a frame from each source for its row thumbnail — used by MOV → MP4, while
-  TS → MP4 prefers a same-named `.jpg` if one is dropped alongside).
-
-**TS → MP4 specifics**
-
-- Min size: `.ts` files under 50 MB are skipped on add (`MIN_SIZE_MB` in `src/tools/ts-to-mp4/spec.ts`),
-  with a toast saying how many and why. Sizes are decimal MB to match Finder.
-- Pair a same-named `.jpg`/`.png` with a recording to use it as that row's thumbnail; a `.star` sidecar
-  (`hdz_0000.ts.star.txt`) flags the matching `.ts` and rides into the row name and MP4 filename.
-
-**MOV → MP4 specifics**
-
-- No size floor — a `.mov` is already a finished file, and small ones (clips, exports) are normal.
-- Auto's copy rules cover the usual QuickTime payloads: iPhone/screen-recording H.264 and HEVC plus AAC
-  copy straight across, while ProRes, DV, Motion JPEG and PCM/ALAC audio are re-encoded.
+Stage explicit paths when committing; this checkout is shared with other sessions, so never
+`git add -A`.
 
 ## Origin
 
-The TS → MP4 tool was migrated here from its standalone repo (`~/Code/ts-to-mp4`, still deployable on
-its own) into this hub, converted from JSX to strict TypeScript and split into component folders. When
-MOV → MP4 arrived as the second converter, the engine, queue and row/viewer components moved out of
-`tools/ts-to-mp4/` into a shared `tools/video/` kit driven by a per-format `VideoToolSpec`, leaving each
-tool as a one-line page plus a spec.
+The TS → MP4 tool was migrated here from a standalone repo (`~/Code/ts-to-mp4`, still deployable
+on its own), converted from JSX to strict TypeScript and split into component folders. When
+MOV → MP4 arrived as the second converter, the engine, queue and row/viewer components moved out
+of `tools/ts-to-mp4/` into the shared `tools/video/` kit driven by a per-format `VideoToolSpec`,
+leaving each tool as a one-line page plus a spec.

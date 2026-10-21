@@ -23,6 +23,10 @@ export default function Home() {
   return (
     <div className="home">
       <section className="home__hero">
+        {/* The page's one h1. It states what the site is rather than repeating
+            the brand the header already carries — the title says the same thing,
+            so the tab, the crawler and the reader agree. */}
+        <h1 className="home__title">Browser tools that never upload your files</h1>
         <p className="home__lede">
           A hub for small, single-purpose tools. Each one runs entirely in your browser — no accounts, no
           uploads, no server holding your files.

@@ -22,6 +22,16 @@ Flagged entries:
   Google Fonts previewer    asset fetch
   icon browser              asset fetch
 
+Shipped — live on randomutils.com today, one tool per route:
+  TS->MP4                            /ts-to-mp4
+  MOV->MP4                           /mov-to-mp4
+  video->audio (MP3/WAV/M4A)         /audio-extract
+
+  The three above are marked [shipped] in the list below; everything else in this
+  file is still a candidate, not a promise. A new tool is appended to
+  src/data/tools.ts, given a route in src/App.tsx and a flag in
+  src/config/flags.ts — see the "Adding a tool" section of README.md.
+
 Excluded from the hub (cannot be client-side-only):
   currency / FX converter          needs live exchange rates
   handwriting-to-text              hosted inference
@@ -35,7 +45,8 @@ Excluded from the hub (cannot be client-side-only):
 VIDEO
   MKV->MP4
   AVI->MP4
-  MOV->MP4
+  MOV->MP4                           [shipped]
+  TS->MP4                            [shipped]
   WebM->MP4
   MP4->WebM
   FLV->MP4
@@ -56,7 +67,7 @@ VIDEO
   GIF->video
   GIF optimizer
   GIF reverse/bounce
-  video->audio (MP3/WAV/M4A)
+  video->audio (MP3/WAV/M4A)         [shipped]
   change FPS
   change resolution
   video metadata/probe reader

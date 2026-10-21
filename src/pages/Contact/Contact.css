@@ -1,0 +1,18 @@
+/* Contact — the address is the page's one action, so it is the one thing that
+   is emphasised; everything else uses the shared .doc prose frame. */
+
+.contact__mail {
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.contact .doc__section a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.contact svg {
+  flex-shrink: 0;
+  opacity: 0.7;
+}

@@ -5,11 +5,28 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light dark" />
+    <!-- site:meta -->
+    <!-- Dev-time default for the home page. `node scripts/prerender.mjs` (run by
+         `npm run build`) rewrites everything between these markers for every
+         route, straight from src/data/pages.ts — so edit the copy there, not
+         here, and this block stays a faithful copy for `npm run dev`. -->
+    <title>RandomUtils — browser tools that never upload your files</title>
     <meta
       name="description"
-      content="RandomUtils — a hub for small, single-purpose browser tools. Everything runs locally; nothing is uploaded."
+      content="Small, single-purpose browser tools: convert TS and MOV video to MP4 and pull the audio out of a video. Everything runs locally with FFmpeg in WebAssembly — nothing is uploaded."
     />
-    <title>RandomUtils</title>
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://randomutils.com/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="RandomUtils" />
+    <meta property="og:title" content="RandomUtils — browser tools that never upload your files" />
+    <meta
+      property="og:description"
+      content="Small, single-purpose browser tools: convert TS and MOV video to MP4 and pull the audio out of a video. Everything runs locally with FFmpeg in WebAssembly — nothing is uploaded."
+    />
+    <meta property="og:url" content="https://randomutils.com/" />
+    <meta name="twitter:card" content="summary" />
+    <!-- /site:meta -->
     <!-- Google AdSense -->
     <script
       async

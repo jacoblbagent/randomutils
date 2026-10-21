@@ -12,3 +12,7 @@ Allow: /
 # Keep the AdSense ownership record fetchable even if the rules above tighten.
 User-agent: Google-adstxt
 Allow: /ads.txt
+
+# The four tool pages, /privacy and /contact each have their own static page
+# (see scripts/prerender.mjs), so they are the URLs worth fetching.
+Sitemap: https://randomutils.com/sitemap.xml

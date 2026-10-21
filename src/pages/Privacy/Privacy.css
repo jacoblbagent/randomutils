@@ -1,0 +1,12 @@
+/* Privacy policy — the prose frame itself lives in App.css (.doc primitives);
+   only what this page needs on top of it is here. */
+
+.privacy .doc__section ul li {
+  /* Vendor-disclosure points carry the detail; give them a little air. */
+  line-height: 1.55;
+}
+
+.privacy code {
+  /* randomutils.flags and friends read as identifiers, not as decoration. */
+  white-space: nowrap;
+}

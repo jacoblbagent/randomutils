@@ -1,0 +1,527 @@
+RandomUtils — tool idea inventory
+=================================
+
+Every tool listed here MUST run entirely in the end-user's browser, on their own
+device. No server of ours, no upload, no account, no backend of any kind.
+
+Constraint rules used to build this list:
+  - Client-side only: computation happens in the browser (JS/WebAssembly/Canvas/
+    Web Audio/Web Crypto/WebCodecs/library-in-a-bundle).
+  - No tool whose core function is to query a third party over the network
+    (DNS, WHOIS, IP geolocation, SSL inspection, redirect checking, HTTP
+    fetching, live currency rates, hosted inference).
+  - "Asset fetch" tools are client-side but pull a font/icon file over the
+    network; flagged inline.
+  - "On-device model" tools download an ML model once and then run locally; no
+    server of ours is involved. Flagged inline.
+
+Flagged entries:
+  background remover        on-device model
+  karaoke vocal remover     on-device model
+  OCR PDF                   on-device tesseract
+  Google Fonts previewer    asset fetch
+  icon browser              asset fetch
+
+Excluded from the hub (cannot be client-side-only):
+  currency / FX converter          needs live exchange rates
+  handwriting-to-text              hosted inference
+  pandoc-style converter           no browser pandoc
+  DNS lookup / WHOIS / IP geo      network queries
+  SSL checker / redirect checker   network queries
+  HTTP header / URL fetch tools    network queries
+  CORS testing / endpoint probes   network queries
+
+
+VIDEO
+  MKV->MP4
+  AVI->MP4
+  MOV->MP4
+  WebM->MP4
+  MP4->WebM
+  FLV->MP4
+  WMV->MP4
+  video compressor (target size)
+  video trimmer
+  video cropper
+  video resizer/scaler
+  video rotator/flipper
+  video speed changer
+  mute video
+  strip/swap audio track
+  merge videos
+  split video at timestamp
+  extract frames
+  images->slideshow video
+  video->GIF
+  GIF->video
+  GIF optimizer
+  GIF reverse/bounce
+  video->audio (MP3/WAV/M4A)
+  change FPS
+  change resolution
+  video metadata/probe reader
+  bitrate inspector
+  subtitle extract (.srt)
+  burn subtitles
+  subtitle time-shifter
+  video->thumbnail/screenshot
+  vertical->horizontal crop
+  video watermarker
+  video concat with re-encode
+
+
+AUDIO
+  audio format converter (WAV/FLAC/OGG/M4A/MP3)
+  audio trimmer
+  audio joiner
+  audio speed/pitch
+  audio fade in/out
+  audio normalizer (loudness)
+  audio channel tools (stereo<->mono)
+  silence splitter
+  ringtone maker
+  voice recorder (mic->MP3)
+  audio waveform image
+  tone generator
+  frequency sweep
+  metronome
+  instrument tuner
+  BPM tapper
+  white/pink/brown noise
+  karaoke vocal remover              [on-device model]
+  podcast chapter marker
+  spectrum analyzer
+  note->frequency
+  MP3 tag/ID3 editor
+  audio metadata reader
+
+
+IMAGES
+  format converter (PNG/JPG/WebP/AVIF/HEIC/BMP/TIFF)
+  HEIC->JPG
+  image compressor
+  bulk resizer
+  cropper (aspect presets)
+  rotator
+  flipper
+  watermarker
+  border/frame/padding
+  circle crop
+  rounded corners
+  image->base64
+  base64->image
+  favicon generator
+  ICO generator
+  app icon set generator
+  EXIF viewer
+  EXIF editor
+  EXIF/GPS stripper
+  color picker
+  dominant color extractor
+  palette from image
+  background remover                 [on-device model]
+  image diff/similarity
+  compare slider
+  blur/pixelate (redact)
+  sharpen
+  grain/noise
+  document/canvas cleanup
+  scan deskew
+  B&W threshold
+  photo collage/grid
+  placeholder image generator
+  SVG->PNG
+  image->SVG trace
+  SVG optimizer
+  SVG minifier
+  image->ASCII art
+  image->pixel art
+  sprite sheet generator
+  sprite sheet splitter
+  LQIP/blurhash generator
+  duplicate image finder
+  image histogram/levels
+  profile picture rounder
+
+
+PDF
+  merge
+  split
+  rotate pages
+  delete/reorder pages
+  compress
+  PDF->JPG
+  images->PDF
+  PDF->Word
+  PDF->text
+  PDF->Markdown
+  text->PDF
+  Markdown->PDF
+  HTML->PDF
+  watermark PDF
+  page numbers
+  password-protect
+  remove password
+  PDF metadata editor
+  sign (drawn signature)
+  fill forms
+  redact/black out
+  extract images
+  extract links
+  N-up imposition
+  OCR PDF                            [on-device tesseract]
+  PDF page extractor by keyword
+
+
+DOCS / OFFICE
+  Excel->CSV
+  CSV->Excel
+  ODS converter
+  Word->Markdown
+  Markdown->HTML
+  EPUB->text
+  EPUB->PDF
+  .docx text extractor
+  presentation->PDF
+  .ics viewer
+  vCard viewer
+
+
+TEXT
+  word/char counter
+  case converter
+  text diff
+  sort lines
+  dedupe lines
+  remove blank lines
+  trim whitespace
+  find & replace (regex)
+  regex tester
+  line numbering
+  add/remove line breaks
+  columns/wrap width
+  slugify
+  reverse text
+  repeat text
+  lorem ipsum
+  text to list (split by delimiter)
+  extract emails/URLs/phones
+  word frequency
+  readability score
+  character/byte length
+  escape/unescape (JSON/URL/HTML/Unicode)
+  HTML entities
+  invisible-char remover
+  homoglyph/confusable detector
+  Morse
+  ROT13/Caesar
+  Roman numerals
+  NATO alphabet
+  Braille translator
+  Pig Latin
+  palindrome checker
+  text->speech
+  speech->text
+  grammar/style check
+
+
+CODE / DEV
+  JSON formatter
+  JSON validator
+  JSON minifier
+  JSON<->YAML
+  JSON<->TOML
+  JSON<->XML
+  JSON<->CSV
+  JSONPath playground
+  jq playground
+  JSON->TypeScript
+  JSON->Go/Rust structs
+  JSON Schema validator
+  YAML formatter
+  XML formatter
+  SQL formatter
+  SQL->CSV
+  CSV->SQL inserts
+  HTML formatter
+  HTML minifier
+  HTML sanitizer
+  HTML->JSX
+  JS minifier
+  JS beautifier
+  TypeScript transpile
+  base64 encode/decode
+  URL encode/decode
+  JWT decoder
+  JWT signer
+  hash generator (MD5/SHA)
+  HMAC generator
+  UUID (v1/v4/v7)
+  ULID
+  NanoID
+  password generator
+  passphrase generator (diceware)
+  random string generator
+  random number generator
+  checksum verifier
+  diff/patch generator
+  .gitignore generator
+  .env parser
+  Dockerfile generator
+  docker-compose generator
+  semver comparator
+  semver bumper
+  license chooser
+  README generator
+  OpenAPI viewer
+  curl->fetch/axios/Python
+  HTTP status reference
+  MIME type lookup
+  CORS header builder
+  user-agent parser
+  URL parser/query builder
+  UTM builder
+  QR generator
+  QR reader
+  barcode generator
+  barcode reader
+  cron generator/explainer
+  cron next-run parser
+
+
+WEB / CSS / DESIGN
+  color converter (HEX/RGB/HSL/HSV/OKLCH)
+  shade/tint palette
+  WCAG contrast checker
+  CSS gradient generator
+  box-shadow generator
+  border-radius generator
+  flexbox playground
+  grid generator
+  CSS minifier
+  CSS beautifier
+  SCSS/LESS->CSS
+  autoprefixer
+  px<->rem
+  CSS unit converter
+  clip-path generator
+  wave/blob SVG generator
+  noise/grain texture generator
+  background pattern generator
+  font pairer
+  Google Fonts previewer            [asset fetch]
+  TTF->WOFF2
+  variable font tester
+  icon browser (Lucide/Heroicons)   [asset fetch]
+  emoji picker
+  SVG icon colorizer
+  PWA manifest generator
+  meta tag generator
+  OG preview/tester
+  social share card generator
+  device-frame mockup
+  responsive viewport tester
+  color-blindness simulator
+  design token generator
+  favicon+manifest bundle
+  screenshot beautifier
+
+
+DATA / FILES
+  CSV viewer/editor
+  CSV<->TSV
+  Excel viewer
+  ZIP creator
+  ZIP/unzip
+  TAR/GZ extractor
+  archive viewer
+  file hasher
+  file splitter/joiner
+  bulk file renamer
+  any-file->base64
+  data URI generator
+  encoding converter (UTF-8/16/Latin1)
+  line-ending converter (CRLF/LF)
+  BOM detect/strip
+  hex dump viewer
+  binary viewer
+  file type/MIME detector
+  fake data generator (names/addresses/emails)
+  mock JSON/API generator
+  sample CSV generator
+  test credit card numbers
+
+
+SECURITY / CRYPTO
+  password strength meter
+  password entropy calculator
+  AES text encrypt/decrypt
+  file encrypt/decrypt
+  RSA keypair generator
+  PGP encrypt/decrypt
+  self-signed cert generator
+  CSR generator
+  PEM/cert decoder
+  SSH key generator + fingerprint
+  TOTP generator
+  OTP secret->QR
+  Base32
+  digital signature sign/verify
+  Luhn card validator
+  IBAN validator
+  ISBN validator
+  secret-sharing splitter
+
+
+NUMBERS / MATH
+  unit converter (length/mass/volume/temp)
+  base converter (bin/dec/hex/oct)
+  bitwise calculator
+  big-number calculator
+  prime checker
+  factorizer
+  GCD/LCM
+  Fibonacci
+  combinatorics
+  statistics (mean/median/stddev)
+  percentage calculator
+  ratio/proportion
+  fraction<->decimal
+  scientific notation
+  number->words
+  quadratic solver
+  matrix calculator
+  function grapher
+  3D surface plotter
+  truth-table/boolean simplifier
+  resistor color code
+  Ohm's law
+  aspect-ratio calculator
+  golden ratio
+  bytes<->human-readable
+  data-storage converter
+  bandwidth converter
+
+
+CALCULATORS
+  tip
+  bill split
+  discount/sale price
+  VAT/sales tax
+  loan/mortgage
+  compound interest
+  savings goal
+  inflation
+  BMI
+  BMR/TDEE
+  calorie/macro
+  body fat
+  ideal weight
+  pregnancy due date
+  ovulation
+  age
+  date difference
+  business-days
+  add/subtract days
+  grade/GPA
+  triangle
+  fuel cost
+  recipe scaler
+  cooking measurement
+  clothing/shoe size
+
+
+DATE & TIME
+  Unix timestamp converter
+  ISO 8601 formatter
+  timezone converter
+  world clock
+  meeting planner across zones
+  duration calculator
+  countdown/days-until
+  countdown timer
+  stopwatch
+  Pomodoro
+  SRT/timecode converter
+  week number
+  cron->human
+  date format converter
+
+
+CREATIVE / GENERATORS
+  random picker
+  wheel spinner
+  team/group randomizer
+  coin flip
+  dice roller
+  lottery numbers
+  bingo card
+  random color
+  magic 8-ball
+  meme generator
+  sticker maker
+  speech bubble
+  thumbnail maker
+  YouTube banner maker
+  social post resizer
+  Instagram grid splitter
+  thread splitter
+  hashtag generator
+  bio generator
+  email signature generator
+  invoice generator
+  receipt generator
+  certificate generator
+  business card
+  resume builder
+  wifi QR
+  vCard QR
+  contact QR
+  calendar/ICS generator
+  signature pad
+  fake receipt
+  address label generator
+
+
+GAMES / FUN
+  Sudoku generator/solver
+  maze generator
+  Conway's Game of Life
+  Wordle solver
+  anagram solver
+  Scrabble finder
+  chess FEN viewer
+  PGN viewer
+  poker odds
+  tic-tac-toe AI
+  2048
+  random decision maker
+  would-you-rather
+  truth or dare
+  tarot picker
+
+
+REFERENCE / LOOKUP
+  ASCII table
+  Unicode character search
+  HTML entity table
+  HTTP status codes
+  MIME types
+  periodic table
+  element lookup
+  country codes
+  currency codes
+  timezone list
+  keyboard shortcuts
+  git cheat sheet
+  regex library
+  color names
+  CSS properties index
+
+
+Easy-to-test, high-demand shortlist (all pure client-side):
+  QR code generator
+  image compressor / converter
+  JSON formatter
+  password generator
+  word & character counter

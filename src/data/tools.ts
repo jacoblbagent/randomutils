@@ -49,6 +49,17 @@ export const tools: Tool[] = [
     status: 'live',
     flag: 'mov-to-mp4',
   },
+  {
+    id: 'audio-extract',
+    name: 'Video → Audio',
+    tagline: 'Extract a video’s audio track as WAV or MP3',
+    description:
+      'Drop a video in, pick WAV or MP3, and download the audio track by itself — no upload, no editing suite. Runs on FFmpeg compiled to WebAssembly, so the video never leaves your machine.',
+    path: '/audio-extract',
+    tags: ['Audio', 'Video', 'FFmpeg', 'Offline'],
+    status: 'live',
+    flag: 'audio-extract',
+  },
 ]
 
 /** Everything whose flag is on — what the grid, the count and the routes use. */

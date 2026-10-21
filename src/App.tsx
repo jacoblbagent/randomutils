@@ -6,6 +6,7 @@ import FlagsPanel from './config/FlagsPanel/FlagsPanel'
 import { useFlags } from './config/flags'
 import Home from './pages/Home/Home'
 import NotFound from './pages/NotFound/NotFound'
+import AudioExtract from './tools/audio-extract/AudioExtract'
 import MovToMp4 from './tools/mov-to-mp4/MovToMp4'
 import TsToMp4 from './tools/ts-to-mp4/TsToMp4'
 
@@ -37,6 +38,7 @@ export default function App() {
             <Route path="/" element={<Home />} />
             {flags['ts-to-mp4'] && <Route path="/ts-to-mp4" element={<TsToMp4 />} />}
             {flags['mov-to-mp4'] && <Route path="/mov-to-mp4" element={<MovToMp4 />} />}
+            {flags['audio-extract'] && <Route path="/audio-extract" element={<AudioExtract />} />}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

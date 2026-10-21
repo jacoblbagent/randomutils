@@ -6,6 +6,7 @@ import FlagsPanel from './config/FlagsPanel/FlagsPanel'
 import { useFlags } from './config/flags'
 import Home from './pages/Home/Home'
 import NotFound from './pages/NotFound/NotFound'
+import MovToMp4 from './tools/mov-to-mp4/MovToMp4'
 import TsToMp4 from './tools/ts-to-mp4/TsToMp4'
 
 // Production is served at the apex of randomutils.com; dev runs at the root too.
@@ -35,6 +36,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             {flags['ts-to-mp4'] && <Route path="/ts-to-mp4" element={<TsToMp4 />} />}
+            {flags['mov-to-mp4'] && <Route path="/mov-to-mp4" element={<MovToMp4 />} />}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

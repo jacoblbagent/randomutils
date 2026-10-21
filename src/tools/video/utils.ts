@@ -1,29 +1,10 @@
-import type { Job, JobPhase } from './types'
+import type { Job, JobPhase, VideoToolSpec } from './types'
 
-export const TS_RE = /\.(ts|mts|m2ts)$/i
 export const IMG_RE = /\.(jpe?g|png)$/i
-
-// Some recordings carry a "star" sidecar from the DVR — "hdz_0000.ts.star.txt" (or just
-// "hdz_0000.ts.star") sitting next to "hdz_0000.ts". It's consumed as a flag on the matching
-// .ts (never queued itself), and the flag rides along into the row name and the .mp4 filename.
-export const STAR_RE = /\.star(\.[^.]+)?$/i
-
-// .ts files smaller than this are ignored when added. Decimal MB to match macOS Finder.
-export const MIN_SIZE_MB = 50
-export const MIN_SIZE_BYTES = MIN_SIZE_MB * 1000 * 1000
-
-export const isTs = (name: string) => TS_RE.test(name)
 export const isImage = (name: string) => IMG_RE.test(name)
 
-/** A ".star" sidecar for a matching .ts — consumed as a flag, never queued. */
-export const isStarSidecar = (name: string) =>
-  !TS_RE.test(name) && STAR_RE.test(name) && TS_RE.test(name.replace(STAR_RE, ''))
-
-// Strip the extension and any trailing modifier macOS/DVRs sometimes add (e.g. "hdz_0056 copy")
+/** Strip the extension and lowercase — how a file is matched to its thumbnail/sidecar. */
 export const baseKey = (name: string) => name.replace(/\.[^.]+$/, '').trim().toLowerCase()
-
-/** The recording a star sidecar refers to. */
-export const starKey = (name: string) => baseKey(name.replace(STAR_RE, ''))
 
 // Natural, case-insensitive name order like Finder: clip2 < clip10, "A" == "a"
 const byName = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' })
@@ -47,9 +28,10 @@ export const PHASE_LABEL: Record<JobPhase, string> = {
 
 let nextId = 1
 
-export const makeJob = (file: File): Job => ({
+export const makeJob = (file: File, spec: VideoToolSpec): Job => ({
   id: nextId++,
   file,
+  stem: file.name.replace(spec.stripExt, ''),
   status: 'queued', // queued | converting | done | error
   phase: null,
   progress: 0,
@@ -57,14 +39,13 @@ export const makeJob = (file: File): Job => ({
   error: '',
   customName: null,
   starred: false,
+  poster: null,
 })
 
 // The name shown/edited for a job: the custom name if set, else the original filename minus its
-// .ts extension — with "-star" appended when a .star sidecar flagged it. Spaces are kept here so
+// source extension — with "-star" appended when a sidecar flagged it. Spaces are kept here so
 // editing stays natural; they're only swapped for "-" when a file actually gets downloaded
 // (downloadFilename below).
-export const baseName = (job: Job) =>
-  job.customName ?? job.file.name.replace(TS_RE, '') + (job.starred ? '-star' : '')
+export const baseName = (job: Job) => job.customName ?? job.stem + (job.starred ? '-star' : '')
 
-export const downloadFilename = (job: Job) =>
-  baseName(job).trim().replace(/\s+/g, '-') + '.mp4'
+export const downloadFilename = (job: Job) => baseName(job).trim().replace(/\s+/g, '-') + '.mp4'

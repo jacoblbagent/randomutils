@@ -10,8 +10,10 @@ import type { ConvertHandlers, ConvertMode, ConvertPlan, ConvertResult, StreamIn
  * macOS QuickTime / Quick Look are much pickier than browsers about what's inside an MP4:
  *  - H.264 must be 8-bit 4:2:0 (High 10 / 4:2:2 / 4:4:4 won't open)
  *  - H.265 must be tagged `hvc1` (ffmpeg's default `hev1` won't open)
- *  - audio should be AAC or MP3 (MP2, AC-3, PCM, Opus etc. won't play)
+ *  - audio should be AAC or MP3 (MP2, AC-3, PCM, ALAC, Opus etc. won't play)
  * So each file is probed first and only the parts that need it are re-encoded.
+ * The same rules cover QuickTime sources: ProRes, DV, Motion JPEG and PCM/ALAC audio
+ * are all "must re-encode", while H.264/HEVC + AAC copy straight across.
  */
 
 /** Parse `ffmpeg -i` output for the first video and audio stream. */
@@ -50,14 +52,16 @@ export function planFor(info: StreamInfo): ConvertPlan {
 
 const X264 = ['-c:v', 'libx264', '-preset', 'veryfast', '-crf', '23', '-pix_fmt', 'yuv420p', '-profile:v', 'high', '-tag:v', 'avc1']
 
-export function argsFor(i: string, o: string, plan: ConvertPlan): string[] {
+export function argsFor(i: string, o: string, plan: ConvertPlan, adtsAudio: boolean): string[] {
   const v: Record<ConvertPlan['video'], string[]> = {
     'copy-avc1': ['-c:v', 'copy', '-tag:v', 'avc1'],
     'copy-hvc1': ['-c:v', 'copy', '-tag:v', 'hvc1'],
     encode: X264,
   }
   const a: Record<ConvertPlan['audio'], string[]> = {
-    'copy-aac': ['-c:a', 'copy', '-bsf:a', 'aac_adtstoasc'], // ADTS AAC (in .ts) -> MP4-style AAC
+    // ADTS AAC (MPEG-TS) needs rewriting into MP4-style AAC; in a QuickTime container the
+    // AudioSpecificConfig is already there, and the filter would fail.
+    'copy-aac': ['-c:a', 'copy', ...(adtsAudio ? ['-bsf:a', 'aac_adtstoasc'] : [])],
     copy: ['-c:a', 'copy'],
     encode: ['-c:a', 'aac', '-b:a', '160k'],
     none: [],
@@ -88,13 +92,23 @@ const isFatalWasmError = (err: unknown) => {
   return /memory access out of bounds|RuntimeError|Aborted|unreachable/i.test(message)
 }
 
+/** `.mov` -> `.mov`, `.ts` -> `.ts`: ffmpeg picks its demuxer from this, so keep the real one. */
+const sourceExt = (name: string) => (name.match(/\.[a-z0-9]+$/i) ?? ['.bin'])[0].toLowerCase()
+
+export interface FFmpegOptions {
+  /** Copied AAC needs the aac_adtstoasc fix (MPEG-TS sources only). */
+  adtsAudio: boolean
+  /** Also pull a frame from each source, for use as its row thumbnail. */
+  posters: boolean
+}
+
 /**
  * One ffmpeg.wasm instance, loaded lazily. Jobs must run one at a time.
- * convert(file, mode, { onProgress, onLog, onPhase }) -> { blob, mode }
+ * convert(file, mode, { onProgress, onLog, onPhase }) -> { blob, mode, poster? }
  *   mode: 'auto' | 'remux' | 'encode'
  * cancel() kills the running job (terminates the worker; it reloads on next use).
  */
-export function useFFmpeg() {
+export function useFFmpeg({ adtsAudio, posters }: FFmpegOptions) {
   const ffmpegRef = useRef<FFmpeg | null>(null)
   const loadingRef = useRef<Promise<FFmpeg> | null>(null)
   const handlersRef = useRef<ConvertHandlers>({})
@@ -163,8 +177,9 @@ export function useFFmpeg() {
 
       // Unique names so a terminated job can't collide with the next one
       const id = Math.random().toString(36).slice(2, 8)
-      const input = `in_${id}.ts`
+      const input = `in_${id}${sourceExt(file.name)}`
       const output = `out_${id}.mp4`
+      const poster = `poster_${id}.jpg`
       let result: ConvertResult | undefined
 
       try {
@@ -191,7 +206,7 @@ export function useFFmpeg() {
 
         let used: ConvertMode = plan.video === 'encode' ? 'encode' : 'remux'
         handlers.onPhase?.(used)
-        let code = await ffmpeg.exec(argsFor(input, output, plan))
+        let code = await ffmpeg.exec(argsFor(input, output, plan, adtsAudio))
 
         if (code !== 0 && mode === 'auto' && plan !== FULL_ENCODE) {
           handlers.onLog?.('--- Copy failed, re-encoding everything ---')
@@ -200,7 +215,7 @@ export function useFFmpeg() {
           plan = FULL_ENCODE
           used = 'encode'
           handlers.onPhase?.(used)
-          code = await ffmpeg.exec(argsFor(input, output, plan))
+          code = await ffmpeg.exec(argsFor(input, output, plan, adtsAudio))
         }
 
         if (code !== 0) throw new Error(`FFmpeg exited with code ${code}.`)
@@ -208,6 +223,27 @@ export function useFFmpeg() {
         const bytes = typeof data === 'string' ? new TextEncoder().encode(data) : data
         // .buffer, not the view: ffmpeg's FS hands back a whole-file array (byteOffset 0).
         result = { blob: new Blob([bytes.buffer as ArrayBuffer], { type: 'video/mp4' }), mode: used }
+
+        // Thumbnail, best-effort: a failure here must never mark a converted file as failed.
+        // It has to run *before* the `finally` cleanup below — the source file is still in the
+        // wasm filesystem at this point and is deleted the moment this try block exits.
+        if (posters) {
+          try {
+            // One frame from a second in, scaled to about 4x the row's 64px box.
+            const pcode = await ffmpeg.exec([
+              '-hide_banner', '-ss', '1', '-i', input,
+              '-frames:v', '1', '-vf', 'scale=256:-2', '-q:v', '4', poster,
+            ])
+            if (pcode === 0) {
+              const pdata = await ffmpeg.readFile(poster)
+              if (typeof pdata !== 'string' && pdata.length > 0) {
+                result.poster = new Blob([pdata.buffer as ArrayBuffer], { type: 'image/jpeg' })
+              }
+            }
+          } catch {
+            /* no poster — the row shows the empty thumb box */
+          }
+        }
       } catch (err) {
         if (cancelledRef.current) throw new CancelledError()
         // A wasm trap leaves this instance unreliable for every file after it — recycle now so
@@ -219,6 +255,7 @@ export function useFFmpeg() {
         if (ffmpeg.loaded) {
           await ffmpeg.deleteFile(input).catch(() => {})
           await ffmpeg.deleteFile(output).catch(() => {})
+          if (posters) await ffmpeg.deleteFile(poster).catch(() => {})
         }
       }
 
@@ -234,7 +271,7 @@ export function useFFmpeg() {
       }
       return result
     },
-    [load, recycle],
+    [load, recycle, adtsAudio, posters],
   )
 
   const cancel = useCallback(() => {

@@ -38,6 +38,17 @@ export const tools: Tool[] = [
     status: 'live',
     flag: 'ts-to-mp4',
   },
+  {
+    id: 'mov-to-mp4',
+    name: 'MOV → MP4',
+    tagline: 'Batch convert QuickTime .mov files to MP4',
+    description:
+      'Drop QuickTime movies in and get MP4s that play anywhere — H.264, HEVC and AAC copied across untouched, ProRes/DV/PCM re-encoded. Also runs on FFmpeg compiled to WebAssembly, so the files stay on your machine.',
+    path: '/mov-to-mp4',
+    tags: ['Video', 'FFmpeg', 'Offline'],
+    status: 'live',
+    flag: 'mov-to-mp4',
+  },
 ]
 
 /** Everything whose flag is on — what the grid, the count and the routes use. */

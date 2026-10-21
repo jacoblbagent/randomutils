@@ -55,6 +55,8 @@ export default function JobRow({
   viewingRowRef,
 }: JobRowProps) {
   const { file, status, phase, progress, result, error } = job
+  // A paired .jpg/.png wins; otherwise a frame pulled out of the video itself (poster formats).
+  const image = thumb ?? job.poster
   const pct = Math.round(progress * 100)
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState('')
@@ -118,8 +120,8 @@ export default function JobRow({
             aria-label={`Select ${name}`}
           />
         )}
-        {thumb ? (
-          <img className="thumb" src={thumb} alt="" />
+        {image ? (
+          <img className="thumb" src={image} alt="" />
         ) : (
           <div className="thumb thumb-empty" aria-hidden="true" />
         )}

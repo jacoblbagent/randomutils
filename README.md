@@ -23,8 +23,13 @@ npm run preview
 ## Stack
 
 React 19 + Vite 8 + TypeScript (strict) + plain CSS with custom-property tokens. Routing is
-`react-router-dom`'s `HashRouter` — the site is static, so a deep link such as
-`/#/ts-to-mp4` survives a reload with no server rewrite rule. No state library, no CSS framework.
+`react-router-dom`'s `BrowserRouter` with `basename` taken from Vite's `BASE_URL`, so tool URLs are
+real paths (`/ts-to-mp4`, not `/#/ts-to-mp4`). No state library, no CSS framework.
+
+The site is static, so deep-link reloads are served by a `404.html` copy of `index.html` that the
+build emits (`spaFallback()` in `vite.config.ts`) — GitHub Pages serves it for any unknown path under
+`/randomutils/`, and the SPA boots from the real URL. Vite's dev and preview servers already fall
+back to `index.html`, so nothing extra is needed locally.
 
 **Ports:** dev :5196 (Hermes web UI Projects row), preview :4173.
 
@@ -70,7 +75,7 @@ pulls in `globby > fast-glob > micromatch > braces`, and `braces` has an unfixed
 advisory (GHSA-vfj7-8cjw-p6xm, no patched release), so `npm audit` stays clean without an override.
 
 `vite.config.ts` sets `base: '/randomutils/'` for production builds only, so `npm run dev` stays at
-the root.
+the root, and appends the `404.html` SPA fallback to `dist/` on every build.
 
 ## TS → MP4 notes
 

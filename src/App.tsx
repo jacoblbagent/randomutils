@@ -1,4 +1,4 @@
-import { HashRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import SiteFooter from './components/SiteFooter/SiteFooter'
 import SiteHeader from './components/SiteHeader/SiteHeader'
 import ScrollToTop from './components/ScrollToTop/ScrollToTop'
@@ -6,17 +6,21 @@ import Home from './pages/Home/Home'
 import NotFound from './pages/NotFound/NotFound'
 import TsToMp4 from './tools/ts-to-mp4/TsToMp4'
 
+// Production is served from https://<user>.github.io/randomutils/; dev from the root.
+const basename = import.meta.env.BASE_URL.replace(/\/$/, '')
+
 /**
  * RandomUtils shell: one persistent header and footer around a routed page.
  *
- * Routing is a hash router on purpose — the site is static (GitHub Pages, a
- * plain file server) and a deep link must survive a reload without any
- * server-side rewrite rule. New tools: add a <Route> here and an entry in
- * src/data/tools.ts.
+ * Real paths, not hashes — /ts-to-mp4 rather than /#/ts-to-mp4. The site is
+ * static (GitHub Pages), so deep-link reloads are handled by the 404.html copy
+ * of index.html that the build emits (see the `spa-fallback` plugin in
+ * vite.config.ts, which GitHub Pages serves for unknown paths). New tools: add
+ * a <Route> here and an entry in src/data/tools.ts.
  */
 export default function App() {
   return (
-    <HashRouter>
+    <BrowserRouter basename={basename}>
       <ScrollToTop />
       <div className="app">
         <SiteHeader />
@@ -29,6 +33,6 @@ export default function App() {
         </main>
         <SiteFooter />
       </div>
-    </HashRouter>
+    </BrowserRouter>
   )
 }

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import RelatedTools from '../../components/RelatedTools/RelatedTools'
 import ToolGuide from '../../components/ToolGuide/ToolGuide'
 import ConvertQueue from '../video/ConvertQueue/ConvertQueue'
 import { TS_SPEC, MIN_SIZE_MB } from './spec'
@@ -123,6 +124,8 @@ export default function TsToMp4() {
           </p>
         </section>
       </ToolGuide>
+
+      <RelatedTools currentId="ts-to-mp4" />
     </>
   )
 }

@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { SITE } from '../../config/site'
 import { canonicalFor, pageMetaFor } from '../../data/pages'
+import { structuredDataJson } from '../../data/structuredData'
 
 /**
  * Keeps the document head in step with the route.
@@ -15,6 +16,10 @@ import { canonicalFor, pageMetaFor } from '../../data/pages'
  * The canonical uses the same trailing-slash form as the static HTML and
  * sitemap.xml, because that is the URL the static host answers 200 for; the
  * address bar can say /privacy while the canonical says /privacy/.
+ *
+ * The JSON-LD block (`script#site-ld`) is refreshed the same way, from the same
+ * module the prerender writes it from — a tool page clicked into from the home
+ * page ends up with that tool's graph, not the home page's.
  *
  * Unknown routes (the SPA's NotFound view) get noindex and drop the canonical,
  * so a crawler never files them under an address that was never published.
@@ -55,6 +60,14 @@ export default function PageMetaSync() {
       link.href = canonicalFor(meta.path)
     } else if (link) {
       link.remove()
+    }
+
+    // Same JSON-LD source as the build: the route's graph, or an empty tag for
+    // a path that has no page to describe.
+    const ldTag = document.head.querySelector<HTMLScriptElement>('script#site-ld')
+    if (ldTag) {
+      const ld = structuredDataJson(meta ? meta.path : '')
+      if (ldTag.textContent !== ld) ldTag.textContent = ld
     }
   }, [pathname])
 

@@ -16,7 +16,7 @@ const MOV_RE = /\.(mov|qt)$/i
 export const MOV_SPEC: VideoToolSpec = {
   id: 'mov-to-mp4',
   title: 'MOV → MP4',
-  sub: 'Batch convert QuickTime (.mov) video to MP4 that plays everywhere. H.264, HEVC and AAC are copied across untouched; camera formats like ProRes, DV and PCM audio are re-encoded. Everything runs in the browser with FFmpeg (WebAssembly) — your videos never leave this machine.',
+  sub: 'Convert MOV to MP4 in your browser: batch QuickTime (.mov) video into MP4 that plays everywhere. H.264, HEVC and AAC are copied across untouched; camera formats like ProRes, DV and PCM audio are re-encoded. Everything runs with FFmpeg (WebAssembly) — your videos never leave this machine.',
   accept: '.mov,.qt,video/quicktime',
   isSource: (name) => MOV_RE.test(name),
   pairImages: false,

@@ -108,6 +108,21 @@ function withMeta(template, meta) {
   return template.replace(META_RE, metaBlock(meta))
 }
 
+/**
+ * The structured-data slot. The script tag itself lives in index.html so the
+ * id (which PageMetaSync updates at runtime) can never disagree with the build;
+ * this replaces only its contents. An unpublished route — the 404 shell — gets
+ * an empty tag rather than a graph describing a page that does not exist.
+ */
+const LD_RE = /(<script type="application\/ld\+json" id="site-ld">)[\s\S]*?(<\/script>)/
+
+function withLd(template, json) {
+  if (!LD_RE.test(template)) {
+    throw new Error('index.html is missing the id="site-ld" script the structured data is written into')
+  }
+  return template.replace(LD_RE, (_match, open, close) => `${open}${json ? `\n${json}\n    ` : ''}${close}`)
+}
+
 function withBody(template, html) {
   if (!ROOT_RE.test(template)) throw new Error('index.html is missing <div id="root"></div>')
   return template.replace(ROOT_RE, `<div id="root">${html}</div>`)
@@ -137,20 +152,29 @@ async function main() {
     const { render } = await server.ssrLoadModule('/scripts/prerender/entry.tsx')
     const { pages, canonicalFor, sitemapPages } = await server.ssrLoadModule('/src/data/pages.ts')
     const { SITE } = await server.ssrLoadModule('/src/config/site.ts')
+    const { structuredDataJson } = await server.ssrLoadModule('/src/data/structuredData.ts')
 
     for (const page of pages) {
+      if (page.description.endsWith('…')) {
+        console.log(
+          `  ! ${page.path.padEnd(14)} meta description is over 155 chars and was trimmed — rewrite the copy`,
+        )
+      }
       const html = render(page.path)
       if (!html.includes('class="site-head"')) {
         throw new Error(`prerender produced no shell for ${page.path} — refusing to write an empty page`)
       }
-      const out = withBody(
-        withMeta(template, {
-          title: page.title,
-          description: page.description,
-          canonical: canonicalFor(page.path),
-          siteName: SITE.name,
-        }),
-        html,
+      const out = withLd(
+        withBody(
+          withMeta(template, {
+            title: page.title,
+            description: page.description,
+            canonical: canonicalFor(page.path),
+            siteName: SITE.name,
+          }),
+          html,
+        ),
+        structuredDataJson(page.path),
       )
       // '/' is dist/index.html; every other route gets its own directory so that
       // GitHub Pages answers /privacy (⇒ /privacy/, 200) instead of the 404 shell.
@@ -171,7 +195,8 @@ async function main() {
     if (!ADSENSE_RE.test(notFound)) {
       throw new Error('index.html is missing the Google AdSense loader block the 404 page has to strip')
     }
-    writeFile('404.html', notFound.replace(ADSENSE_RE, ''))
+    // No structured data on the error page either: it describes no real page.
+    writeFile('404.html', withLd(notFound.replace(ADSENSE_RE, ''), ''))
 
     const lastmod = new Date().toISOString().slice(0, 10)
     const urls = sitemapPages()

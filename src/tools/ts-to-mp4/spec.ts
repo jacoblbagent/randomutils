@@ -19,7 +19,7 @@ export const MIN_SIZE_MB = 50
 export const TS_SPEC: VideoToolSpec = {
   id: 'ts-to-mp4',
   title: 'TS → MP4',
-  sub: 'Batch convert MPEG transport stream (.ts) recordings to MP4. Everything runs in the browser with FFmpeg (WebAssembly) — your videos never leave this machine.',
+  sub: 'Convert TS to MP4 in your browser: batch MPEG transport stream (.ts, .mts, .m2ts) recordings, stream-copied where they already fit an MP4. Everything runs with FFmpeg (WebAssembly) — your videos never leave this machine.',
   accept: '.ts,.mts,.m2ts,video/mp2t,.jpg,.jpeg,.png,image/jpeg,image/png,.txt,.star,text/plain',
   isSource: (name) => TS_RE.test(name),
   pairImages: true,

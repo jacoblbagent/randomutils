@@ -33,7 +33,7 @@ const STATIC_PAGES: PageMeta[] = [
     path: '/',
     title: `${SITE.name} — browser tools that never upload your files`,
     description:
-      'Small, single-purpose browser tools: convert TS and MOV video to MP4 and pull the audio out of a video. Everything runs locally with FFmpeg in WebAssembly — nothing is uploaded.',
+      'Single-purpose browser tools: convert TS and MOV video to MP4, or pull the audio out of a video. Everything runs locally with FFmpeg — nothing is uploaded.',
     heading: SITE.name,
     inSitemap: true,
   },
@@ -65,7 +65,7 @@ const STATIC_PAGES: PageMeta[] = [
     path: '/faq',
     title: `FAQ — ${SITE.name}`,
     description:
-      'Why a file is skipped, why the FFmpeg engine reloads mid-batch, whether anything is uploaded, whether big batches are safe, and how to install the site as an app.',
+      'Why a file is skipped, why the FFmpeg engine reloads mid-batch, whether anything is uploaded, and how to install the site as an app.',
     heading: 'Frequently asked questions',
     inSitemap: true,
   },
@@ -73,28 +73,53 @@ const STATIC_PAGES: PageMeta[] = [
     path: '/terms',
     title: `Terms of use — ${SITE.name}`,
     description:
-      'The plain terms for using the RandomUtils tools: free to use and provided as-is without warranty, your files stay yours, and the site is supported by advertising.',
+      'The plain terms for the RandomUtils tools: free to use, provided as-is without warranty, your files stay yours, and the site is supported by advertising.',
     heading: 'Terms of use',
     inSitemap: true,
   },
 ]
 
-/** Trim a description to the length search engines actually display. */
+/**
+ * Trim a description to the length search engines actually display.
+ *
+ * Only a backstop — every page carries hand-written copy that fits, and the
+ * build logs a note when this fires. It is careful about *how* it cuts: a plain
+ * 155-character slice can leave the text ending on a dangling article
+ * ("… compiled to", "… so the"), which reads as broken in a search result, so
+ * trailing function words are dropped before the ellipsis goes on.
+ */
+const DANGLING = /(?:[,;:]|\s(?:a|an|the|and|or|but|for|to|of|in|on|at|by|with|from|that|this|it|its|is|are|was|as|so|than|then|into|over|your|you|we|our))+$/i
+
 function clamp(text: string, max = 155): string {
   const clean = text.replace(/\s+/g, ' ').trim()
   if (clean.length <= max) return clean
-  return `${clean.slice(0, max - 1).replace(/[,.;:\s]\S*$/, '')}…`
+  const cut = clean.slice(0, max - 1).replace(/[^\w.)\]]+$/, '')
+  return `${cut.replace(DANGLING, '')}…`
 }
 
+/**
+ * Tool pages read their copy from the tool registry (src/data/tools.ts), where
+ * each tool carries a hand-written `seo.title` and `seo.description` — the two
+ * fields a crawler sees, kept beside the card copy so they cannot drift.
+ */
 const TOOL_PAGES: PageMeta[] = tools.map((tool) => ({
   path: tool.path,
-  title: `${tool.name} — ${tool.tagline} — ${SITE.name}`,
-  description: clamp(tool.description),
+  title: tool.seo.title,
+  description: clamp(tool.seo.description),
   heading: tool.name,
   inSitemap: true,
 }))
 
-export const pages: PageMeta[] = [...STATIC_PAGES, ...TOOL_PAGES]
+/**
+ * Every page's final metadata. Descriptions go through `clamp` here rather than
+ * at each call site, so a description that grows past the length a search result
+ * displays is trimmed by the build instead of shipping long — and the prerender
+ * prints a note when that happens, which is the signal to rewrite the copy.
+ */
+export const pages: PageMeta[] = [...STATIC_PAGES, ...TOOL_PAGES].map((page) => ({
+  ...page,
+  description: clamp(page.description),
+}))
 
 /** Every route with a real page, in the order they should be written. */
 export const pagePaths: string[] = pages.map((page) => page.path)

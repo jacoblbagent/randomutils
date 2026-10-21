@@ -53,17 +53,25 @@ No state library, no CSS framework, no component kit, no analytics. Type checkin
 
 ## The registries — where a change lands
 
-Four files decide what exists. A new tool touches three of them; a new prose page touches two.
+Five files decide what exists. A new tool touches three of them; a new prose page touches two.
 
-1. `src/data/tools.ts` — the **tool registry**. Name, tagline, description, path, tags and the
-   flag that ships it. The home grid, its tag filter row, the footer and `pages.ts` all read it.
+1. `src/data/tools.ts` — the **tool registry**. Name, tagline, description, path, tags, the flag
+   that ships it, and a `seo` block (`title`, `description`, `anchor`, `features`) holding what a
+   crawler sees and what other pages say when they link here. The home grid, its tag filter row,
+   the footer, the related-tools block and `pages.ts` all read it.
 2. `src/data/pages.ts` — the **page registry**: every URL the site answers with a real,
    indexable page, with its `<title>`, meta description and `inSitemap`. Tool pages are derived
-   from `tools.ts`, so a tool needs no entry here.
+   from `tools.ts` (their title and description come from `tool.seo`), so a tool needs no entry
+   here. Every description passes through `clamp()` — a build-time backstop that the prerender
+   reports when it fires, because a trimmed sentence reads badly in a search result.
 3. `src/App.tsx` — the `<Route>`, mounted inside `AppShell` so the prerenderer sees the same
    shell a visitor does. A flagged tool's routes are mounted only while its flag is on.
 4. `src/config/flags.ts` — the **flag registry**. A new tool needs a `FlagId` defaulted to
    `true`, or its card, footer count and route all vanish.
+5. `src/data/structuredData.ts` — the **JSON-LD graph** for a route, built from the two
+   registries above: Organization + WebSite + WebPage everywhere, WebApplication and a
+   BreadcrumbList on a tool page. Written into `<!-- site:ld -->` by the prerender and refreshed
+   by `PageMetaSync` at runtime, from this one module, so both always agree.
 
 Miss the route and the page 404s live; miss the registry and it never reaches the sitemap.
 
@@ -90,7 +98,9 @@ dist/404.html                 ← noindex, for genuinely unknown paths
 `scripts/prerender.mjs` (run by `npm run build`, after `vite build`) renders every route through
 the real app shell (`scripts/prerender/entry.tsx`, `renderToString` + `MemoryRouter`) and writes
 the markup into a copy of the **built** `index.html`, with that route's `<title>`, description,
-`rel=canonical`, Open Graph tags and `robots` swapped into the `<!-- site:meta -->` block. It
+`rel=canonical`, Open Graph tags and `robots` swapped into the `<!-- site:meta -->` block, and the
+route's JSON-LD graph written into the `id="site-ld"` script between the `<!-- site:ld -->`
+markers (empty on `404.html`, which is a page that does not exist). It
 refuses to write a page whose markup has no `class="site-head"`, so an empty prerender fails the
 build rather than shipping blank pages. It loads the `.tsx` sources through Vite's own SSR module
 runner (`createServer` in middleware mode), so there is no second build pipeline and no extra
@@ -105,8 +115,14 @@ Consequences worth knowing:
 - **The app mounts over the prerendered markup**, so the first paint is real content and a
   crawler that does not run JavaScript still sees a populated page.
 - `src/components/PageMetaSync/` keeps the head in step while a visitor clicks between tools
-  (`document.title`, description, `og:*`, `robots`, canonical). Unknown routes get `noindex` and
-  lose the canonical, so the NotFound view is never filed as a page.
+  (`document.title`, description, `og:*`, `robots`, canonical and the JSON-LD graph). Unknown
+  routes get `noindex`, lose the canonical and get an empty graph, so the NotFound view is never
+  filed as a page.
+- **Internal links**: every tool page carries a related-tools block under its guide
+  (`src/components/RelatedTools/`) naming its siblings, and the footer links every shipped tool
+  from every page. Both read `tools.ts`, so the anchor text is the tool's own phrase and a
+  flagged tool's links disappear with its route. Before these, each tool page had exactly one
+  editorial inbound link — its card on the home page.
 - `public/robots.txt` allows everything, names the AdSense crawlers (`Mediapartners-Google`,
   `AdsBot-Google`, `Google-adstxt`) and points at the sitemap.
 
@@ -268,9 +284,11 @@ src/
 │   ├── flags.ts             the flag registry + store
 │   ├── site.ts              origin, repo, owner, contact address, publisher id, siteUrl()
 │   └── FlagsPanel/          the ?flags=1 panel (tool-search is on by default)
-├── data/                    tools.ts (tools), pages.ts (every real page)
+├── data/                    tools.ts (tools + their seo copy), pages.ts (every real page),
+│                            structuredData.ts (the JSON-LD graph for a route)
 ├── icons/Icons.tsx          authored 16px SVG icon set (no unicode glyphs)
-├── components/              SiteHeader, SiteFooter, ToolCard, ToolGuide, ScrollToTop, PageMetaSync
+├── components/              SiteHeader, SiteFooter, ToolCard, ToolGuide, RelatedTools,
+│                            ScrollToTop, PageMetaSync
 ├── pages/                   Home, About, Faq, Privacy, Terms, Contact, NotFound
 └── tools/                   video/ (shared kit), ts-to-mp4/, mov-to-mp4/, audio-extract/
 
@@ -296,6 +314,20 @@ npm run lint      # oxlint — only the pre-existing ConvertQueue/AudioExtract w
 npm run preview -- --port 4199
 curl -s -o /dev/null -w '%{http_code}\n' http://localhost:4199/privacy/   # trailing slash matters
 ```
+
+Also worth a look after a metadata change — each route's head and its internal links:
+
+```bash
+curl -s http://localhost:4199/ts-to-mp4/ | grep -o 'id="site-ld"'          # JSON-LD is there
+curl -s http://localhost:4199/ts-to-mp4/ | grep -c 'related-tools'         # sibling links
+curl -s http://localhost:4199/404.html | grep -c 'googlesyndication'       # 0 — no ad code
+curl -s http://localhost:4199/404.html | grep -c '"@context"'              # 0 — no JSON-LD
+```
+
+The build prints `! <path> meta description is over 155 chars and was trimmed` when copy needs
+shortening — that line means rewrite the source, not that the build is broken. A long title is
+silent, so read the `dist/<path>/index.html` heads once in a while: the phrase someone would
+type should survive the 60-character cut, and the brand suffix is the part Google drops.
 
 The built routes are directory indexes, so `/privacy` 301s to `/privacy/`. Kill a preview server
 with the bracket trick — `pkill -f "[v]ite preview"` — because a plain `pkill -f "vite preview"`

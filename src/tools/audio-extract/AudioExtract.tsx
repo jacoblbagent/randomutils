@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import JSZip from 'jszip'
 import { Link } from 'react-router-dom'
+import RelatedTools from '../../components/RelatedTools/RelatedTools'
 import ToolGuide from '../../components/ToolGuide/ToolGuide'
 import { IconArrowLeft, IconDownload, IconX } from '../../icons/Icons'
 import {
@@ -271,7 +272,7 @@ export default function AudioExtract() {
         </Link>
         <h1>Video → Audio</h1>
         <p className="ax-head__sub">
-          Pull the audio track out of a video and download it as WAV or MP3. Everything runs in
+          Extract the audio from a video and download it as WAV or MP3. Everything runs in
           this tab with FFmpeg (WebAssembly) — no upload, no server, your file never leaves this
           machine.
         </p>
@@ -572,6 +573,8 @@ export default function AudioExtract() {
           </p>
         </section>
       </ToolGuide>
+
+      <RelatedTools currentId="audio-extract" />
     </div>
   )
 }

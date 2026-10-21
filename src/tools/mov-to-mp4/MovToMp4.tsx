@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import RelatedTools from '../../components/RelatedTools/RelatedTools'
 import ToolGuide from '../../components/ToolGuide/ToolGuide'
 import ConvertQueue from '../video/ConvertQueue/ConvertQueue'
 import { MOV_SPEC } from './spec'
@@ -112,6 +113,8 @@ export default function MovToMp4() {
           </p>
         </section>
       </ToolGuide>
+
+      <RelatedTools currentId="mov-to-mp4" />
     </>
   )
 }

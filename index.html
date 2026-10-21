@@ -40,6 +40,15 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content="https://randomutils.com/og.png" />
     <!-- /site:meta -->
+    <!-- site:ld -->
+    <!-- Structured data (JSON-LD). Left empty here on purpose: the prerender
+         (scripts/prerender.mjs) writes the graph for each route into this
+         script tag from src/data/structuredData.ts, and PageMetaSync keeps it
+         in step while a visitor moves between tools. Do not paste JSON-LD in
+         here — it is generated, and the build fails if these markers or the id
+         go missing. -->
+    <script type="application/ld+json" id="site-ld"></script>
+    <!-- /site:ld -->
     <!-- Google AdSense -->
     <script
       async

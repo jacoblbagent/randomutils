@@ -3,7 +3,7 @@
 A hub for small, single-purpose browser tools. Every tool runs entirely client-side — no accounts, no
 uploads, no server holding your files.
 
-**🔗 Live:** https://jacoblbagent.github.io/randomutils/
+**🔗 Live:** https://randomutils.com/
 
 ## Tools
 
@@ -27,9 +27,9 @@ React 19 + Vite 8 + TypeScript (strict) + plain CSS with custom-property tokens.
 real paths (`/ts-to-mp4`, not `/#/ts-to-mp4`). No state library, no CSS framework.
 
 The site is static, so deep-link reloads are served by a `404.html` copy of `index.html` that the
-build emits (`spaFallback()` in `vite.config.ts`) — GitHub Pages serves it for any unknown path under
-`/randomutils/`, and the SPA boots from the real URL. Vite's dev and preview servers already fall
-back to `index.html`, so nothing extra is needed locally.
+build emits (`spaFallback()` in `vite.config.ts`) — GitHub Pages serves it for any unknown path, and
+the SPA boots from the real URL. Vite's dev and preview servers already fall back to `index.html`, so
+nothing extra is needed locally.
 
 **Ports:** dev :5196 (Hermes web UI Projects row), preview :4173.
 
@@ -74,8 +74,13 @@ inits a repo there and force-pushes `gh-pages`. The `gh-pages` package is delibe
 pulls in `globby > fast-glob > micromatch > braces`, and `braces` has an unfixed stack-exhaustion
 advisory (GHSA-vfj7-8cjw-p6xm, no patched release), so `npm audit` stays clean without an override.
 
-`vite.config.ts` sets `base: '/randomutils/'` for production builds only, so `npm run dev` stays at
-the root, and appends the `404.html` SPA fallback to `dist/` on every build.
+`vite.config.ts` keeps `base: '/'` (the site is served from the `randomutils.com` apex, so assets sit
+at the root) and appends the `404.html` SPA fallback to `dist/` on every build.
+
+The custom domain is declared by `public/CNAME` (`randomutils.com`), which lands in `dist/` and tells
+GitHub Pages to serve the site at the apex. At Namecheap the DNS is four `A` records on `@`
+(185.199.108.153 / .109.153 / .110.153 / .111.153) plus `CNAME www → jacoblbagent.github.io`; GitHub
+301s `www` to the apex. HTTPS is enforced, cert issued for both hosts.
 
 ## TS → MP4 notes
 

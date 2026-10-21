@@ -40,11 +40,3 @@
   grid-template-columns: repeat(auto-fill, minmax(288px, 1fr));
   gap: var(--s3);
 }
-
-.home__note code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.95em;
-  padding: 1px 4px;
-  border-radius: var(--r-sm);
-  background: var(--surface-2);
-}

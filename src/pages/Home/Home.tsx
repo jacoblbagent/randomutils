@@ -45,13 +45,8 @@ export default function Home() {
             <ToolCard key={tool.id} tool={tool} />
           ))}
         </div>
-        {shown.length === 0 ? (
+        {shown.length === 0 && (
           <p className="small-note home__note">Nothing matches “{query.trim()}”.</p>
-        ) : (
-          <p className="small-note home__note">
-            More tools land here as they get built — the grid is driven by{' '}
-            <code>src/data/tools.ts</code>.
-          </p>
         )}
       </section>
     </div>

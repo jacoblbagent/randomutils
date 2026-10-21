@@ -1,0 +1,14 @@
+# RandomUtils — everything is public; crawl freely.
+User-agent: *
+Allow: /
+
+# Google's crawlers must be able to read /ads.txt and the pages that carry ads.
+User-agent: Mediapartners-Google
+Allow: /
+
+User-agent: AdsBot-Google
+Allow: /
+
+# Keep the AdSense ownership record fetchable even if the rules above tighten.
+User-agent: Google-adstxt
+Allow: /ads.txt

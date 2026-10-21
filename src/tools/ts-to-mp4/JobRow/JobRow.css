@@ -1,0 +1,77 @@
+.job {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: var(--s3) var(--s4);
+  display: grid;
+  gap: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s ease-out;
+}
+.job:hover { border-color: var(--border-strong); }
+.job.no-view, .job.no-view:hover { cursor: default; }
+.job.active { border-color: var(--accent); }
+.job.error { border-color: color-mix(in srgb, var(--danger) 55%, var(--border)); }
+.job.queued { color: var(--text-2); }
+.job.last { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.job-main { display: flex; gap: var(--s3); align-items: center; min-width: 0; }
+.job-info { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.job-name { display: flex; gap: 6px; align-items: center; font-weight: 600; min-width: 0; }
+.job-name .idx { font-weight: 500; font-variant-numeric: tabular-nums; color: var(--text-3); }
+.job-meta { font-size: var(--t-sm); font-variant-numeric: tabular-nums; color: var(--text-2); }
+.job-actions { display: flex; gap: var(--s2); align-items: center; flex-shrink: 0; }
+.job .job-actions button, .job .job-actions a, .job .star { cursor: pointer; }
+.job video { width: 100%; max-height: 360px; border-radius: var(--r-md); background: #000; }
+
+.error-text { color: var(--danger); }
+
+/* ---------- thumbnail ---------- */
+.thumb {
+  flex-shrink: 0;
+  width: 96px;
+  height: 54px;
+  border-radius: var(--r-md);
+  object-fit: cover;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+.thumb-empty { border-style: dashed; }
+
+/* ---------- inline rename ---------- */
+.rename-btn { width: 22px; height: 22px; flex-shrink: 0; opacity: 0; }
+.job:hover .rename-btn, .rename-btn:focus-visible { opacity: 1; }
+
+.name-edit {
+  flex: 1;
+  min-width: 0;
+  padding: 3px 6px;
+  border-radius: 6px;
+  border: 1px solid var(--accent);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+}
+.name-edit:focus { outline: none; }
+
+/* ---------- selection ---------- */
+.select-check {
+  flex-shrink: 0;
+  width: 17px;
+  height: 17px;
+  cursor: pointer;
+  touch-action: manipulation;
+  accent-color: var(--accent);
+}
+
+@media (max-width: 640px) {
+  /* 16px fields stop iOS from zooming the viewport on focus */
+  .name-edit { font-size: 16px; }
+}
+
+@media (max-width: 520px) {
+  .job-main { flex-wrap: wrap; }
+  .job-actions { width: 100%; justify-content: flex-end; }
+  .thumb { width: 64px; height: 36px; }
+}

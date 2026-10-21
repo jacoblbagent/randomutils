@@ -1,0 +1,12 @@
+.not-found { display: grid; gap: var(--s3); max-width: 46ch; }
+
+.not-found h1 {
+  margin: 0;
+  font-size: var(--t-xl);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.not-found p { margin: 0; }
+
+.btn-home { justify-self: start; }

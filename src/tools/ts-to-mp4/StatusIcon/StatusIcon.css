@@ -1,0 +1,22 @@
+.status-icon,
+.spinner {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.status-icon.queued { color: var(--text-3); }
+.status-icon.done { color: var(--ok); }
+.status-icon.error { color: var(--danger); }
+
+.spinner {
+  border: 2px solid var(--border-strong);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }

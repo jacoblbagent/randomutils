@@ -1,0 +1,59 @@
+.tool-card {
+  display: grid;
+  gap: var(--s2);
+  align-content: start;
+  text-align: left;
+  padding: var(--s5);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 0.15s ease-out, background 0.15s ease-out;
+}
+
+.tool-card:hover { border-color: var(--border-strong); background: var(--surface-2); }
+.tool-card:active { border-color: var(--accent); }
+
+.tool-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s2);
+  min-width: 0;
+}
+
+.tool-card__name {
+  font-size: var(--t-lg);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.tool-card__go {
+  display: inline-flex;
+  color: var(--text-3);
+  transition: color 0.15s ease-out, transform 0.15s ease-out;
+}
+
+.tool-card:hover .tool-card__go { color: var(--accent); transform: translateX(2px); }
+
+.tool-card__tagline {
+  font-weight: 600;
+  font-size: var(--t-sm);
+  color: var(--text-2);
+}
+
+.tool-card__desc {
+  font-size: var(--t-sm);
+  color: var(--text-2);
+  max-width: 62ch;
+}
+
+.tool-card__tags { margin-top: var(--s1); }
+
+.tool-card--soon {
+  border-style: dashed;
+  background: transparent;
+}
+
+.tool-card--soon .tool-card__name { color: var(--text-2); }

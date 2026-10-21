@@ -1,0 +1,16 @@
+.site-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2) var(--s4);
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--s4);
+  border-top: 1px solid var(--border);
+  font-size: var(--t-sm);
+  color: var(--text-2);
+}
+
+.site-foot__count {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-3);
+}

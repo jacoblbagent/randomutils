@@ -1,0 +1,22 @@
+.star {
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: 0;
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--r-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-3);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: color 0.15s ease-out, opacity 0.15s ease-out;
+}
+.star:hover { color: var(--text); opacity: 0.8; }
+.star.on { color: #c98a00; }
+
+.fav-dl { display: flex; align-items: center; gap: var(--s1); }
+.fav-filter.on { border-color: #c98a00; background: color-mix(in srgb, #c98a00 12%, var(--surface)); }

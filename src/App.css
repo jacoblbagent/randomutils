@@ -1,0 +1,230 @@
+/* =========================================================================
+   RandomUtils — tokens first, then the primitives every page shares.
+
+   One place declares colour, space (4px grid), radius, and type; pages and
+   tools only consume them. Component styles live next to their component
+   (ComponentName/ComponentName.css) — only cross-cutting primitives live here.
+   ========================================================================= */
+
+:root {
+  /* surfaces */
+  --bg: #f4f5f7;
+  --surface: #ffffff;
+  --surface-2: #eceef1;
+
+  /* ink */
+  --text: #14171c;
+  --text-2: #565e6b;
+  --text-3: #6d7583;
+
+  /* lines + accent */
+  --border: #d3d7dd;
+  --border-strong: #b6bcc5;
+  --accent: #1d5fd0;
+  --accent-soft: #e6eefb;
+  --on-accent: #ffffff;
+
+  /* status */
+  --ok: #157347;
+  --ok-soft: #e4f2e9;
+  --danger: #b42318;
+  --danger-soft: #fbeae8;
+  --warn: #92500f;
+
+  /* chip (counts) — grey stone-300, 4px radius */
+  --chip-bg: #d6d3d1;
+  --chip-ink: #3d3a38;
+
+  /* space — 4px grid */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 20px;
+  --s6: 24px;
+  --s8: 32px;
+
+  /* radius */
+  --r-sm: 4px;
+  --r-md: 8px;
+  --r-lg: 12px;
+
+  /* type */
+  --font: 'Instrument Sans Variable', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif;
+  --t-xs: 0.75rem;
+  --t-sm: 0.875rem;
+  --t-base: 1rem;
+  --t-lg: 1.25rem;
+  --t-xl: 1.5625rem;
+  --t-2xl: 1.875rem;
+
+  --shadow: 0 1px 2px rgba(16, 18, 22, 0.06), 0 2px 8px rgba(16, 18, 22, 0.07);
+
+  color-scheme: light dark;
+  font-family: var(--font);
+  font-synthesis-weight: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #101216;
+    --surface: #191c21;
+    --surface-2: #22262c;
+
+    --text: #e9eaee;
+    --text-2: #a3aab6;
+    --text-3: #8b93a0;
+
+    --border: #2c3138;
+    --border-strong: #3a4048;
+    --accent: #84aef7;
+    --accent-soft: #1c2739;
+    --on-accent: #0d1524;
+
+    --ok: #4cc38a;
+    --ok-soft: #16281f;
+    --danger: #f38b81;
+    --danger-soft: #2c1a19;
+    --warn: #e0a45e;
+
+    --chip-bg: #3f3a37;
+    --chip-ink: #ded9d5;
+
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 10px rgba(0, 0, 0, 0.35);
+  }
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-size: var(--t-base);
+  line-height: 1.5;
+}
+
+/* Browser surfaces — themed from the palette, not left to defaults */
+::selection { background: color-mix(in srgb, var(--accent) 26%, transparent); color: var(--text); }
+* { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; border: 3px solid var(--bg); }
+*::-webkit-scrollbar-track { background: transparent; }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ---------- shell ---------- */
+.app {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 var(--s4) 64px;
+  display: grid;
+  gap: var(--s6);
+  align-content: start;
+}
+
+.page { display: grid; gap: var(--s6); min-width: 0; }
+
+/* ---------- text helpers ---------- */
+.muted { color: var(--text-2); }
+.small-note { font-size: var(--t-sm); color: var(--text-2); }
+.ellipsis { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+
+/* ---------- buttons ---------- */
+.primary, .secondary {
+  appearance: none;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: var(--r-md);
+  padding: 11px var(--s4);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s2);
+  touch-action: manipulation;
+  transition: border-color 0.15s ease-out, background 0.15s ease-out, opacity 0.15s ease-out;
+}
+.primary { border: 1px solid transparent; background: var(--accent); color: var(--on-accent); }
+.primary:hover { opacity: 0.8; }
+.secondary { border: 1px solid var(--border); background: var(--surface); color: var(--text); }
+.secondary:hover { border-color: var(--border-strong); opacity: 0.8; }
+.primary:disabled, .secondary:disabled { opacity: 0.45; cursor: not-allowed; }
+.small { padding: 7px var(--s3); font-size: var(--t-sm); }
+
+/* standalone / inline text actions — ghost, underlined */
+.link {
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: var(--accent);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+  touch-action: manipulation;
+}
+.link:hover { opacity: 0.8; }
+.link:disabled { opacity: 0.45; cursor: not-allowed; text-decoration: none; }
+
+/* icon buttons */
+.icon {
+  appearance: none;
+  border: 0;
+  background: none;
+  color: var(--text-3);
+  padding: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--r-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  touch-action: manipulation;
+  transition: color 0.15s ease-out, opacity 0.15s ease-out;
+}
+.icon:hover { color: var(--text); opacity: 0.8; }
+.icon:disabled { opacity: 0.3; cursor: not-allowed; }
+
+/* ---------- progress ---------- */
+.bar { height: 8px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
+.bar.thin { height: 4px; }
+.bar > div {
+  height: 100%;
+  width: 100%;
+  transform-origin: left center;
+  transform: scaleX(0);
+  background: var(--accent);
+  transition: transform 0.2s ease-out; /* transform only — never layout width */
+}
+.bar > .indeterminate { animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: 0.35; } }
+
+/* ---------- chips (counts, tags) ---------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s1);
+  padding: 1px var(--s2);
+  border-radius: var(--r-sm);
+  background: var(--chip-bg);
+  color: var(--chip-ink);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.chips { display: inline-flex; gap: 6px; flex-wrap: wrap; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}

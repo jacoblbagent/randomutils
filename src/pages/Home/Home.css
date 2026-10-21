@@ -1,0 +1,33 @@
+.home { display: grid; gap: var(--s8); }
+
+.home__hero { display: grid; gap: var(--s2); }
+
+.home__hero h1 {
+  margin: 0;
+  font-size: var(--t-2xl);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.home__lede {
+  margin: 0;
+  max-width: 58ch;
+  color: var(--text-2);
+}
+
+.home__tools { display: grid; gap: var(--s4); }
+
+.tool-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(288px, 1fr));
+  gap: var(--s3);
+}
+
+.home__note code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.95em;
+  padding: 1px 4px;
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+}

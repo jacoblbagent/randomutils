@@ -53,6 +53,22 @@ const STATIC_PAGES: PageMeta[] = [
     heading: 'Contact',
     inSitemap: true,
   },
+  {
+    path: '/about',
+    title: `About — ${SITE.name}`,
+    description:
+      'What RandomUtils is, why every tool runs entirely in your browser instead of uploading your files, what the site deliberately does not do, and who runs it.',
+    heading: 'About',
+    inSitemap: true,
+  },
+  {
+    path: '/terms',
+    title: `Terms of use — ${SITE.name}`,
+    description:
+      'The plain terms for using the RandomUtils tools: free to use and provided as-is without warranty, your files stay yours, and the site is supported by advertising.',
+    heading: 'Terms of use',
+    inSitemap: true,
+  },
 ]
 
 /** Trim a description to the length search engines actually display. */

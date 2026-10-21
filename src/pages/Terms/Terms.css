@@ -1,0 +1,7 @@
+/* Terms — the prose frame itself lives in App.css (.doc primitives); only what
+   this page needs on top of it is here. */
+
+.terms .doc__section ul li {
+  /* The acceptable-use list reads better with a little air between lines. */
+  line-height: 1.55;
+}

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import ToolCard from '../../components/ToolCard/ToolCard'
 import { useFlag } from '../../config/flags'
 import { useTools, type Tool } from '../../data/tools'
@@ -47,6 +48,16 @@ export default function Home() {
         {shown.length === 0 && (
           <p className="small-note home__note">Nothing matches “{query.trim()}”.</p>
         )}
+      </section>
+
+      <section className="home__hero">
+        <p className="home__lede">
+          Every tool here is a page, not a service: the conversion runs on your own machine with
+          FFmpeg compiled to WebAssembly, so your file is never uploaded and nothing is kept when
+          you close the tab. That is not a setting you have to trust us to leave alone — there is
+          no upload step to disable. <Link className="link" to="/about">How that works</Link>, and
+          what the site does and does not do, is on the about page.
+        </p>
       </section>
     </div>
   )

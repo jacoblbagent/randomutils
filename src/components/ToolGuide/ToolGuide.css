@@ -1,0 +1,31 @@
+/* The guide under a converter — the shared .doc prose frame in App.css does the
+   work; this only separates it from the tool above and sets the title scale. */
+
+.tool-guide {
+  border-top: 1px solid var(--border);
+  padding-top: var(--s6);
+  gap: var(--s5);
+}
+
+.tool-guide__head {
+  display: grid;
+  gap: var(--s1);
+}
+
+.tool-guide__title {
+  margin: 0;
+  font-size: var(--t-xl);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Sections inside the guide sit one step under the guide title, and the
+   drop zone above should never be dwarfed by the prose below it. */
+.tool-guide .doc__section h2 {
+  font-size: var(--t-base);
+  font-weight: 700;
+}
+
+.tool-guide .doc__section strong {
+  color: var(--text);
+}

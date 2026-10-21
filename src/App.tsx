@@ -5,10 +5,12 @@ import SiteHeader from './components/SiteHeader/SiteHeader'
 import ScrollToTop from './components/ScrollToTop/ScrollToTop'
 import FlagsPanel from './config/FlagsPanel/FlagsPanel'
 import { useFlags } from './config/flags'
+import About from './pages/About/About'
 import Contact from './pages/Contact/Contact'
 import Home from './pages/Home/Home'
 import NotFound from './pages/NotFound/NotFound'
 import Privacy from './pages/Privacy/Privacy'
+import Terms from './pages/Terms/Terms'
 import AudioExtract from './tools/audio-extract/AudioExtract'
 import MovToMp4 from './tools/mov-to-mp4/MovToMp4'
 import TsToMp4 from './tools/ts-to-mp4/TsToMp4'
@@ -39,7 +41,9 @@ export function AppShell() {
         <main className="page">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
             <Route path="/privacy" element={<Privacy />} />
+            <Route path="/terms" element={<Terms />} />
             <Route path="/contact" element={<Contact />} />
             {flags['ts-to-mp4'] && <Route path="/ts-to-mp4" element={<TsToMp4 />} />}
             {flags['mov-to-mp4'] && <Route path="/mov-to-mp4" element={<MovToMp4 />} />}

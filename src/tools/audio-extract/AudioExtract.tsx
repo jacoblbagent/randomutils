@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import JSZip from 'jszip'
 import { Link } from 'react-router-dom'
+import ToolGuide from '../../components/ToolGuide/ToolGuide'
 import { IconArrowLeft, IconDownload, IconX } from '../../icons/Icons'
 import {
   CancelledError,
@@ -474,6 +475,103 @@ export default function AudioExtract() {
         afterwards). Audio is taken from the first audio track and re-encoded — WAV keeps the
         source sample rate, MP3 is 192 kbps.
       </p>
+
+      <ToolGuide heading="About this tool">
+        <section className="doc__section">
+          <h2>WAV or MP3?</h2>
+          <p>
+            The choice is between a file that is faithful and a file that is small, and only you
+            know which the job needs.
+          </p>
+          <ul>
+            <li>
+              <strong>WAV</strong> — uncompressed 16-bit PCM at the source&rsquo;s own sample
+              rate. Lossless, so nothing is thrown away, and every editor and audio tool accepts
+              it. The cost is size: a stereo WAV is roughly 10 MB per minute, which adds up fast
+              over a long recording. Choose WAV when you are going to edit, transcribe, or
+              re-encode the audio later, or when quality is the whole point.
+            </li>
+            <li>
+              <strong>MP3</strong> — 192 kbps, which is transparent enough for speech and fine for
+              most music. Roughly a tenth the size of the WAV and plays on literally anything.
+              Choose MP3 when the audio is the finished product — a podcast, a voice memo, a
+              soundtrack you want on a phone — rather than the start of more work.
+            </li>
+          </ul>
+        </section>
+
+        <section className="doc__section">
+          <h2>Where the audio comes from</h2>
+          <ul>
+            <li>
+              The audio is taken from the <strong>first audio track</strong> in the file, and it
+              is re-encoded to the format you pick. For a normal video — one audio track — that
+              is simply &ldquo;the&rdquo; audio.
+            </li>
+            <li>
+              A video with several audio tracks, such as a film with multiple language dubs,
+              yields the first one. If you need a different track, that is worth a note on the{' '}
+              <Link to="/contact">contact page</Link>.
+            </li>
+            <li>
+              A video with <strong>no</strong> audio track at all has nothing to extract; the
+              tool will report a failure rather than invent a silent file.
+            </li>
+            <li>
+              Audio files themselves work as input too — taking the audio &ldquo;out of&rdquo; an
+              MP3 is just a format conversion, and WAV→MP3 or MP3→WAV is a perfectly good use of
+              this tool.
+            </li>
+          </ul>
+        </section>
+
+        <section className="doc__section">
+          <h2>Formats it accepts</h2>
+          <p>
+            Video: MP4, MOV, MKV, WebM, AVI, FLV, WMV, MPEG, TS, M2TS, 3GP, OGV, VOB, MXF and
+            more. Audio: MP3, WAV, M4A, AAC, FLAC, OGG, Opus, WMA, AIFF and more. If a file is
+            neither video nor audio it is skipped and named in a note above the queue.
+          </p>
+        </section>
+
+        <section className="doc__section">
+          <h2>If something goes wrong</h2>
+          <ul>
+            <li>
+              <strong>The job fails at &ldquo;Extracting audio&rdquo;.</strong> Usually a video
+              with no audio track, or a file whose audio is in a codec the bundled FFmpeg build
+              cannot decode. Try another file to confirm the tool itself is fine.
+            </li>
+            <li>
+              <strong>The WAV is enormous.</strong> Expected — it is uncompressed. If size rather
+              than fidelity is the problem, extract to MP3 instead.
+            </li>
+            <li>
+              <strong>A rental or store-bought download fails.</strong> Protected (DRM) files are
+              deliberately unreadable by any ordinary tool; this one is no exception, and the
+              files are not yours to convert.
+            </li>
+            <li>
+              <strong>A very long video stops part-way.</strong> The whole file and its audio
+              output live in the page&rsquo;s memory, so a single video over roughly 2 GB may run
+              out of room.
+            </li>
+          </ul>
+          <p className="small-note">
+            Still stuck? The <Link to="/contact">contact page</Link> lists exactly what to include.
+          </p>
+        </section>
+
+        <section className="doc__section">
+          <h2>Privacy, in one line</h2>
+          <p>
+            Video is often the most personal thing on a phone, and a voice recording more so. The
+            extraction runs in this tab on FFmpeg compiled to WebAssembly, so the file never
+            leaves your machine — no upload, and nothing kept after the tab closes. The{' '}
+            <Link to="/privacy">privacy page</Link> is the long version.
+          </p>
+        </section>
+      </ToolGuide>
     </div>
   )
 }

@@ -4,6 +4,9 @@
  * Adding a tool: append an entry here and add its route in `App.tsx`. The home
  * page grid, the footer count, and (later) any index/search all read this list.
  */
+import { useMemo } from 'react'
+import { useFlags, type FlagId } from '../config/flags'
+
 export interface Tool {
   /** Matches the route path and the project id in ~/Code/hermes-web-ui. */
   id: string
@@ -16,6 +19,11 @@ export interface Tool {
   path: string
   tags: string[]
   status: 'live' | 'soon'
+  /**
+   * Feature flag that ships this tool. Omitted = always on. With the flag off
+   * the card, the footer count and the route all go away (see config/flags.ts).
+   */
+  flag?: FlagId
 }
 
 export const tools: Tool[] = [
@@ -28,5 +36,12 @@ export const tools: Tool[] = [
     path: '/ts-to-mp4',
     tags: ['Video', 'FFmpeg', 'Offline'],
     status: 'live',
+    flag: 'ts-to-mp4',
   },
 ]
+
+/** Everything whose flag is on — what the grid, the count and the routes use. */
+export function useTools(): Tool[] {
+  const flags = useFlags()
+  return useMemo(() => tools.filter((tool) => !tool.flag || flags[tool.flag]), [flags])
+}

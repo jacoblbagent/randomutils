@@ -39,6 +39,9 @@ nothing extra is needed locally.
 src/
 ├── App.tsx                     # shell: header + <Routes> + footer
 ├── App.css                     # tokens (colour, 4px space grid, radius, type) + shared primitives
+├── config/
+│   ├── flags.ts                # the flag registry + store (see Feature flags)
+│   └── FlagsPanel/             # the ?flags=1 panel — one switch per flag
 ├── data/tools.ts               # the tool registry — the one place a tool is announced
 ├── icons/Icons.tsx             # authored 16px SVG icon set (no unicode glyphs)
 ├── components/                 # SiteHeader, SiteFooter, ToolCard, ScrollToTop
@@ -58,8 +61,62 @@ and `main.tsx` are exempt. Shared primitives (buttons, chips, progress bar, help
 ## Adding a tool
 
 1. Create `src/tools/<tool-id>/` with the tool component and its CSS.
-2. Append an entry to `src/data/tools.ts` (the home grid and footer count read it).
+2. Append an entry to `src/data/tools.ts` (the home grid and footer count read it). Add `flag: '<id>'` if
+   the tool should ship behind a flag — see below.
 3. Add a `<Route path="/<tool-id>" element={<Tool />} />` in `src/App.tsx`.
+
+## Branches
+
+| Branch | What it is |
+|---|---|
+| `main` | What randomutils.com serves. Deploys go from here. |
+| `development` | Where work lands first. Never serves the live site. |
+
+Build on `development`, then merge to `main` to publish. `scripts/deploy.sh` refuses to run from any
+branch other than `main`, so a dev branch cannot clobber the live site by accident — override on
+purpose with `DEPLOY_BRANCH=gh-pages npm run deploy`.
+
+## Feature flags
+
+New features and major changes ship behind a flag: the code merges dark, and turning it on is one
+value. The registry lives in `src/config/flags.ts` — that file is the reference; this is the short
+version.
+
+**Add a flag:** append it to `FLAGS` with `default: false`, gate the code, done.
+
+```ts
+// in a component
+const search = useFlag('tool-search')
+
+// outside render
+import { isEnabled } from '../config/flags'
+if (isEnabled('tool-search')) { … }
+```
+
+**Value resolution,** highest precedence first:
+
+1. **URL** — `?flags=tool-search` (on), `?flags=!tool-search` (off), comma-separated. Page-scoped, so
+   it doubles as a shareable preview link and does not stick afterwards.
+2. **localStorage** `randomutils.flags` — what the flags panel writes, so a flip in your browser
+   survives reloads. Per browser, no redeploy, no server.
+3. **`FLAGS` in `src/config/flags.ts`** — the committed default, which is what fresh visitors and CI
+   get.
+
+**Flip them:** open any URL with `?flags=1` (e.g. https://randomutils.com/?flags=1) or press
+Shift+Alt+F. The panel lists every flag with a live switch, shows whether the current value came from
+the URL, from storage or from the default, and can copy a preview link carrying the state. From the
+console: `randomutils.flags.set('tool-search', true)`.
+
+**Flags that carry weight** — a bundled dataset, MBs of assets, another big dependency — must *also*
+be checked at build time by a module-level `const` in a branch the bundler can fold, so the payload is
+tree-shaken out of `dist/`. Runtime overrides can hide a feature, never un-ship it.
+
+Registered flags:
+
+| Flag | Default | What it gates |
+|---|---|---|
+| `ts-to-mp4` | on | The TS → MP4 converter: grid card, footer count and `/ts-to-mp4` route. |
+| `tool-search` | off | Filter box above the home grid (matches name, tagline, tags). |
 
 ## Deploy
 

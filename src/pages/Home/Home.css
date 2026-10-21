@@ -18,6 +18,23 @@
 
 .home__tools { display: grid; gap: var(--s4); }
 
+.home__search {
+  width: 100%;
+  max-width: 320px;
+  padding: var(--s2) var(--s3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: var(--t-sm);
+}
+
+.home__search:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
 .tool-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(288px, 1fr));

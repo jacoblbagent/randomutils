@@ -10,7 +10,20 @@ set -euo pipefail
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_DIR"
 
+# Two long-lived branches: `main` is what randomutils.com serves, `development`
+# is where work lands first. Publishing is only allowed from `main`, so a dev
+# branch can never clobber the live site by accident — override on purpose with
+# DEPLOY_BRANCH=<branch> when you really do want that.
+CURRENT="$(git rev-parse --abbrev-ref HEAD)"
 BRANCH="${DEPLOY_BRANCH:-gh-pages}"
+
+if [ "$CURRENT" != "main" ] && [ -z "${DEPLOY_BRANCH:-}" ]; then
+  echo "refusing to deploy from '$CURRENT': that publishes the live site." >&2
+  echo "  merge to main first, or force it with DEPLOY_BRANCH=gh-pages npm run deploy" >&2
+  echo "  (preview a dev build locally with npm run preview instead)" >&2
+  exit 1
+fi
+
 REMOTE="$(git remote get-url origin)"
 
 # Use the gh CLI token when available so the push works without a preconfigured credential helper.
@@ -34,4 +47,4 @@ git checkout -q -b "$BRANCH"
 git -c user.name="$NAME" -c user.email="$EMAIL" add -A
 git -c user.name="$NAME" -c user.email="$EMAIL" commit -q -m "Deploy $(date -u +%Y-%m-%dT%H:%M:%SZ)"
 git push -q -f "$REMOTE" "$BRANCH"
-echo "Published to $BRANCH ($(git rev-parse --short HEAD))"
+echo "Published $CURRENT ($(git rev-parse --short HEAD)) to $BRANCH"

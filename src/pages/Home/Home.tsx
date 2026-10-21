@@ -22,7 +22,6 @@ export default function Home() {
   return (
     <div className="home">
       <section className="home__hero">
-        <h1>RandomUtils</h1>
         <p className="home__lede">
           A hub for small, single-purpose tools. Each one runs entirely in your browser — no accounts, no
           uploads, no server holding your files.

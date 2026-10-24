@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#f4f5f7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#101216" media="(prefers-color-scheme: dark)" />
+    <meta name="application-name" content="RandomUtils" />
+    <meta name="apple-mobile-web-app-title" content="RandomUtils" />
+    <!-- site:meta -->
+    <title>TS to MP4 Converter — .ts, .mts and .m2ts Files — RandomUtils</title>
+    <meta name="description" content="Convert TS, MTS and M2TS transport-stream recordings to MP4 in your browser — batch queue, stream-copied where possible, and no upload step." />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://randomutils.com/ts-to-mp4/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="RandomUtils" />
+    <meta property="og:title" content="TS to MP4 Converter — .ts, .mts and .m2ts Files — RandomUtils" />
+    <meta property="og:description" content="Convert TS, MTS and M2TS transport-stream recordings to MP4 in your browser — batch queue, stream-copied where possible, and no upload step." />
+    <meta property="og:url" content="https://randomutils.com/ts-to-mp4/" />
+    <meta property="og:image" content="https://randomutils.com/og.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="RandomUtils — browser tools that never upload your files" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://randomutils.com/og.png" />
+    <!-- /site:meta -->
+    <!-- site:ld -->
+    <!-- Structured data (JSON-LD). Left empty here on purpose: the prerender
+         (scripts/prerender.mjs) writes the graph for each route into this
+         script tag from src/data/structuredData.ts, and PageMetaSync keeps it
+         in step while a visitor moves between tools. Do not paste JSON-LD in
+         here — it is generated, and the build fails if these markers or the id
+         go missing. -->
+    <script type="application/ld+json" id="site-ld">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://randomutils.com/#organization",
+          "name": "RandomUtils",
+          "url": "https://randomutils.com/",
+          "email": "jacoblbagent@gmail.com",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://randomutils.com/icon-512.png",
+            "width": 512,
+            "height": 512
+          },
+          "sameAs": [
+            "https://github.com/jacoblbagent/randomutils"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://randomutils.com/#website",
+          "name": "RandomUtils",
+          "url": "https://randomutils.com/",
+          "description": "Small, single-purpose browser tools that convert video and audio locally in your browser — nothing is uploaded.",
+          "inLanguage": "en",
+          "publisher": {
+            "@id": "https://randomutils.com/#organization"
+          }
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://randomutils.com/ts-to-mp4/#page",
+          "url": "https://randomutils.com/ts-to-mp4/",
+          "name": "TS → MP4",
+          "description": "Convert TS, MTS and M2TS transport-stream recordings to MP4 in your browser — batch queue, stream-copied where possible, and no upload step.",
+          "isPartOf": {
+            "@id": "https://randomutils.com/#website"
+          },
+          "inLanguage": "en",
+          "breadcrumb": {
+            "@id": "https://randomutils.com/ts-to-mp4/#breadcrumb"
+          }
+        },
+        {
+          "@type": "WebApplication",
+          "@id": "https://randomutils.com/ts-to-mp4/#app",
+          "name": "TS to MP4 converter",
+          "alternateName": "TS → MP4",
+          "url": "https://randomutils.com/ts-to-mp4/",
+          "description": "Convert TS, MTS and M2TS transport-stream recordings to MP4 in your browser — batch queue, stream-copied where possible, and no upload step.",
+          "applicationCategory": "MultimediaApplication",
+          "applicationSubCategory": "File converter",
+          "operatingSystem": "Any — runs in the browser",
+          "browserRequirements": "Requires JavaScript and WebAssembly",
+          "isAccessibleForFree": true,
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "featureList": [
+            "Batch convert .ts, .mts and .m2ts recordings to MP4",
+            "Stream copy for speed, re-encode only when the source needs it",
+            "DVR .star sidecars and same-named thumbnails handled",
+            "No upload — the files never leave your machine"
+          ],
+          "mainEntityOfPage": {
+            "@id": "https://randomutils.com/ts-to-mp4/#page"
+          },
+          "publisher": {
+            "@id": "https://randomutils.com/#organization"
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://randomutils.com/ts-to-mp4/#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "RandomUtils",
+              "item": "https://randomutils.com/"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "TS → MP4",
+              "item": "https://randomutils.com/ts-to-mp4/"
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <!-- /site:ld -->
+    <!-- Google AdSense -->
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7737570630269660"
+      crossorigin="anonymous"
+    ></script>
+    <script type="module" crossorigin src="/assets/index-C9hM_xAa.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-x5m_FpWI.css">
+  </head>
+  <body>
+    <div id="root"><div class="app"><header class="site-head"><a class="site-head__brand" href="/" data-discover="true"><span class="site-head__mark" aria-hidden="true"></span>RandomUtils</a><nav class="site-head__links" aria-label="Site"><a class="site-head__link" href="/about" data-discover="true">About</a><a class="site-head__link" href="/faq" data-discover="true">FAQ</a><a class="site-head__link" href="/contact" data-discover="true">Contact</a><a class="site-head__link" href="https://github.com/jacoblbagent/randomutils" target="_blank" rel="noreferrer">Source<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14 5h5v5"></path><path d="M19 5l-7.5 7.5"></path><path d="M18 14.5V18a1.5 1.5 0 0 1-1.5 1.5H6.5A1.5 1.5 0 0 1 5 18V8a1.5 1.5 0 0 1 1.5-1.5H10"></path></svg></a></nav></header><main class="page"><div class="tool"><header class="tool-head"><a class="tool-head__back" href="/" data-discover="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M19.5 12h-14"></path><path d="M11.5 6.5L6 12l5.5 5.5"></path></svg>All tools</a><h1>TS → MP4</h1><p class="tool-head__sub">Convert TS to MP4 in your browser: batch MPEG transport stream (.ts, .mts, .m2ts) recordings, stream-copied where they already fit an MP4. Everything runs with FFmpeg (WebAssembly) — your videos never leave this machine.</p></header><section class="drop "><input type="file" multiple="" accept=".ts,.mts,.m2ts,video/mp2t,.jpg,.jpeg,.png,image/jpeg,image/png,.txt,.star,text/plain" hidden=""/><strong>Drop .ts files here</strong><span class="small-note">or click to browse — you can add more while a batch runs.</span><span class="small-note">Under 50 MB is skipped. Pair a same-named .jpg to use as its thumbnail.</span></section><fieldset class="modes"><legend>Conversion method</legend><div class="segmented"><label class="on"><input type="radio" name="mode" checked="" value="auto"/><span>Auto</span><span class="info-tip"><button type="button" class="info-tip-btn" aria-label="More info" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8"></circle><path d="M12 11.25v5"></path><path d="M12 8h.01"></path></svg></button></span></label><label class=""><input type="radio" name="mode" value="remux"/><span>Stream copy</span><span class="info-tip"><button type="button" class="info-tip-btn" aria-label="More info" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8"></circle><path d="M12 11.25v5"></path><path d="M12 8h.01"></path></svg></button></span></label><label class=""><input type="radio" name="mode" value="encode"/><span>Re-encode</span><span class="info-tip"><button type="button" class="info-tip-btn" aria-label="More info" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="8"></circle><path d="M12 11.25v5"></path><path d="M12 8h.01"></path></svg></button></span></label></div></fieldset><p class="tool-note muted">Files convert one at a time; each input and output sits in browser memory, so single files over ~2 GB may fail. “Download all” bundles every converted file into one .zip.</p></div><article class="doc tool-guide"><header class="tool-guide__head"><h2 class="tool-guide__title">About this tool</h2></header><section class="doc__section"><h2>What a .ts file is</h2><p>A <code>.ts</code> file is an MPEG transport stream: the container broadcasters and tuners write because it is built to survive a lossy signal. Instead of an index at the head of the file, as MP4 has, it is a continuous run of small fixed-size packets, which lets a receiver tune in mid-stream and start playing. That design is why a recording plays fine in VLC and awkwardly — or not at all — in QuickTime, in most phones, and in editors that expect a seekable file. Nothing is wrong with the video inside; the wrapper is the whole problem, and moving it into MP4 is what this tool does.</p><p>You will usually meet one of three things, and they are the same conversion here: a capture from a network tuner such as an HDHomeRun, a recording pulled off a cable box or DVR, or an over-the-air capture. Files named <code>.mts</code> or<!-- --> <code>.m2ts</code> are the same family under different initials — AVCHD camcorders and Blu-ray use those extensions, and this tool takes all three.</p></section><section class="doc__section"><h2>Stream copy or re-encode?</h2><p><strong>Auto</strong> is the right answer almost every time: it copies the video and audio across untouched where they are already playable in an MP4, and re-encodes only the parts that are not. A copy is lossless and limited by your disk rather than your processor, so a two-hour recording finishes in seconds.</p><ul><li><strong>Stream copy</strong> — force it when you know the recording is already H.264 or HEVC video with AAC audio and you want the fastest, pixel-identical result. If the video cannot legally sit in an MP4 it will fail outright rather than quietly re-encode behind your back, which is the point of choosing it.</li><li><strong>Re-encode</strong> — H.264 video and AAC audio, playable anywhere, but slow: roughly real time or worse on a laptop, and it discards the original quality in favour of compatibility. Reach for it when Auto produced a file that still will not play, or when you want the safest possible copy of an odd recording.</li></ul></section><section class="doc__section"><h2>The 50 MB floor, and DVR .star files</h2><ul><li>Any <code>.ts</code> under <!-- -->50<!-- --> MB is skipped when you add it. Small files are almost always stubs, ad-break fragments or index scraps rather than real recordings, and converting them is noise. If a genuine clip is under the floor, the <a href="/contact" data-discover="true">contact page</a> explains what to send.</li><li>A <code>.star</code> file sitting next to a recording — <code>hdz_0000.ts.star</code> <!-- -->and the like — is a DVR sidecar naming the programme. Drop it in with the video and it is never converted itself; it just flags the matching row and rides along into the output name.</li><li>A same-named <code>.jpg</code> becomes that row’s thumbnail, since DVRs usually ship one beside each recording.</li></ul></section><section class="doc__section"><h2>If something goes wrong</h2><ul><li><strong>The MP4 plays but has no sound.</strong> The audio was probably AC-3, which MP4 players commonly refuse. Re-run that file with <strong>Re-encode</strong>.</li><li><strong>The picture shows comb-like lines on movement.</strong> The source is interlaced. <strong>Re-encode</strong> de-interlaces; a stream copy cannot.</li><li><strong>“Stream copy failed.”</strong> Expected — the video inside the stream is not MP4-legal. Auto or Re-encode handles it.</li><li><strong>A very large file stops part-way.</strong> The whole input and output sit in the page’s memory, so a single recording over roughly 2 GB may run out of room. Split it first, or convert on a machine with more free memory.</li><li><strong>Dropping a file does nothing.</strong> Check the extension is<!-- --> <code>.ts</code>, <code>.mts</code> or <code>.m2ts</code>, and that the file is over<!-- --> <!-- -->50<!-- --> MB.</li></ul><p class="small-note">Still stuck? The <a href="/contact" data-discover="true">contact page</a> lists exactly what to include so it can be worked out without sending the file.</p></section><section class="doc__section"><h2>Privacy, in one line</h2><p>The conversion runs in this tab with FFmpeg compiled to WebAssembly, so the recording never leaves your machine — there is no upload step, and nothing is kept after you close the tab. The <a href="/privacy" data-discover="true">privacy page</a> is the long version.</p></section></article><nav class="related-tools" aria-labelledby="related-tools-title"><h2 class="related-tools__title" id="related-tools-title">Other browser tools</h2><ul class="related-tools__list"><li class="related-tools__item"><a class="related-tools__link" href="/mov-to-mp4" data-discover="true"><span class="related-tools__name">MOV to MP4 converter</span><span class="related-tools__line">Batch convert QuickTime .mov files to MP4</span></a></li><li class="related-tools__item"><a class="related-tools__link" href="/audio-extract" data-discover="true"><span class="related-tools__name">Extract audio from a video</span><span class="related-tools__line">Extract a video’s audio track as WAV or MP3</span></a></li></ul><p class="related-tools__note">Same setup on every page: the work happens in this tab with FFmpeg compiled to WebAssembly, so nothing you open is uploaded.</p></nav></main><footer class="site-foot"><nav class="site-foot__links" aria-label="Tools"><a class="site-foot__link" href="/ts-to-mp4" data-discover="true">TS to MP4 converter</a><a class="site-foot__link" href="/mov-to-mp4" data-discover="true">MOV to MP4 converter</a><a class="site-foot__link" href="/audio-extract" data-discover="true">Extract audio from a video</a></nav><nav class="site-foot__links" aria-label="Site information"><a class="site-foot__link" href="/about" data-discover="true">About</a><a class="site-foot__link" href="/faq" data-discover="true">FAQ</a><a class="site-foot__link" href="/privacy" data-discover="true">Privacy</a><a class="site-foot__link" href="/terms" data-discover="true">Terms</a><a class="site-foot__link" href="/contact" data-discover="true">Contact</a><a class="site-foot__link" href="mailto:jacoblbagent@gmail.com">jacoblbagent@gmail.com</a></nav></footer></div></div>
+  </body>
+</html>

@@ -1,14 +1,11 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import ToolCard from '../../components/ToolCard/ToolCard'
 import { useFlag } from '../../config/flags'
 import { useTools, type Tool } from '../../data/tools'
 import './Home.css'
 
-const ALL = 'All'
-
-function matches(tool: Tool, query: string, tag: string): boolean {
-  if (tag !== ALL && !tool.tags.includes(tag)) return false
+function matches(tool: Tool, query: string): boolean {
   const needle = query.trim().toLowerCase()
   if (!needle) return true
   return [tool.name, tool.tagline, tool.description, ...tool.tags]
@@ -21,16 +18,7 @@ export default function Home() {
   const search = useFlag('tool-search')
   const available = useTools()
   const [query, setQuery] = useState('')
-  const [tag, setTag] = useState(ALL)
-  const shown = available.filter((tool) => matches(tool, query, tag))
-
-  // Every tag a live tool carries, once each — the same values the cards print,
-  // so the filter row cannot drift from the registry.
-  const tags = useMemo(() => {
-    const seen = new Set<string>()
-    for (const tool of available) for (const value of tool.tags) seen.add(value)
-    return [ALL, ...[...seen].sort()]
-  }, [available])
+  const shown = available.filter((tool) => matches(tool, query))
 
   return (
     <div className="home">
@@ -46,26 +34,8 @@ export default function Home() {
       </section>
 
       <section className="home__tools">
-        <div className="home__controls">
-          <div className="home__tags" role="group" aria-label="Filter tools by tag">
-            {tags.map((value) => (
-              <button
-                key={value}
-                type="button"
-                className={`home__tag${tag === value ? ' is-active' : ''}`}
-                aria-pressed={tag === value}
-                onClick={() => setTag(value)}
-              >
-                {value}
-                <span className="home__tag-count">
-                  {value === ALL
-                    ? available.length
-                    : available.filter((tool) => tool.tags.includes(value)).length}
-                </span>
-              </button>
-            ))}
-          </div>
-          {search && (
+        {search && (
+          <div className="home__controls">
             <input
               type="search"
               className="home__search"
@@ -74,17 +44,15 @@ export default function Home() {
               placeholder="Filter tools…"
               aria-label="Filter tools"
             />
-          )}
-        </div>
+          </div>
+        )}
         <div className="tool-grid">
           {shown.map((tool) => (
             <ToolCard key={tool.id} tool={tool} />
           ))}
         </div>
         {shown.length === 0 && (
-          <p className="small-note home__note">
-            {query.trim() ? `Nothing matches “${query.trim()}”.` : `Nothing tagged ${tag} yet.`}
-          </p>
+          <p className="small-note home__note">Nothing matches “{query.trim()}”.</p>
         )}
       </section>
 

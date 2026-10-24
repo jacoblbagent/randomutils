@@ -23,42 +23,8 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: var(--s3);
-}
-
-.home__tags { display: flex; flex-wrap: wrap; gap: 6px; }
-
-/* Tag filter — the same chip shape the cards use, made interactive. */
-.home__tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border: 1px solid transparent;
-  border-radius: var(--r-sm);
-  background: var(--chip-bg);
-  color: var(--chip-ink);
-  font: inherit;
-  font-size: var(--t-xs);
-  font-weight: 600;
-  line-height: 1.4;
-  cursor: pointer;
-}
-
-.home__tag:hover { border-color: var(--border-strong); }
-.home__tag:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
-
-.home__tag.is-active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--on-accent);
-}
-
-.home__tag-count {
-  font-weight: 500;
-  opacity: 0.65;
-  font-variant-numeric: tabular-nums;
 }
 
 .home__search {

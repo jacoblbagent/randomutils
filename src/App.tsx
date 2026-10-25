@@ -15,6 +15,7 @@ import Terms from './pages/Terms/Terms'
 import AudioExtract from './tools/audio-extract/AudioExtract'
 import MovToMp4 from './tools/mov-to-mp4/MovToMp4'
 import TsToMp4 from './tools/ts-to-mp4/TsToMp4'
+import CookieBanner from './components/CookieBanner/CookieBanner'
 
 // Production is served at the apex of randomutils.com; dev runs at the root too.
 const basename = import.meta.env.BASE_URL.replace(/\/$/, '')
@@ -37,6 +38,7 @@ export function AppShell() {
     <>
       <ScrollToTop />
       <PageMetaSync />
+      <CookieBanner />
       <div className="app">
         <SiteHeader />
         <main className="page">

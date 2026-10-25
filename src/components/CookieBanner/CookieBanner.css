@@ -1,0 +1,68 @@
+/* Cookie consent — a floating notice card, bottom-left of the content column.
+   Tokens only; commits to a hairline border, no shadow (never both). */
+
+.cookie-banner {
+  position: fixed;
+  bottom: var(--s4);
+  left: max(var(--s4), calc(50% - 500px + var(--s4)));
+  z-index: 45; /* under the flags panel (50) so its toggle stays clickable */
+  width: min(360px, calc(100vw - var(--s8)));
+  display: grid;
+  gap: var(--s3);
+  padding: var(--s4) var(--s5) var(--s5);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  animation: cookie-banner-in 0.18s cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+@keyframes cookie-banner-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.cookie-banner__title {
+  margin: 0;
+  font-size: var(--t-base);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.cookie-banner__body {
+  margin: 0;
+  font-size: var(--t-sm);
+  line-height: 1.55;
+  color: var(--text-2);
+}
+
+.cookie-banner__policy {
+  display: inline-block;
+  margin-top: var(--s2);
+  font-size: var(--t-sm);
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+  touch-action: manipulation;
+}
+
+.cookie-banner__policy:hover { opacity: 0.8; }
+
+.cookie-banner__actions {
+  display: flex;
+  gap: var(--s2);
+  margin-top: var(--s1);
+}
+
+.cookie-banner__actions > * { flex: 1; }
+
+@media (max-width: 640px) {
+  .cookie-banner {
+    left: var(--s3);
+    right: var(--s3);
+    bottom: var(--s3);
+    width: auto;
+    padding: var(--s4);
+  }
+}

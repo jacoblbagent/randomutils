@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import './CookieBanner.css'
 
 type CookieConsent = {
   analytics: boolean
@@ -37,6 +39,12 @@ function writeConsentToStorage(consent: CookieConsent) {
   }
 }
 
+/**
+ * Consent notice for the ads that fund the site. A floating card in the content
+ * column, not a full-width bar — it never covers the tool a visitor came for.
+ * Stays out of the way once answered: either choice is remembered under
+ * `randomutils.cookie.consent` and the card is never shown again.
+ */
 export default function CookieBanner() {
   const [consent, setConsent] = useState<CookieConsent>(readConsentFromStorage)
 
@@ -44,70 +52,34 @@ export default function CookieBanner() {
     writeConsentToStorage(consent)
   }, [consent])
 
-  // Hide banner if dismissed or consent given
   if (consent.dismissed || consent.analytics) {
     return null
   }
 
   return (
-    <div
-      className="cookie-banner"
-      aria-live="polite"
-      role="alert"
-      style={{
-        position: 'fixed',
-        bottom: '0',
-        left: '0',
-        right: '0',
-        background: '#f8f9fa',
-        borderTop: '1px solid #dee2e6',
-        padding: '12px',
-        fontSize: '14px',
-        zIndex: '9999'
-      }}
-    >
-      <p
-        style={{
-          margin: '0',
-          paddingRight: '60px'
-        }}
-      >
-        This site is supported by Google AdSense, which may place cookies.
-        <a
-          href="/privacy"
-          style={{
-            color: 'inherit',
-            textDecoration: 'underline'
-          }}
-        >
-          Learn more
-        </a>.
+    <div className="cookie-banner" role="dialog" aria-label="Cookie consent">
+      <p className="cookie-banner__title">Cookies on RandomUtils</p>
+      <p className="cookie-banner__body">
+        Ads served by Google AdSense may set cookies to show and measure them.
+        Every tool runs in your browser — your files are never uploaded.{' '}
+        <Link className="cookie-banner__policy" to="/privacy">
+          Cookie policy
+        </Link>
       </p>
-      <div
-        style={{
-          position: 'absolute',
-          right: '12px',
-          top: '50%',
-          transform: 'translateY(-50%)',
-          display: 'flex',
-          gap: '8px'
-        }}
-      >
+      <div className="cookie-banner__actions">
         <button
-          onClick={() =>
-            setConsent(prev => ({ ...prev, analytics: true }))
-          }
-          style={{ padding: '4px 8px', fontSize: '12px' }}
-        >
-          Accept
-        </button>
-        <button
-          onClick={() =>
-            setConsent(prev => ({ ...prev, dismissed: true }))
-          }
-          style={{ padding: '4px 8px', fontSize: '12px' }}
+          type="button"
+          className="secondary small"
+          onClick={() => setConsent(prev => ({ ...prev, dismissed: true }))}
         >
           Reject
+        </button>
+        <button
+          type="button"
+          className="primary small"
+          onClick={() => setConsent(prev => ({ ...prev, analytics: true }))}
+        >
+          Accept
         </button>
       </div>
     </div>

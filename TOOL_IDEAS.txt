@@ -79,6 +79,15 @@ VIDEO
   vertical->horizontal crop
   video watermarker
   video concat with re-encode
+  MP4 faststart (moov atom) fixer
+  screen & webcam recorder
+  aspect-ratio letterboxer/pillarboxer
+  keyframe (I-frame) inspector & extractor
+  video chapter marker editor
+  VFR->CFR (variable to constant frame rate) fixer
+  subtitle format converter (SRT/VTT/ASS/SBV)
+  LRC synced lyrics maker
+  video contact sheet generator
 
 
 AUDIO
@@ -105,6 +114,15 @@ AUDIO
   note->frequency
   MP3 tag/ID3 editor
   audio metadata reader
+  audio bitcrusher & lo-fi processor
+  impulse response (IR) convolution reverb previewer
+  binaural beats generator
+  MIDI file player & visualizer
+  MIDI->WAV/MP3 SoundFont renderer
+  multi-track stem mixer
+  audio phase & stereo correlation meter
+  DTMF dial-tone generator & decoder
+  audio A/B blind listening comparator
 
 
 IMAGES
@@ -153,6 +171,26 @@ IMAGES
   duplicate image finder
   image histogram/levels
   profile picture rounder
+  LUT (.cube) previewer & applier
+  halftone & dither studio
+  normal/height/bump map generator
+  seamless tileable texture maker
+  passport & ID photo print sheet layout
+  anaglyph 3D (red/cyan) maker
+  image steganography encoder/decoder
+  panoramic 360 equirectangular viewer
+  RGB/Alpha color-channel splitter & combiner
+  photo contact sheet PDF builder
+  local receipt/invoice redactor
+
+
+3D / CAD / SHADERS
+  3D model viewer & converter (STL/OBJ/GLTF/GLB/PLY)
+  STL volume, weight & filament cost calculator
+  UV checker texture generator
+  font->3D mesh (.stl/.obj) generator
+  SVG->3D extruded STL converter
+  WebGL GLSL fragment shader sandbox
 
 
 PDF
@@ -182,6 +220,11 @@ PDF
   N-up imposition
   OCR PDF                            [on-device tesseract]
   PDF page extractor by keyword
+  booklet saddle-stitch imposition
+  PDF crop & margin trimmer
+  PDF grayscale / ink-saver converter
+  PDF flatten annotations & forms
+  multi-page poster tiler (rasterbator style)
 
 
 DOCS / OFFICE
@@ -196,6 +239,7 @@ DOCS / OFFICE
   presentation->PDF
   .ics viewer
   vCard viewer
+  QIF/OFX bank statement->CSV converter
 
 
 TEXT
@@ -234,6 +278,7 @@ TEXT
   text->speech
   speech->text
   grammar/style check
+  Unicode byte-inspector & grapheme splitter
 
 
 CODE / DEV
@@ -298,6 +343,17 @@ CODE / DEV
   barcode reader
   cron generator/explainer
   cron next-run parser
+  CIDR / IPv4 / IPv6 subnet calculator & splitter
+  chmod permissions calculator
+  Protobuf raw wire-format decoder
+  ASN.1 / DER structure visualizer
+  IEEE 754 floating-point bit visualizer
+
+
+HARDWARE / DEVICE TESTERS
+  keyboard NKRO / rollover & chatter tester
+  gamepad deadzone, drift & circularity tester
+  monitor dead-pixel, uniformity & refresh-rate tester
 
 
 WEB / CSS / DESIGN
@@ -361,6 +417,14 @@ DATA / FILES
   mock JSON/API generator
   sample CSV generator
   test credit card numbers
+  SQLite (.db/.sqlite) browser viewer & query runner
+  Parquet / Arrow / Feather file inspector
+  HAR (HTTP Archive) waterfall analyzer
+  PCAP / PCAPNG packet header viewer
+  WebAssembly (.wasm) to WAT disassembler
+  FIT / GPX / TCX GPS track viewer & privacy trimmer
+  APK / IPA package manifest inspector
+  Nginx/Apache/JSON log timeline analyzer
 
 
 SECURITY / CRYPTO
@@ -382,6 +446,7 @@ SECURITY / CRYPTO
   IBAN validator
   ISBN validator
   secret-sharing splitter
+  Shamir's Secret Sharing printable QR kit
 
 
 NUMBERS / MATH

@@ -29,7 +29,7 @@ const ORG_ID = `${HOME}#organization`
 const SITE_ID = `${HOME}#website`
 
 /** Home-page description, reused for the WebSite node. */
-const SITE_DESCRIPTION = 'Small, single-purpose browser tools that convert video and audio locally in your browser — nothing is uploaded.'
+const SITE_DESCRIPTION = 'Small, single-purpose browser tools that run entirely in your browser — video and audio conversion, and password generation. Nothing is uploaded.'
 
 /** The publisher of every page — referenced by @id, defined once per graph. */
 function organization(): Json {
@@ -112,10 +112,12 @@ export function structuredDataFor(pathname: string): Json | null {
       alternateName: tool.name,
       url,
       description: tool.seo.description,
-      applicationCategory: 'MultimediaApplication',
-      applicationSubCategory: 'File converter',
+      // Per-tool, because a password generator is neither multimedia nor a file
+      // converter, and the default was doing the claiming for it.
+      applicationCategory: tool.appCategory ?? 'MultimediaApplication',
+      applicationSubCategory: tool.subCategory ?? 'File converter',
       operatingSystem: 'Any — runs in the browser',
-      browserRequirements: 'Requires JavaScript and WebAssembly',
+      browserRequirements: tool.browserRequirements ?? 'Requires JavaScript and WebAssembly',
       isAccessibleForFree: true,
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
       featureList: tool.seo.features,

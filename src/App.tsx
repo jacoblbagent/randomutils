@@ -15,6 +15,7 @@ import Terms from './pages/Terms/Terms'
 import AudioExtract from './tools/audio-extract/AudioExtract'
 import MovToMp4 from './tools/mov-to-mp4/MovToMp4'
 import TsToMp4 from './tools/ts-to-mp4/TsToMp4'
+import PasswordGenerator from './tools/password-generator/PasswordGenerator'
 import CookieBanner from './components/CookieBanner/CookieBanner'
 
 // Production is served at the apex of randomutils.com; dev runs at the root too.
@@ -52,6 +53,9 @@ export function AppShell() {
             {flags['ts-to-mp4'] && <Route path="/ts-to-mp4" element={<TsToMp4 />} />}
             {flags['mov-to-mp4'] && <Route path="/mov-to-mp4" element={<MovToMp4 />} />}
             {flags['audio-extract'] && <Route path="/audio-extract" element={<AudioExtract />} />}
+            {flags['password-generator'] && (
+              <Route path="/password-generator" element={<PasswordGenerator />} />
+            )}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

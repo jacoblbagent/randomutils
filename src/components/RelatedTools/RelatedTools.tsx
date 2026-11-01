@@ -33,8 +33,8 @@ export default function RelatedTools({ currentId }: { currentId: string }) {
         ))}
       </ul>
       <p className="related-tools__note">
-        Same setup on every page: the work happens in this tab with FFmpeg compiled to
-        WebAssembly, so nothing you open is uploaded.
+        Same setup on every page: the work happens in this tab, on your own machine — nothing you
+        open or generate is uploaded.
       </p>
     </nav>
   )

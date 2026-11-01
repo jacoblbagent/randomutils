@@ -27,8 +27,9 @@ export default function Privacy() {
       <p className="doc__lede">
         {SITE.name} is a set of small tools that run inside your browser. The tools are the whole product:
         every file you open in one of them is processed on your own machine by FFmpeg compiled to
-        WebAssembly. It is never uploaded, transmitted or stored anywhere — there is no account, no
-        server-side processing, and no copy of your file leaves your device.
+        WebAssembly, and every password is drawn from your browser's own random source. Neither is
+        uploaded, transmitted or stored anywhere — there is no account, no server-side processing,
+        and no copy of your file leaves your device.
       </p>
 
       <section className="doc__section">
@@ -37,6 +38,11 @@ export default function Privacy() {
           <li>
             Files you drop into a converter are read locally to convert them. The results are produced in
             the page and handed straight back to you as downloads.
+          </li>
+          <li>
+            Passwords generated here are made in the page by your browser's cryptographic random
+            source. They are shown to you, and put on your clipboard only if you press Copy. The
+            site keeps no list of them, and they are never written to storage.
           </li>
           <li>
             The queue, the conversion and the results live only in the page's memory. Closing or reloading

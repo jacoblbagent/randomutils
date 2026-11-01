@@ -25,19 +25,22 @@ export default function About() {
       </header>
 
       <p className="doc__lede">
-        {SITE.name} is a small set of single-purpose tools for everyday media annoyance:
-        converting a DVR recording or a QuickTime clip into an MP4 that plays anywhere, and
-        pulling the audio track out of a video. Each one does that one job and nothing else.
+        {SITE.name} is a small set of single-purpose tools for everyday chores: converting a DVR
+        recording or a QuickTime clip into an MP4 that plays anywhere, pulling the audio track out
+        of a video, and generating a password that is genuinely random. Each one does that one job
+        and nothing else.
       </p>
 
       <section className="doc__section">
         <h2>What makes it different</h2>
         <p>
-          The tools run entirely in your browser, on FFmpeg compiled to WebAssembly. That is a
-          technical choice with a plain consequence: the file you drop in is read and rewritten
-          on your own machine, and there is no upload step because there is no server to upload
-          to. There are no accounts, no sign-up, no queue on someone else's disk, and no copy of
-          your file anywhere you cannot see. Close the tab and it is gone.
+          The tools run entirely in your browser — the video converters on FFmpeg compiled to
+          WebAssembly, the password generator on the browser's own cryptographic random source.
+          That is a technical choice with a plain consequence: what you drop in, or ask for, is
+          handled on your own machine, and there is no upload step because there is no server to
+          upload to. There are no accounts, no sign-up, no queue on someone else's disk, and no
+          copy of your file — or of a password you generated — anywhere you cannot see. Close the
+          tab and it is gone.
         </p>
         <p>
           This matters most for exactly the files people convert here. A DVR recording may carry

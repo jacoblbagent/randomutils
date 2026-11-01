@@ -315,7 +315,7 @@ CODE / DEV
   UUID (v1/v4/v7)
   ULID
   NanoID
-  password generator
+  password generator                 [shipped]
   passphrase generator (diceware)
   random string generator
   random number generator
@@ -599,5 +599,5 @@ Easy-to-test, high-demand shortlist (all pure client-side):
   QR code generator
   image compressor / converter
   JSON formatter
-  password generator
+  password generator                 [shipped]
   word & character counter

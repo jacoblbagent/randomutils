@@ -33,7 +33,7 @@ const STATIC_PAGES: PageMeta[] = [
     path: '/',
     title: `${SITE.name} — browser tools that never upload your files`,
     description:
-      'Single-purpose browser tools: convert TS and MOV video to MP4, or pull the audio out of a video. Everything runs locally with FFmpeg — nothing is uploaded.',
+      'Browser tools that never upload your files: convert TS and MOV video to MP4, pull a video’s audio, or generate a strong password — all locally.',
     heading: SITE.name,
     inSitemap: true,
   },

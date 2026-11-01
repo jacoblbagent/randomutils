@@ -51,6 +51,19 @@ export interface Tool {
    * the card, the footer count and the route all go away (see config/flags.ts).
    */
   flag?: FlagId
+  /**
+   * WebApplication.applicationSubCategory in the JSON-LD. Defaults to a file
+   * converter, which is what every video tool is; a tool that is not one says so
+   * here rather than inheriting a claim that does not describe it.
+   */
+  subCategory?: string
+  /** WebApplication.browserRequirements. Defaults to the WebAssembly line. */
+  browserRequirements?: string
+  /**
+   * WebApplication.applicationCategory. Defaults to MultimediaApplication, which
+   * is right for a format converter and wrong for anything that is not media.
+   */
+  appCategory?: string
 }
 
 const NEVER_UPLOADS = 'No upload — the files never leave your machine'
@@ -119,6 +132,34 @@ export const tools: Tool[] = [
         'Takes MP4, MOV, MKV, AVI, WebM, FLV, TS and more',
         'Several videos at once, zipped into one download',
         NEVER_UPLOADS,
+      ],
+    },
+  },
+  {
+    id: 'password-generator',
+    name: 'Password generator',
+    tagline: 'Strong random passwords, made in this tab',
+    description:
+      'Pick a length and the characters to allow, and get a password drawn from your browser’s own cryptographic random source — with the entropy and the estimated offline crack time printed beside it. Nothing is generated on a server, so there is nothing for one to log.',
+    path: '/password-generator',
+    tags: ['Security', 'Passwords', 'Offline'],
+    flag: 'password-generator',
+    subCategory: 'Password generator',
+    appCategory: 'SecurityApplication',
+    browserRequirements: 'Requires JavaScript (Web Crypto)',
+    seo: {
+      title: `Password Generator — Strong Random Passwords, No Upload — RandomUtils`,
+      description:
+        'Generate strong random passwords in your browser: choose the length and character sets, see the entropy and crack time, then copy. Nothing is uploaded.',
+      anchor: 'Password generator',
+      features: [
+        'Cryptographically random passwords from the browser’s Web Crypto API',
+        'Choose the length and character sets, and drop look-alike characters',
+        'Entropy score and estimated offline crack time as the settings change',
+        'Up to 25 passwords at once, each with its own copy button',
+        // Deliberately not NEVER_UPLOADS: that line says "the files never leave your
+        // machine", and there is no file here.
+        'No upload — nothing you generate leaves your machine',
       ],
     },
   },

@@ -103,6 +103,24 @@ export function IconArrowLeft() {
   )
 }
 
+export function IconCopy() {
+  return (
+    <svg {...base}>
+      <rect x="9" y="9" width="10.5" height="10.5" rx="2" />
+      <path d="M14.5 6.75V6A1.5 1.5 0 0 0 13 4.5H6A1.5 1.5 0 0 0 4.5 6v7A1.5 1.5 0 0 0 6 14.5h.75" />
+    </svg>
+  )
+}
+
+export function IconRefresh() {
+  return (
+    <svg {...base}>
+      <path d="M20 12a8 8 0 1 1-2.4-5.7" />
+      <path d="M20 4.5V10h-5.5" />
+    </svg>
+  )
+}
+
 export function IconExternal() {
   return (
     <svg {...base}>

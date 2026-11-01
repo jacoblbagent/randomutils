@@ -14,8 +14,11 @@ you cannot see.
 | **TS → MP4** | `/ts-to-mp4` | Batch-convert MPEG transport stream (`.ts`, `.mts`, `.m2ts`) DVR/OTA recordings into MP4 that macOS and every browser player will open. Files under 50 MB are skipped on add. |
 | **MOV → MP4** | `/mov-to-mp4` | Batch-convert QuickTime (`.mov`, `.qt`) video. H.264/HEVC/AAC/MP3 are copied across untouched; ProRes, DV, Motion JPEG and PCM/ALAC audio are re-encoded. No size floor. |
 | **Video → Audio** | `/audio-extract` | Pull a video's audio track out on its own as **WAV** (lossless) or **MP3**. |
+| **Password generator** | `/password-generator` | Draw cryptographically random passwords from the browser's own CSPRNG, with the entropy and estimated offline crack time shown beside them. Not a media tool: it needs no WebAssembly and no FFmpeg. |
 
-All three run on FFmpeg compiled to WebAssembly, bundled with the site — no CDN fetch.
+The three video tools run on FFmpeg compiled to WebAssembly, bundled with the site — no CDN
+fetch. The password generator is plain JavaScript on Web Crypto, so it carries none of that
+32 MB payload.
 
 ## Requirements and quick start
 
@@ -59,6 +62,10 @@ Five files decide what exists. A new tool touches three of them; a new prose pag
    that ships it, and a `seo` block (`title`, `description`, `anchor`, `features`) holding what a
    crawler sees and what other pages say when they link here. The home grid, its tag filter row,
    the footer, the related-tools block and `pages.ts` all read it.
+   A tool that is not a file converter also sets `subCategory`, `appCategory` and
+   `browserRequirements` — the JSON-LD blocks default to the video-converter answers
+   (`File converter` / `MultimediaApplication` / `Requires JavaScript and WebAssembly`), and the
+   password generator is none of those three.
 2. `src/data/pages.ts` — the **page registry**: every URL the site answers with a real,
    indexable page, with its `<title>`, meta description and `inSitemap`. Tool pages are derived
    from `tools.ts` (their title and description come from `tool.seo`), so a tool needs no entry
@@ -309,7 +316,7 @@ chips, and the `.doc` prose frame used by About/Faq/Privacy/Terms/Contact and ev
 ## Local checks before shipping
 
 ```bash
-npm run build     # prerender lists every route and sitemap.xml reports "9 URLs (all routes)"
+npm run build     # prerender lists every route and sitemap.xml reports "10 URLs (all routes)"
 npm run lint      # oxlint — only the pre-existing ConvertQueue/AudioExtract warnings
 npm run preview -- --port 4199
 curl -s -o /dev/null -w '%{http_code}\n' http://localhost:4199/privacy/   # trailing slash matters

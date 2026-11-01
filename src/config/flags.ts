@@ -26,7 +26,12 @@ import { useSyncExternalStore } from 'react'
    Runtime overrides can only hide a feature, never un-ship it.
    ========================================================================= */
 
-export type FlagId = 'tool-search' | 'ts-to-mp4' | 'mov-to-mp4' | 'audio-extract'
+export type FlagId =
+  | 'tool-search'
+  | 'ts-to-mp4'
+  | 'mov-to-mp4'
+  | 'audio-extract'
+  | 'password-generator'
 
 export interface FlagSpec {
   /** Committed default. Keep `false` until the change is ready for everyone. */
@@ -57,6 +62,12 @@ export const FLAGS: Record<FlagId, FlagSpec> = {
     default: true,
     label: 'Video → Audio',
     description: 'Grid card, footer count and the /audio-extract route for the WAV/MP3 extractor.',
+  },
+  'password-generator': {
+    default: true,
+    label: 'Password generator',
+    description:
+      'Grid card, footer count and the /password-generator route for the password generator.',
   },
 }
 

@@ -1,5 +1,5 @@
 /**
- * Site-wide constants — the things the pages, the head meta and the generated
+ * Site-wide constants, the things the pages, the head meta and the generated
  * sitemap.xml all need to agree on. Change a value here, not in five places.
  *
  * `contactEmail` is the public address on /contact: ad review, takedown and

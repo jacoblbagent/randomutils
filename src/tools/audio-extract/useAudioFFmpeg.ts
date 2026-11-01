@@ -1,14 +1,14 @@
 import { useCallback, useRef, useState } from 'react'
 import { FFmpeg } from '@ffmpeg/ffmpeg'
 import { fetchFile } from '@ffmpeg/util'
-// Bundled locally by Vite — no CDN, so the page works offline once loaded.
+// Bundled locally by Vite, no CDN, so the page works offline once loaded.
 import coreURL from '@ffmpeg/core?url'
 import wasmURL from '@ffmpeg/core/wasm?url'
 
 /**
  * The audio extractor's engine. One ffmpeg.wasm instance, loaded lazily, jobs strictly
  * sequential: pull the first audio stream out of a video (or audio) file and write it as
- * WAV or MP3. Nothing is uploaded — the file goes into the wasm filesystem and comes back
+ * WAV or MP3. Nothing is uploaded, the file goes into the wasm filesystem and comes back
  * as a Blob.
  */
 
@@ -20,7 +20,7 @@ export interface FormatSpec {
   mime: string
   /** Segmented-control label. */
   label: string
-  /** One line under the label — what you get and why you'd pick it. */
+  /** One line under the label, what you get and why you'd pick it. */
   hint: string
   /** Encoder arguments; input/output and `-vn` are added by the converter. */
   args: string[]
@@ -31,14 +31,14 @@ export const FORMATS: Record<AudioFormat, FormatSpec> = {
     ext: 'wav',
     mime: 'audio/wav',
     label: 'WAV',
-    hint: 'Uncompressed 16-bit PCM at the source sample rate. Lossless and accepted by every editor — but big files.',
+    hint: 'Uncompressed 16-bit PCM at the source sample rate. Lossless and accepted by every editor, but big files.',
     args: ['-c:a', 'pcm_s16le'],
   },
   mp3: {
     ext: 'mp3',
     mime: 'audio/mpeg',
     label: 'MP3',
-    hint: '192 kbps MP3. A small file that plays on anything — the choice when size or compatibility matters.',
+    hint: '192 kbps MP3. A small file that plays on anything, the choice when size or compatibility matters.',
     args: ['-c:a', 'libmp3lame', '-b:a', '192k'],
   },
 }
@@ -68,8 +68,8 @@ export class CancelledError extends Error {
 
 // ffmpeg.wasm's linear memory only ever grows inside one engine instance, so a long batch of
 // large videos can eventually trap with "memory access out of bounds". Bouncing the worker
-// (terminate, reload on next use) resets that ceiling — cheap, because the core is in the
-// browser cache — and a trapped instance is unusable anyway.
+// (terminate, reload on next use) resets that ceiling, cheap, because the core is in the
+// browser cache, and a trapped instance is unusable anyway.
 const RECYCLE_EVERY_FILES = 4
 const RECYCLE_EVERY_BYTES = 1_000_000_000 // ~1 GB of source video since the last recycle
 const BIG_FILE_BYTES = 500_000_000 // recycle right after anything this big
@@ -199,7 +199,7 @@ export function useAudioFFmpeg() {
         return { blob, elapsed: (performance.now() - t0) / 1000, duration }
       } catch (err) {
         if (cancelledRef.current) throw new CancelledError()
-        // A wasm trap leaves the instance unreliable for every file after it — recycle now so
+        // A wasm trap leaves the instance unreliable for every file after it, recycle now so
         // the failure can't cascade onto the next job.
         if (isFatalWasmError(err)) recycle()
         throw err

@@ -14,9 +14,9 @@ import './ConvertQueue.css'
 
 /**
  * The whole converter page, format-agnostic: drop zone, queue, per-row state, selection,
- * bulk download and the video viewer. Everything specific to a format — which extensions it
+ * bulk download and the video viewer. Everything specific to a format, which extensions it
  * takes, whether a `.star` sidecar flags a recording, whether copied AAC needs the ADTS fix,
- * the copy that goes under the title — comes from the `spec` the tool passes in.
+ * the copy that goes under the title, comes from the `spec` the tool passes in.
  */
 export default function ConvertQueue({ spec }: { spec: VideoToolSpec }) {
   const { convert, cancel } = useFFmpeg({ adtsAudio: spec.adtsAudio, posters: spec.posters })
@@ -158,7 +158,7 @@ export default function ConvertQueue({ spec }: { spec: VideoToolSpec }) {
         return next
       })
     }
-    // Remember sidecar flags, so one added before or after its source still applies — then flag
+    // Remember sidecar flags, so one added before or after its source still applies, then flag
     // the matching rows and append the new ones. Keep the whole list sorted ascending by name;
     // the queue converts in this order too.
     if (sidecars.length && spec.sidecar) {
@@ -286,7 +286,7 @@ export default function ConvertQueue({ spec }: { spec: VideoToolSpec }) {
     patch(id, { customName: value.trim() ? value : null })
 
   // Plain click (on a checkbox) or cmd/ctrl-click (on a row): toggle just this one, and it
-  // becomes the anchor a following shift-click ranges from — same as Finder/Gmail/etc.
+  // becomes the anchor a following shift-click ranges from, same as Finder/Gmail/etc.
   const toggleSelect = (id: number) => {
     setSelectedIds((prev) => {
       const next = new Set(prev)
@@ -320,7 +320,7 @@ export default function ConvertQueue({ spec }: { spec: VideoToolSpec }) {
   }
 
   // A real folder, unlike the old approach of putting "/" in a `download` attribute (Chrome just
-  // sanitizes that to "_" instead of creating one) — a .zip becomes a real folder once extracted.
+  // sanitizes that to "_" instead of creating one), a .zip becomes a real folder once extracted.
   const zipAndDownload = async (list: Job[]) => {
     if (!list.length) return
     setZipping(true)
@@ -562,7 +562,7 @@ export default function ConvertQueue({ spec }: { spec: VideoToolSpec }) {
                   onRemove={() => remove(job.id)}
                   onRetry={() => retry(job.id)}
                   onRename={(value) => rename(job.id, value)}
-                  // Only used when isViewing — the viewer renders nested inside this row so it
+                  // Only used when isViewing, the viewer renders nested inside this row so it
                   // visually reads as one card instead of two bordered pieces with a gap.
                   viewerJobs={doneJobsForViewer}
                   onChangeViewing={setViewingId}

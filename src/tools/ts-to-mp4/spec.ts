@@ -8,7 +8,7 @@ import { baseKey } from '../video/utils'
 
 const TS_RE = /\.(ts|mts|m2ts)$/i
 
-// Some recordings carry a "star" sidecar from the DVR — "hdz_0000.ts.star.txt" (or just
+// Some recordings carry a "star" sidecar from the DVR, "hdz_0000.ts.star.txt" (or just
 // "hdz_0000.ts.star") sitting next to "hdz_0000.ts". It's consumed as a flag on the matching
 // .ts (never queued itself), and the flag rides along into the row name and the .mp4 filename.
 const STAR_RE = /\.star(\.[^.]+)?$/i
@@ -19,7 +19,7 @@ export const MIN_SIZE_MB = 50
 export const TS_SPEC: VideoToolSpec = {
   id: 'ts-to-mp4',
   title: 'TS → MP4',
-  sub: 'Convert TS to MP4 in your browser: batch MPEG transport stream (.ts, .mts, .m2ts) recordings, stream-copied where they already fit an MP4. Everything runs with FFmpeg (WebAssembly) — your videos never leave this machine.',
+  sub: 'Convert TS to MP4 in your browser: batch MPEG transport stream (.ts, .mts, .m2ts) recordings, stream-copied where they already fit an MP4. Everything runs with FFmpeg (WebAssembly), so your videos never leave this machine.',
   accept: '.ts,.mts,.m2ts,video/mp2t,.jpg,.jpeg,.png,image/jpeg,image/png,.txt,.star,text/plain',
   isSource: (name) => TS_RE.test(name),
   pairImages: true,
@@ -37,7 +37,7 @@ export const TS_SPEC: VideoToolSpec = {
   posters: false,
   dropTitle: 'Drop .ts files here',
   dropNotes: [
-    'or click to browse — you can add more while a batch runs.',
+    'or click to browse, and you can add more while a batch runs.',
     `Under ${MIN_SIZE_MB} MB is skipped. Pair a same-named .jpg to use as its thumbnail.`,
   ],
   modes: [

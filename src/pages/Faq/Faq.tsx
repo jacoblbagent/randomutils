@@ -8,7 +8,7 @@ import './Faq.css'
  *
  * The recurring questions from support mail, answered in one place instead of
  * being rediscovered in each tool's guide. Every answer here is a statement
- * about how the code actually behaves — the skip rules are in
+ * about how the code actually behaves, the skip rules are in
  * `ConvertQueue.addFiles` and the tool specs, the engine recycling thresholds
  * are `RECYCLE_EVERY_FILES` / `RECYCLE_EVERY_BYTES` in `useFFmpeg.ts`. If one
  * of those numbers moves, this page moves with it.
@@ -43,7 +43,7 @@ export default function Faq() {
             <code>.qt</code>; Video → Audio takes the common video containers (and audio files,
             which it simply re-exports). A same-named{' '}
             <code>.jpg</code>/<code>.png</code> beside a recording is used as its thumbnail and a{' '}
-            <code>.star</code> sidecar becomes a flag on the row — neither is queued as a video.
+            <code>.star</code> sidecar becomes a flag on the row; neither is queued as a video.
           </li>
           <li>
             <strong>You removed it earlier.</strong> Removing a file from the list is remembered by
@@ -62,7 +62,7 @@ export default function Faq() {
         <p>
           FFmpeg runs as WebAssembly inside the page, and a wasm instance's memory only ever grows.
           Deleting the input and output from its virtual filesystem frees the files but not the
-          ceiling the instance has already reached — so a long batch of large recordings eventually
+          ceiling the instance has already reached, so a long batch of large recordings eventually
           hits a memory trap. To avoid that, the engine is deliberately thrown away and reloaded,
           every six files or every ~1 GB of source video, whichever comes first.
         </p>
@@ -85,7 +85,7 @@ export default function Faq() {
         <p>
           The one third party the page loads is the Google AdSense script; what it and its cookies
           do is set out on the <Link to="/privacy">privacy page</Link>. Nothing about your files
-          ever reaches it — the conversion code has no network call in it at all.
+          ever reaches it: the conversion code has no network call in it at all.
         </p>
       </section>
 
@@ -99,7 +99,7 @@ export default function Faq() {
         <p>
           The limit is per file: the source and the result both sit in browser memory while a job
           runs, so a single file over roughly 2 GB can fail no matter how much free disk you have.
-          Splitting a very large recording is the workaround. Also keep the tab open and awake —
+          Splitting a very large recording is the workaround. Also keep the tab open and awake:
           the queue lives in the page, so a reload or a crash loses it, which is why the browser
           warns you before you leave with files still in the list. Download finished files as you
           go if the batch matters.
@@ -110,7 +110,7 @@ export default function Faq() {
         <h2>Does it work offline, and can I install it?</h2>
         <p>
           Every tool is a page with no server round-trip in its conversion path, so once the page
-          and its FFmpeg core have loaded it keeps working without a network — on a plane, or on a
+          and its FFmpeg core have loaded it keeps working without a network, on a plane or on a
           locked-down laptop where a conversion site would be blocked. The site also ships a web
           app manifest, so a browser that offers “Install” can put it in its own window like an
           app. Installing changes nothing about the privacy story: it is still this page, running
@@ -130,7 +130,7 @@ export default function Faq() {
         <p>
           If something looks wrong that this page does not explain, email{' '}
           <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a> with the file's codecs (the
-          row's log has them) — the <Link to="/contact">contact page</Link> lists what to include.
+          row's log has them). The <Link to="/contact">contact page</Link> lists what to include.
         </p>
       </section>
 

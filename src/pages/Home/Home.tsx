@@ -24,12 +24,12 @@ export default function Home() {
     <div className="home">
       <section className="home__hero">
         {/* The page's one h1. It states what the site is rather than repeating
-            the brand the header already carries — the title says the same thing,
+            the brand the header already carries, the title says the same thing,
             so the tab, the crawler and the reader agree. */}
         <h1 className="home__title">Browser tools that never upload your files</h1>
         <p className="home__lede">
-          A hub for small, single-purpose tools. Each one runs entirely in your browser — no accounts, no
-          uploads, no server holding your files.
+          A hub for small, single-purpose tools. Each one runs entirely in your browser, with no
+          accounts, no uploads, and no server holding your files.
         </p>
       </section>
 
@@ -58,12 +58,12 @@ export default function Home() {
 
       <section className="home__hero">
         <p className="home__lede">
-          Every tool here is a page, not a service: the work happens on your own machine — the
-          video tools on FFmpeg compiled to WebAssembly, the password generator on your
-          browser&rsquo;s own crypto — so nothing you open or generate is uploaded, and nothing is
-          kept when you close the tab. That is not a setting you have to trust us to leave alone —
-          there is no upload step to disable. <Link className="link" to="/about">How that works</Link>,
-          and what the site does and does not do, is on the about page.
+          Every tool here is a page, not a service. The work happens on your own machine: the video
+          tools on FFmpeg compiled to WebAssembly, the password generator on your browser&rsquo;s own
+          crypto. Nothing you open or generate is uploaded, and nothing is kept when you close the
+          tab. Nothing depends on trusting us to leave a setting alone, because there is no upload
+          step to disable. <Link className="link" to="/about">How that works</Link>, and what the
+          site does and does not do, is on the about page.
         </p>
       </section>
     </div>

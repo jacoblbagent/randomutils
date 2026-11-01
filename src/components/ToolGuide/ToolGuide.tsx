@@ -6,7 +6,7 @@ import './ToolGuide.css'
  * a stream copy is safe versus when a re-encode is the only way through, and
  * the handful of failures people actually hit.
  *
- * The tool is the product and stays the first thing on the page — this is a
+ * The tool is the product and stays the first thing on the page, this is a
  * sibling below it, not a preamble above it. Layout comes from the shared .doc
  * prose frame in App.css, so a guide reads like the privacy and contact pages
  * rather than a second design; only the separator and the heading scale are

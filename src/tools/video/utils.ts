@@ -3,7 +3,7 @@ import type { Job, JobPhase, VideoToolSpec } from './types'
 export const IMG_RE = /\.(jpe?g|png)$/i
 export const isImage = (name: string) => IMG_RE.test(name)
 
-/** Strip the extension and lowercase — how a file is matched to its thumbnail/sidecar. */
+/** Strip the extension and lowercase, how a file is matched to its thumbnail/sidecar. */
 export const baseKey = (name: string) => name.replace(/\.[^.]+$/, '').trim().toLowerCase()
 
 // Natural, case-insensitive name order like Finder: clip2 < clip10, "A" == "a"
@@ -43,7 +43,7 @@ export const makeJob = (file: File, spec: VideoToolSpec): Job => ({
 })
 
 // The name shown/edited for a job: the custom name if set, else the original filename minus its
-// source extension — with "-star" appended when a sidecar flagged it. Spaces are kept here so
+// source extension, with "-star" appended when a sidecar flagged it. Spaces are kept here so
 // editing stays natural; they're only swapped for "-" when a file actually gets downloaded
 // (downloadFilename below).
 export const baseName = (job: Job) => job.customName ?? job.stem + (job.starred ? '-star' : '')

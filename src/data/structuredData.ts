@@ -1,5 +1,5 @@
 /**
- * Structured data (JSON-LD) — one graph per route, built from the same
+ * Structured data (JSON-LD), one graph per route, built from the same
  * registries the pages render from.
  *
  * Read twice: `scripts/prerender.mjs` writes it into each static page's head at
@@ -12,7 +12,7 @@
  * sits in the site (BreadcrumbList), and who publishes the site (Organization).
  * It deliberately does NOT claim FAQPage or HowTo markup: Google's FAQ rich
  * results are limited to authoritative sites, and both types must match visible
- * on-page content exactly — which means sourcing them from the rendered prose
+ * on-page content exactly, which means sourcing them from the rendered prose
  * rather than restating it here.
  *
  * `<!-- site:ld -->` in index.html is the managed slot: the prerenderer rewrites
@@ -29,9 +29,9 @@ const ORG_ID = `${HOME}#organization`
 const SITE_ID = `${HOME}#website`
 
 /** Home-page description, reused for the WebSite node. */
-const SITE_DESCRIPTION = 'Small, single-purpose browser tools that run entirely in your browser — video and audio conversion, and password generation. Nothing is uploaded.'
+const SITE_DESCRIPTION = 'Small, single-purpose browser tools that run entirely in your browser: video and audio conversion, and password generation. Nothing is uploaded.'
 
-/** The publisher of every page — referenced by @id, defined once per graph. */
+/** The publisher of every page, referenced by @id, defined once per graph. */
 function organization(): Json {
   return {
     '@type': 'Organization',
@@ -78,7 +78,7 @@ function breadcrumb(url: string, crumbs: { name: string; path: string }[]): Json
 
 /**
  * The graph for one route, or null for a path the site does not publish (the
- * NotFound view) — an unknown URL must not carry structured data claiming to be
+ * NotFound view), an unknown URL must not carry structured data claiming to be
  * a page.
  */
 export function structuredDataFor(pathname: string): Json | null {
@@ -116,7 +116,7 @@ export function structuredDataFor(pathname: string): Json | null {
       // converter, and the default was doing the claiming for it.
       applicationCategory: tool.appCategory ?? 'MultimediaApplication',
       applicationSubCategory: tool.subCategory ?? 'File converter',
-      operatingSystem: 'Any — runs in the browser',
+      operatingSystem: 'Any (runs in the browser)',
       browserRequirements: tool.browserRequirements ?? 'Requires JavaScript and WebAssembly',
       isAccessibleForFree: true,
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },

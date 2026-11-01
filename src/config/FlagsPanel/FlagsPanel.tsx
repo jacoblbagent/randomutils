@@ -15,7 +15,7 @@ import './FlagsPanel.css'
 /**
  * The flags panel: every registered flag with a live switch.
  *
- * Reached with `?flags=1` on any URL or Shift+Alt+F — deliberately not linked
+ * Reached with `?flags=1` on any URL or Shift+Alt+F, deliberately not linked
  * from the site chrome, so visitors never see it. Each switch writes
  * localStorage for this browser, so a flip survives reloads, navigations and
  * deploys that do not change the default. "Copy preview link" produces a URL
@@ -48,7 +48,7 @@ export default function FlagsPanel() {
       setCopied(true)
       window.setTimeout(() => setCopied(false), 1600)
     } catch {
-      /* clipboard blocked — the URL bar is the fallback */
+      /* clipboard blocked, the URL bar is the fallback */
     }
   }
 
@@ -66,7 +66,7 @@ export default function FlagsPanel() {
         </button>
       </div>
 
-      <p className="flags__hint">Saved in this browser only — no redeploy needed.</p>
+      <p className="flags__hint">Saved in this browser only. No redeploy needed.</p>
 
       <ul className="flags__list">
         {FLAG_IDS.map((id) => (

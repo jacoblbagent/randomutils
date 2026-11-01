@@ -12,7 +12,7 @@ interface ViewerProps {
 }
 
 // Sits inside the row of the job it's showing (JobRow renders it there when that job is
-// isViewing), so it only ever needs to show the converted video itself — everything else about
+// isViewing), so it only ever needs to show the converted video itself, everything else about
 // the file (name, star, download) is already right there in the row above it.
 export default function Viewer({ jobs, viewingId, onChange, onClose, onToggleFavorite }: ViewerProps) {
   const index = jobs.findIndex((j) => j.id === viewingId)

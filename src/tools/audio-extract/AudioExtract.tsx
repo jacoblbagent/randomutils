@@ -15,13 +15,13 @@ import './AudioExtract.css'
 
 /**
  * Video → Audio: drop a video (or audio) file in, pick WAV or MP3, get the audio track back
- * as a download. The whole thing runs on ffmpeg.wasm inside this tab — no upload, no backend,
+ * as a download. The whole thing runs on ffmpeg.wasm inside this tab, no upload, no backend,
  * the file never leaves the machine.
  */
 
 // Drag-and-drop ignores the input's `accept`, so the same list is enforced in code. Extensions
 // cover the containers browsers don't know (.mkv, .avi, .flv, .ts …); audio inputs are allowed
-// too — extracting the audio of an audio file is just a format conversion.
+// too, extracting the audio of an audio file is just a format conversion.
 const MEDIA_RE =
   /\.(mp4|m4v|mov|qt|mkv|webm|avi|divx|flv|wmv|mpg|mpeg|m2ts|mts|ts|3gp|3g2|ogv|vob|mxf|mp3|wav|m4a|aac|flac|ogg|oga|opus|wma|aif|aiff|amr)$/i
 
@@ -33,7 +33,7 @@ const ACCEPT =
 
 const stemOf = (name: string) => name.replace(/\.[^.]+$/, '').trim() || 'audio'
 
-/** Filenames are swapped to dashes on download — same convention as the video tools. */
+/** Filenames are swapped to dashes on download, same convention as the video tools. */
 const downloadName = (job: Job, ext: string) =>
   `${stemOf(job.stem).replace(/\s+/g, '-')}.${ext}`
 
@@ -43,7 +43,7 @@ interface JobResult {
   url: string
   blob: Blob
   size: number
-  /** Output extension — the job keeps the format it was run with, even if the radio moves on. */
+  /** Output extension, the job keeps the format it was run with, even if the radio moves on. */
   ext: string
   name: string
   elapsed: number
@@ -273,7 +273,7 @@ export default function AudioExtract() {
         <h1>Video → Audio</h1>
         <p className="ax-head__sub">
           Extract the audio from a video and download it as WAV or MP3. Everything runs in
-          this tab with FFmpeg (WebAssembly) — no upload, no server, your file never leaves this
+          this tab with FFmpeg (WebAssembly): no upload, no server, and your file never leaves this
           machine.
         </p>
       </header>
@@ -304,7 +304,7 @@ export default function AudioExtract() {
           }}
         />
         <strong>Drop video files here</strong>
-        <span className="ax-note">or click to browse — you can add more while a batch runs.</span>
+        <span className="ax-note">or click to browse, and you can add more while a batch runs.</span>
         <span className="ax-note">
           MP4, MOV, MKV, WebM, AVI, FLV, TS and more. Audio files work too.
         </span>
@@ -473,7 +473,7 @@ export default function AudioExtract() {
       <p className="ax-note muted">
         Files are processed one at a time, entirely in browser memory, so a single video over
         ~2 GB may fail. The first file loads the ~31 MB FFmpeg core (cached by the browser
-        afterwards). Audio is taken from the first audio track and re-encoded — WAV keeps the
+        afterwards). Audio is taken from the first audio track and re-encoded: WAV keeps the
         source sample rate, MP3 is 192 kbps.
       </p>
 
@@ -486,17 +486,17 @@ export default function AudioExtract() {
           </p>
           <ul>
             <li>
-              <strong>WAV</strong> — uncompressed 16-bit PCM at the source&rsquo;s own sample
+              <strong>WAV</strong>: uncompressed 16-bit PCM at the source&rsquo;s own sample
               rate. Lossless, so nothing is thrown away, and every editor and audio tool accepts
               it. The cost is size: a stereo WAV is roughly 10 MB per minute, which adds up fast
               over a long recording. Choose WAV when you are going to edit, transcribe, or
               re-encode the audio later, or when quality is the whole point.
             </li>
             <li>
-              <strong>MP3</strong> — 192 kbps, which is transparent enough for speech and fine for
+              <strong>MP3</strong>: 192 kbps, which is transparent enough for speech and fine for
               most music. Roughly a tenth the size of the WAV and plays on literally anything.
-              Choose MP3 when the audio is the finished product — a podcast, a voice memo, a
-              soundtrack you want on a phone — rather than the start of more work.
+              Choose MP3 when the audio is the finished product (a podcast, a voice memo, a
+              soundtrack you want on a phone) rather than the start of more work.
             </li>
           </ul>
         </section>
@@ -506,7 +506,7 @@ export default function AudioExtract() {
           <ul>
             <li>
               The audio is taken from the <strong>first audio track</strong> in the file, and it
-              is re-encoded to the format you pick. For a normal video — one audio track — that
+              is re-encoded to the format you pick. For a normal video with one audio track, that
               is simply &ldquo;the&rdquo; audio.
             </li>
             <li>
@@ -519,7 +519,7 @@ export default function AudioExtract() {
               tool will report a failure rather than invent a silent file.
             </li>
             <li>
-              Audio files themselves work as input too — taking the audio &ldquo;out of&rdquo; an
+              Audio files themselves work as input too: taking the audio &ldquo;out of&rdquo; an
               MP3 is just a format conversion, and WAV→MP3 or MP3→WAV is a perfectly good use of
               this tool.
             </li>
@@ -544,7 +544,7 @@ export default function AudioExtract() {
               cannot decode. Try another file to confirm the tool itself is fine.
             </li>
             <li>
-              <strong>The WAV is enormous.</strong> Expected — it is uncompressed. If size rather
+              <strong>The WAV is enormous.</strong> Expected, since it is uncompressed. If size rather
               than fidelity is the problem, extract to MP3 instead.
             </li>
             <li>
@@ -568,7 +568,7 @@ export default function AudioExtract() {
           <p>
             Video is often the most personal thing on a phone, and a voice recording more so. The
             extraction runs in this tab on FFmpeg compiled to WebAssembly, so the file never
-            leaves your machine — no upload, and nothing kept after the tab closes. The{' '}
+            leaves your machine, with no upload and nothing kept after the tab closes. The{' '}
             <Link to="/privacy">privacy page</Link> is the long version.
           </p>
         </section>

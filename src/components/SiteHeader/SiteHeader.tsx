@@ -11,7 +11,7 @@ export default function SiteHeader() {
         {SITE.name}
       </Link>
       <nav className="site-head__links" aria-label="Site">
-        {/* What the site is, before the way to reach it — the first thing a
+        {/* What the site is, before the way to reach it, the first thing a
             visitor (or an ad reviewer) looks for. */}
         <Link className="site-head__link" to="/about">
           About
@@ -19,7 +19,7 @@ export default function SiteHeader() {
         <Link className="site-head__link" to="/faq">
           FAQ
         </Link>
-        {/* Reachable without a GitHub account — the repo alone is not enough. */}
+        {/* Reachable without a GitHub account, the repo alone is not enough. */}
         <Link className="site-head__link" to="/contact">
           Contact
         </Link>

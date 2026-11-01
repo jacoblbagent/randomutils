@@ -8,8 +8,8 @@ import './SiteFooter.css'
  * reach from anywhere: what the site is, what the ads do to your data, the
  * terms, and a way to contact the owner.
  *
- * The tool links come from the registry, so every page on the site — not just
- * the home grid — links to every shipped tool, with the tool's own phrase as the
+ * The tool links come from the registry, so every page on the site, not just
+ * the home grid, links to every shipped tool, with the tool's own phrase as the
  * anchor text. A flagged tool drops out of here with its route.
  */
 export default function SiteFooter() {

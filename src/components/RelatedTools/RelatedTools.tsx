@@ -6,7 +6,7 @@ import './RelatedTools.css'
  * The links from this tool to its siblings, sitting under the guide.
  *
  * Why it exists: without it every tool page is a leaf with exactly one editorial
- * inbound link — the card on the home page — and no contextual link between the
+ * inbound link, the card on the home page, and no contextual link between the
  * tools themselves, so a crawler has nothing to follow sideways and no anchor
  * text telling it what the other pages are about. The block carries the phrase
  * for each sibling ("MOV to MP4 converter") rather than a bare "read more", and
@@ -33,8 +33,8 @@ export default function RelatedTools({ currentId }: { currentId: string }) {
         ))}
       </ul>
       <p className="related-tools__note">
-        Same setup on every page: the work happens in this tab, on your own machine — nothing you
-        open or generate is uploaded.
+        Same setup on every page: the work happens in this tab, on your own machine, and nothing
+        you open or generate is uploaded.
       </p>
     </nav>
   )

@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 
-/** Each route is a fresh view — land at the top of it, without animation. */
+/** Each route is a fresh view, land at the top of it, without animation. */
 export default function ScrollToTop() {
   const { pathname } = useLocation()
 

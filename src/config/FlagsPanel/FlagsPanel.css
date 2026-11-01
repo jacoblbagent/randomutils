@@ -1,4 +1,4 @@
-/* Flags panel — a floating dev surface, fixed to the corner, above the page. */
+/* Flags panel, a floating dev surface, fixed to the corner, above the page. */
 
 .flags {
   position: fixed;

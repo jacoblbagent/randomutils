@@ -12,7 +12,7 @@ cd "$REPO_DIR"
 
 # Two long-lived branches: `main` is what randomutils.com serves, `development`
 # is where work lands first. Publishing is only allowed from `main`, so a dev
-# branch can never clobber the live site by accident — override on purpose with
+# branch can never clobber the live site by accident. Override on purpose with
 # DEPLOY_BRANCH=<branch> when you really do want that.
 CURRENT="$(git rev-parse --abbrev-ref HEAD)"
 BRANCH="${DEPLOY_BRANCH:-gh-pages}"

@@ -3,7 +3,7 @@ import type { Tool } from '../../data/tools'
 import { IconArrowRight } from '../../icons/Icons'
 import './ToolCard.css'
 
-/** One card per tool — a whole-card link to its route. */
+/** One card per tool, a whole-card link to its route. */
 export default function ToolCard({ tool }: { tool: Tool }) {
   return (
     <Link className="tool-card" to={tool.path}>

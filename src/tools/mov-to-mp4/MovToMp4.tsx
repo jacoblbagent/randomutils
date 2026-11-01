@@ -7,7 +7,7 @@ import { MOV_SPEC } from './spec'
 /**
  * MOV → MP4. The page is the shared converter queue (src/tools/video/) plus the QuickTime spec:
  * no size floor, no sidecars, a poster frame per row, and audio copied without the ADTS fix.
- * The guide below it covers what varies inside a .mov — which is a great deal — and what that
+ * The guide below it covers what varies inside a .mov, which is a great deal, and what that
  * means for a copy versus a re-encode.
  */
 export default function MovToMp4() {
@@ -21,11 +21,10 @@ export default function MovToMp4() {
           <p>
             A <code>.mov</code> file is a QuickTime movie: one of the oldest surviving media
             containers, and still the one Apple&rsquo;s cameras, phones and editors write by
-            default. The container is organized much like an MP4 &mdash; it is read from its
-            header, which is why a .mov seeks and scrubs cleanly &mdash; but it is far more
-            permissive about what it will carry. That permissiveness is the whole story here: two
-            files both ending in <code>.mov</code> can be as different inside as a text file and
-            a photograph.
+            default. The container is organized much like an MP4, read from its header, which is why a .mov
+            seeks and scrubs cleanly, but it is far more permissive about what it will carry. That
+            permissiveness is why two files both ending in <code>.mov</code> can be as different
+            inside as a text file and a photograph.
           </p>
         </section>
 
@@ -37,12 +36,12 @@ export default function MovToMp4() {
           </p>
           <ul>
             <li>
-              <strong>Copied untouched</strong> — H.264 and HEVC video, and AAC or MP3 audio. This
+              <strong>Copied untouched</strong>: H.264 and HEVC video, and AAC or MP3 audio. This
               covers what an iPhone, an iPad or a screen recording produces, which is the
               overwhelming majority of what people drop in. A copy is lossless and takes seconds.
             </li>
             <li>
-              <strong>Re-encoded</strong> — professional and camera codecs MP4 players refuse:
+              <strong>Re-encoded</strong>: professional and camera codecs MP4 players refuse:
               ProRes, DV and Motion JPEG video, and PCM, ALAC and similar audio. These are
               high-quality formats that simply have no place in the MP4 specification, so the
               video is transcoded to H.264 and the audio to AAC.
@@ -61,8 +60,8 @@ export default function MovToMp4() {
             <li>iPhone, iPad and Mac screen recordings, which are H.264 or HEVC and copy straight across.</li>
             <li>Camera and camcorder exports, often ProRes, which are converted.</li>
             <li>
-              Video-editing exports &mdash; Final Cut, Premiere, DaVinci &mdash; which can be any
-              of the above depending on how they were set to render.
+              Video-editing exports from Final Cut, Premiere or DaVinci, which can be any of the above
+              depending on how they were set to render.
             </li>
             <li>Old QuickTime movies, where the video may be DV or an even earlier codec.</li>
           </ul>
@@ -81,8 +80,8 @@ export default function MovToMp4() {
               <strong>Re-encode</strong>.
             </li>
             <li>
-              <strong>&ldquo;Stream copy failed.&rdquo;</strong> The file is ProRes, DV or similar
-              &mdash; expected, and exactly what Auto fixes.
+              <strong>&ldquo;Stream copy failed.&rdquo;</strong> The file is ProRes, DV or similar,
+              which is expected and exactly what Auto fixes.
             </li>
             <li>
               <strong>The picture is very dark or washed out.</strong> Some camera footage carries
@@ -106,9 +105,9 @@ export default function MovToMp4() {
         <section className="doc__section">
           <h2>Privacy, in one line</h2>
           <p>
-            QuickTime movies are often the personal ones &mdash; family clips, screen recordings
-            with something private on screen &mdash; which is a good reason this conversion runs
-            in your browser and never uploads. The <Link to="/privacy">privacy page</Link> has the
+            QuickTime movies are often the personal ones: family clips, screen recordings with
+            something private on screen. That is a good reason this conversion runs in your
+            browser and never uploads. The <Link to="/privacy">privacy page</Link> has the
             detail.
           </p>
         </section>

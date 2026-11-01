@@ -1,4 +1,4 @@
-# RandomUtils — everything is public; crawl freely.
+# RandomUtils: everything is public; crawl freely.
 User-agent: *
 Allow: /
 

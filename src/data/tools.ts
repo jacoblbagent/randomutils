@@ -1,5 +1,5 @@
 /**
- * The tool registry — the single place a new tool is announced.
+ * The tool registry, the single place a new tool is announced.
  *
  * Adding a tool: append an entry here and add its route in `App.tsx`. The home
  * page grid, the footer count, the related-tools links and (later) any
@@ -11,7 +11,7 @@ import { useFlags, type FlagId } from '../config/flags'
 /**
  * What the crawler-facing side of a tool page says. Kept next to the tool so
  * the card copy, the <title>, the description, the anchor text other pages use
- * and the structured-data featureList can never drift apart — and so each tool
+ * and the structured-data featureList can never drift apart, and so each tool
  * gets copy written for it rather than one sentence clamped three ways.
  */
 export interface ToolSeo {
@@ -39,7 +39,7 @@ export interface Tool {
   name: string
   /** One line, shown under the name on the card. */
   tagline: string
-  /** A sentence or two — what it does, and the one thing that makes it useful. */
+  /** A sentence or two, what it does, and the one thing that makes it useful. */
   description: string
   /** Route path inside the hash router. */
   path: string
@@ -66,7 +66,7 @@ export interface Tool {
   appCategory?: string
 }
 
-const NEVER_UPLOADS = 'No upload — the files never leave your machine'
+const NEVER_UPLOADS = 'No upload: the files never leave your machine'
 
 export const tools: Tool[] = [
   {
@@ -74,14 +74,14 @@ export const tools: Tool[] = [
     name: 'TS → MP4',
     tagline: 'Batch convert .ts recordings to MP4',
     description:
-      'Drop DVR and over-the-air captures in and get MP4s that open in QuickTime, stream-copied as fast as the source allows. Runs on FFmpeg compiled to WebAssembly — the files never leave your machine.',
+      'Drop DVR and over-the-air captures in and get MP4s that open in QuickTime, stream-copied as fast as the source allows. Runs on FFmpeg compiled to WebAssembly; the files never leave your machine.',
     path: '/ts-to-mp4',
     tags: ['Video', 'FFmpeg', 'Offline'],
     flag: 'ts-to-mp4',
     seo: {
-      title: `TS to MP4 Converter — .ts, .mts and .m2ts Files — RandomUtils`,
+      title: `TS to MP4 Converter: .ts, .mts and .m2ts Files | RandomUtils`,
       description:
-        'Convert TS, MTS and M2TS transport-stream recordings to MP4 in your browser — batch queue, stream-copied where possible, and no upload step.',
+        'Convert TS, MTS and M2TS transport-stream recordings to MP4 in your browser, with a batch queue, stream-copied where possible, and no upload step.',
       anchor: 'TS to MP4 converter',
       features: [
         'Batch convert .ts, .mts and .m2ts recordings to MP4',
@@ -96,12 +96,12 @@ export const tools: Tool[] = [
     name: 'MOV → MP4',
     tagline: 'Batch convert QuickTime .mov files to MP4',
     description:
-      'Drop QuickTime movies in and get MP4s that play anywhere — H.264, HEVC and AAC copied across untouched, ProRes/DV/PCM re-encoded. Also runs on FFmpeg compiled to WebAssembly, so the files stay on your machine.',
+      'Drop QuickTime movies in and get MP4s that play anywhere: H.264, HEVC and AAC copied across untouched, ProRes/DV/PCM re-encoded. Also runs on FFmpeg compiled to WebAssembly, so the files stay on your machine.',
     path: '/mov-to-mp4',
     tags: ['Video', 'FFmpeg', 'Offline'],
     flag: 'mov-to-mp4',
     seo: {
-      title: `MOV to MP4 Converter — QuickTime MOV, No Upload — RandomUtils`,
+      title: `MOV to MP4 Converter: QuickTime MOV, No Upload | RandomUtils`,
       description:
         'Convert QuickTime MOV files to MP4 in your browser: H.264, HEVC and AAC copied across untouched, ProRes, DV and PCM audio re-encoded. No upload.',
       anchor: 'MOV to MP4 converter',
@@ -118,14 +118,14 @@ export const tools: Tool[] = [
     name: 'Video → Audio',
     tagline: 'Extract a video’s audio track as WAV or MP3',
     description:
-      'Drop a video in, pick WAV or MP3, and download the audio track by itself — no upload, no editing suite. Runs on FFmpeg compiled to WebAssembly, so the video never leaves your machine.',
+      'Drop a video in, pick WAV or MP3, and download the audio track by itself, with no upload and no editing suite. Runs on FFmpeg compiled to WebAssembly, so the video never leaves your machine.',
     path: '/audio-extract',
     tags: ['Audio', 'Video', 'FFmpeg', 'Offline'],
     flag: 'audio-extract',
     seo: {
-      title: `Extract Audio From Video — WAV or MP3, No Upload — RandomUtils`,
+      title: `Extract Audio From Video: WAV or MP3, No Upload | RandomUtils`,
       description:
-        'Extract audio from a video and download it as WAV or MP3. Drop a file, pick a format, download — no editing suite, no upload, no server.',
+        'Extract audio from a video and download it as WAV or MP3. Drop a file, pick a format, download. No editing suite, no upload, no server.',
       anchor: 'Extract audio from a video',
       features: [
         'Extract the audio track as WAV or MP3',
@@ -140,7 +140,7 @@ export const tools: Tool[] = [
     name: 'Password generator',
     tagline: 'Strong random passwords, made in this tab',
     description:
-      'Pick a length and the characters to allow, and get a password drawn from your browser’s own cryptographic random source — with the entropy and the estimated offline crack time printed beside it. Nothing is generated on a server, so there is nothing for one to log.',
+      'Pick a length and the characters to allow, and get a password drawn from your browser’s own cryptographic random source, with the entropy and the estimated offline crack time printed beside it. Nothing is generated on a server, so there is nothing for one to log.',
     path: '/password-generator',
     tags: ['Security', 'Passwords', 'Offline'],
     flag: 'password-generator',
@@ -148,7 +148,7 @@ export const tools: Tool[] = [
     appCategory: 'SecurityApplication',
     browserRequirements: 'Requires JavaScript (Web Crypto)',
     seo: {
-      title: `Password Generator — Strong Random Passwords, No Upload — RandomUtils`,
+      title: `Password Generator: Strong Random Passwords, No Upload | RandomUtils`,
       description:
         'Generate strong random passwords in your browser: choose the length and character sets, see the entropy and crack time, then copy. Nothing is uploaded.',
       anchor: 'Password generator',
@@ -159,13 +159,13 @@ export const tools: Tool[] = [
         'Up to 25 passwords at once, each with its own copy button',
         // Deliberately not NEVER_UPLOADS: that line says "the files never leave your
         // machine", and there is no file here.
-        'No upload — nothing you generate leaves your machine',
+        'No upload: nothing you generate leaves your machine',
       ],
     },
   },
 ]
 
-/** Everything whose flag is on — what the grid, the count and the routes use. */
+/** Everything whose flag is on, what the grid, the count and the routes use. */
 export function useTools(): Tool[] {
   const flags = useFlags()
   return useMemo(() => tools.filter((tool) => !tool.flag || flags[tool.flag]), [flags])

@@ -1,4 +1,4 @@
-// Authored icon set — one consistent 16px grid, 1.5 stroke, currentColor.
+// Authored icon set, one consistent 16px grid, 1.5 stroke, currentColor.
 // No unicode glyphs or emoji standing in for icons.
 import type { SVGProps } from 'react'
 

@@ -1,5 +1,5 @@
 /**
- * Password generation — the whole of the maths, with no React in it.
+ * Password generation, the whole of the maths, with no React in it.
  *
  * Kept apart from the page so it can be exercised directly (`node
  * --experimental-strip-types src/tools/password-generator/random.ts` prints a
@@ -12,7 +12,7 @@
  * notice by eye, but a generator that is subtly biased is not a generator you
  * would trust for anything else, and the fix is four lines.
  *
- * Nothing in this module — or in the page that uses it — touches the network.
+ * Nothing in this module, or in the page that uses it, touches the network.
  */
 
 export const LOWER = 'abcdefghijklmnopqrstuvwxyz'
@@ -23,7 +23,7 @@ export const DIGITS = '0123456789'
  * Symbols that survive being pasted into the places passwords end up:
  *
  * No quotes (single or double), no backtick, no backslash, no space, no angle
- * brackets and no pipe — those are the characters a signup form strips, a shell
+ * brackets and no pipe, those are the characters a signup form strips, a shell
  * eats, or a CSV, JSON or .env file mangles when the value is not quoted. Every
  * character here is safe in all of those.
  */
@@ -66,7 +66,7 @@ export function charsOf(set: CharSet, avoidAmbiguous: boolean): string {
 }
 
 /**
- * The pools to draw from, in set order — one pool per selected set, each already
+ * The pools to draw from, in set order, one pool per selected set, each already
  * stripped of whatever is excluded. Empty pools (a set whose characters are all
  * excluded) drop out here rather than producing a pool a draw could never use.
  */
@@ -165,7 +165,7 @@ export function strengthOf(bits: number): Strength {
 /**
  * Guesses per second for the crack-time estimate: 100 billion, roughly a
  * well-funded offline attack against a fast hash (MD5/SHA-1 class, or a GPU rig
- * on a leaked dump). It is a *lower* bound on how long the password lasts —
+ * on a leaked dump). It is a *lower* bound on how long the password lasts ,
  * a slow or salted hash, or a rate-limited login, makes the real number larger.
  */
 export const GUESSES_PER_SECOND = 1e11

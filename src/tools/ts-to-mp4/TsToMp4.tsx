@@ -7,8 +7,8 @@ import { TS_SPEC, MIN_SIZE_MB } from './spec'
 /**
  * TS → MP4. The page is the shared converter queue (src/tools/video/) plus the MPEG-TS spec:
  * a 50 MB floor, DVR `.star` flags and same-named .jpg thumbnails, ADTS-fixed AAC copies.
- * Under the tool sits the guide — what a .ts actually is, when a copy is safe, and the failures
- * people hit — so the page is worth reading before it is worth using.
+ * Under the tool sits the guide, what a .ts actually is, when a copy is safe, and the failures
+ * people hit, so the page is worth reading before it is worth using.
  */
 export default function TsToMp4() {
   return (
@@ -23,16 +23,15 @@ export default function TsToMp4() {
             tuners write because it is built to survive a lossy signal. Instead of an index at
             the head of the file, as MP4 has, it is a continuous run of small fixed-size packets,
             which lets a receiver tune in mid-stream and start playing. That design is why a
-            recording plays fine in VLC and awkwardly — or not at all — in QuickTime, in most
-            phones, and in editors that expect a seekable file. Nothing is wrong with the video
-            inside; the wrapper is the whole problem, and moving it into MP4 is what this tool
-            does.
+            recording plays fine in VLC and badly, or not at all, in QuickTime, on most
+            phones, and in editors that expect a seekable file. The video inside is fine; the container is the
+            problem, and moving it into MP4 is what this tool does.
           </p>
           <p>
             You will usually meet one of three things, and they are the same conversion here:
             a capture from a network tuner such as an HDHomeRun, a recording pulled off a cable
             box or DVR, or an over-the-air capture. Files named <code>.mts</code> or{' '}
-            <code>.m2ts</code> are the same family under different initials — AVCHD camcorders
+            <code>.m2ts</code> are the same family under different initials: AVCHD camcorders
             and Blu-ray use those extensions, and this tool takes all three.
           </p>
         </section>
@@ -47,13 +46,13 @@ export default function TsToMp4() {
           </p>
           <ul>
             <li>
-              <strong>Stream copy</strong> — force it when you know the recording is already
+              <strong>Stream copy</strong>: force it when you know the recording is already
               H.264 or HEVC video with AAC audio and you want the fastest, pixel-identical
               result. If the video cannot legally sit in an MP4 it will fail outright rather than
-              quietly re-encode behind your back, which is the point of choosing it.
+              re-encode silently, which is what choosing it is for.
             </li>
             <li>
-              <strong>Re-encode</strong> — H.264 video and AAC audio, playable anywhere, but
+              <strong>Re-encode</strong>: H.264 video and AAC audio, playable anywhere, but
               slow: roughly real time or worse on a laptop, and it discards the original quality
               in favour of compatibility. Reach for it when Auto produced a file that still will
               not play, or when you want the safest possible copy of an odd recording.
@@ -71,8 +70,8 @@ export default function TsToMp4() {
               the <Link to="/contact">contact page</Link> explains what to send.
             </li>
             <li>
-              A <code>.star</code> file sitting next to a recording — <code>hdz_0000.ts.star</code>{' '}
-              and the like — is a DVR sidecar naming the programme. Drop it in with the video and
+              A <code>.star</code> file sitting next to a recording (<code>hdz_0000.ts.star</code>{' '}
+              and the like) is a DVR sidecar naming the programme. Drop it in with the video and
               it is never converted itself; it just flags the matching row and rides along into
               the output name.
             </li>
@@ -95,7 +94,7 @@ export default function TsToMp4() {
               interlaced. <strong>Re-encode</strong> de-interlaces; a stream copy cannot.
             </li>
             <li>
-              <strong>&ldquo;Stream copy failed.&rdquo;</strong> Expected — the video inside the
+              <strong>&ldquo;Stream copy failed.&rdquo;</strong> Expected: the video inside the
               stream is not MP4-legal. Auto or Re-encode handles it.
             </li>
             <li>
@@ -119,7 +118,7 @@ export default function TsToMp4() {
           <h2>Privacy, in one line</h2>
           <p>
             The conversion runs in this tab with FFmpeg compiled to WebAssembly, so the recording
-            never leaves your machine — there is no upload step, and nothing is kept after you
+            never leaves your machine: there is no upload step, and nothing is kept after you
             close the tab. The <Link to="/privacy">privacy page</Link> is the long version.
           </p>
         </section>

@@ -1,5 +1,5 @@
 /* The sibling links under a tool's guide. Follows the guide's separator so the
-   page reads: tool, reference, other tools. Layout is deliberately small — a
+   page reads: tool, reference, other tools. Layout is deliberately small, a
    row per tool, no card grid, so it never competes with the drop zone above. */
 
 .related-tools {

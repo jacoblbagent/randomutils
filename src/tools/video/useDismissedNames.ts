@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 
 // Filenames removed from the list (the × button on a row) are remembered so re-uploading the
-// same file later doesn't silently add it back — matched by original filename only, same as it
+// same file later doesn't silently add it back, matched by original filename only, same as it
 // appeared when it was removed. Namespaced per tool; the ts-to-mp4 key is kept from the standalone
 // app so the list carries over.
 const key = (namespace: string) => `${namespace}:dismissed-names`

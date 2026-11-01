@@ -20,7 +20,7 @@ export default function About() {
       <header className="doc__head">
         <h1>About {SITE.name}</h1>
         <p className="doc__stamp">
-          Run by {SITE.owner}, individually — no company behind it.
+          Run by {SITE.owner}, individually, with no company behind it.
         </p>
       </header>
 
@@ -34,25 +34,23 @@ export default function About() {
       <section className="doc__section">
         <h2>What makes it different</h2>
         <p>
-          The tools run entirely in your browser — the video converters on FFmpeg compiled to
+          The tools run entirely in your browser: the video converters on FFmpeg compiled to
           WebAssembly, the password generator on the browser's own cryptographic random source.
-          That is a technical choice with a plain consequence: what you drop in, or ask for, is
-          handled on your own machine, and there is no upload step because there is no server to
-          upload to. There are no accounts, no sign-up, no queue on someone else's disk, and no
-          copy of your file — or of a password you generated — anywhere you cannot see. Close the
-          tab and it is gone.
+          What you drop in, or ask for, is handled on your own machine, and there is no upload step
+          because there is no server to upload to. There are no accounts, no sign-up, no queue on
+          someone else's disk, and no copy of your file (or of a password you generated) anywhere
+          you cannot see. Close the tab and it is gone.
         </p>
         <p>
-          This matters most for exactly the files people convert here. A DVR recording may carry
-          something you would rather not hand to a stranger, and a work clip may be confidential
-          before it is shared. Sending either one to a random conversion website means trusting
-          that site's promises about deleting it. Here there is nothing to trust, because
-          nothing leaves your device.
+          This matters most for the files people convert here. A DVR recording may carry something
+          you would rather not hand to a stranger, and a work clip may be confidential before it is
+          shared. Sending either one to a conversion website means trusting that site to delete it
+          afterwards. Here that question does not come up, because nothing leaves your device.
         </p>
         <p>
-          The other half of the same choice: the tools keep working on a plane, on a locked-down
-          work laptop, or anywhere a conversion site would be blocked, because once the page has
-          loaded there is no network call left to make.
+          The tools also keep working on a plane, on a locked-down work laptop, or anywhere a
+          conversion site would be blocked, because once the page has loaded there is no network
+          call left to make.
         </p>
       </section>
 
@@ -66,19 +64,19 @@ export default function About() {
           <li>It does not put a watermark on the output or cap how many files you convert.</li>
         </ul>
         <p>
-          What the browser does keep — a few preference toggles in local storage — is set out in
-          full on the <Link to="/privacy">privacy page</Link>.
+          What the browser does keep, a few preference toggles in local storage, is set out in full
+          on the <Link to="/privacy">privacy page</Link>.
         </p>
       </section>
 
       <section className="doc__section">
         <h2>Where the tools came from</h2>
         <p>
-          They started as one-off scripts for a real problem — a pile of DVR recordings that
-          would not open in QuickTime, and a batch of clips that needed only their audio. Doing
-          it with a desktop tool meant installing one, and doing it with a website meant handing
-          over files that had no business leaving the machine. Running FFmpeg inside the page
-          removed both problems at once, and the result was worth keeping and sharing.
+          They started as one-off scripts for a real problem: a pile of DVR recordings that would
+          not open in QuickTime, and a batch of clips that needed only their audio. A desktop tool
+          meant installing one, and a website meant handing over files that had no business leaving
+          the machine. Running FFmpeg inside the page removed both problems, and the result was
+          worth keeping and sharing.
         </p>
       </section>
 
@@ -96,7 +94,7 @@ export default function About() {
       <section className="doc__section">
         <h2>Open source, and how to reach me</h2>
         <p>
-          The source is public — read it, file an issue, or run your own copy:{' '}
+          The source is public: read it, file an issue, or run your own copy:{' '}
           <a href={SITE.repo} target="_blank" rel="noreferrer">
             github.com/{SITE.owner}
             <IconExternal />

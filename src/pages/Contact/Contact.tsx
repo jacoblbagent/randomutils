@@ -15,7 +15,7 @@ export default function Contact() {
     <article className="doc contact">
       <header className="doc__head">
         <h1>Contact</h1>
-        <p className="doc__stamp">Run by {SITE.owner}, individually — no company behind it.</p>
+        <p className="doc__stamp">Run by {SITE.owner}, individually, with no company behind it.</p>
       </header>
 
       <p className="doc__lede">
@@ -31,17 +31,17 @@ export default function Contact() {
         <h2>Report a conversion that came out wrong</h2>
         <p>Include as much of this as you can, and it can usually be worked out without the file:</p>
         <ul>
-          <li>Which tool — TS → MP4, MOV → MP4 or Video → Audio.</li>
+          <li>Which tool: TS → MP4, MOV → MP4 or Video → Audio.</li>
           <li>The source format and roughly how the file was made (a DVR recording, an iPhone clip, a camera export).</li>
           <li>Your browser and version, and whether you are on desktop or mobile.</li>
-          <li>What you expected and what you got — a file that will not play, no audio, a stall, an error message.</li>
+          <li>What you expected and what you got: a file that will not play, no audio, a stall, an error message.</li>
           <li>
             Anything the browser's console reported. Open developer tools (F12) before you start the
             conversion and copy the error out.
           </li>
         </ul>
         <p className="small-note">
-          If a file is small and you can share it, say so first — but never send anything private or
+          If a file is small and you can share it, say so first, but never send anything private or
           confidential. Files are not needed to answer most questions.
         </p>
       </section>
@@ -71,7 +71,7 @@ export default function Contact() {
             github.com/{SITE.owner}
             <IconExternal />
           </a>
-          . What the tools do with your files is set out on the privacy page — the short version is that they
+          . What the tools do with your files is set out on the privacy page; the short version is that they
           never leave your browser.
         </p>
       </section>

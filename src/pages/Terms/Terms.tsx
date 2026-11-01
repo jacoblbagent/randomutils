@@ -41,7 +41,7 @@ export default function Terms() {
         <h2>Your files stay yours</h2>
         <p>
           We claim no rights over anything you open in a tool. We never receive your files at
-          all — the conversion happens in your browser — so there is nothing for us to copy,
+          all; the conversion happens in your browser, so there is nothing for us to copy,
           keep, license or disclose. You are responsible for having the right to work with the
           files you use, and for what you do with the results.
         </p>
@@ -66,7 +66,7 @@ export default function Terms() {
           <li>Do not try to attack, overload, or interfere with the site or anyone else's use of it.</li>
           <li>
             Do not attempt to work around the tools' limitations in a way that depends on us
-            storing or processing your files — we do not, and cannot.
+            storing or processing your files; we do not, and cannot.
           </li>
           <li>
             Automated bulk use of the site is your own affair (the tools run locally), but do not
@@ -80,7 +80,7 @@ export default function Terms() {
         <p>
           The site is supported by advertising served by Google AdSense, the only third party the
           page loads. Those ads, and the cookies they use, are governed by Google's own terms and
-          privacy policy — not by these terms. What the site loads and what it stores are set out
+          privacy policy, not by these terms. What the site loads and what it stores are set out
           on the <Link to="/privacy">privacy page</Link>, and the publisher id used for ad
           serving is recorded publicly in <a href={`${SITE.url}/ads.txt`}>ads.txt</a>.
         </p>
@@ -89,8 +89,8 @@ export default function Terms() {
       <section className="doc__section">
         <h2>Names and trademarks</h2>
         <p>
-          Format and company names used on this site — MPEG, MP4, QuickTime, MOV, Apple, H.264,
-          HEVC, WAV, MP3 and others — are the trademarks of their respective owners, and are used
+          Format and company names used on this site (MPEG, MP4, QuickTime, MOV, Apple, H.264,
+          HEVC, WAV, MP3 and others) are the trademarks of their respective owners, and are used
           only to describe what a tool does. {SITE.name} is not affiliated with, endorsed by, or
           sponsored by any of them. FFmpeg is used under its own license; see the{' '}
           <a href={SITE.repo} target="_blank" rel="noreferrer">
@@ -104,7 +104,7 @@ export default function Terms() {
         <h2>Limitation of liability</h2>
         <p>
           To the fullest extent the law allows, {SITE.name} and its owner are not liable for any
-          loss arising from your use of the site — including lost, corrupted or converted files,
+          loss arising from your use of the site, including lost, corrupted or converted files,
           lost time, or any indirect or consequential damage. Because the service is free and
           runs on your own machine, the entire risk of using it sits with you.
         </p>
@@ -122,7 +122,7 @@ export default function Terms() {
       <section className="doc__section">
         <h2>Contact</h2>
         <p>
-          Questions about these terms, or a correction — email{' '}
+          Questions about these terms, or a correction: email{' '}
           <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a> or use the{' '}
           <Link to="/contact">contact page</Link>.
         </p>

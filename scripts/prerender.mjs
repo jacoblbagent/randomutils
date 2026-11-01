@@ -3,12 +3,12 @@
  * Write a real static page for every route, plus sitemap.xml.
  *
  * Why this exists: GitHub Pages serves an unknown path by answering with
- * 404.html — with a 404 status. A single index.html therefore boots the SPA
+ * 404.html, with a 404 status. A single index.html therefore boots the SPA
  * fine in a browser but tells every crawler the page does not exist, so the
  * tool pages can't be indexed and have nowhere to carry a title. Emitting
  * `dist/<path>/index.html` for each route gives each one its own real page,
  * served 200, with its own <title>/description/canonical, and real rendered
- * markup in #root — the app then mounts over it on load.
+ * markup in #root, and the app then mounts over it on load.
  *
  * Sources of truth: src/data/pages.ts for the routes and their metadata (which
  * reads src/data/tools.ts for the tool pages), src/config/site.ts for the
@@ -28,7 +28,7 @@ const DIST = resolve(ROOT, 'dist')
 
 const SITEMAP_NS = 'http://www.sitemaps.org/schemas/sitemap/0.9'
 
-/** Absolute origin — social cards need it, since og:image must not be relative. */
+/** Absolute origin, needed by social cards: og:image must not be relative. */
 const SITE_URL = 'https://randomutils.com'
 
 /**
@@ -42,7 +42,7 @@ const ADSENSE_RE = /[ \t]*<!-- Google AdSense -->[\s\S]*?<\/script>\n/
  * The app reads `window` at module scope (the flag store resolves the query
  * string and localStorage once, at import; the favourite lists do the same
  * inside a try/catch). In the browser that is fine; here it needs a stand-in
- * that reports "no query string, no saved overrides" — which is what makes the
+ * that reports "no query string, no saved overrides", which is what makes the
  * prerendered HTML match a fresh visitor's first paint.
  */
 function installDomShim() {
@@ -93,7 +93,7 @@ function metaBlock({ title, description, canonical, siteName, noindex = false })
     `    <meta property="og:image:type" content="image/png" />`,
     `    <meta property="og:image:width" content="1200" />`,
     `    <meta property="og:image:height" content="630" />`,
-    `    <meta property="og:image:alt" content="${esc(siteName)} — browser tools that never upload your files" />`,
+    `    <meta property="og:image:alt" content="${esc(siteName)}: browser tools that never upload your files" />`,
     `    <meta name="twitter:card" content="summary_large_image" />`,
     `    <meta name="twitter:image" content="${SITE_URL}/og.png" />`,
   )
@@ -111,7 +111,7 @@ function withMeta(template, meta) {
 /**
  * The structured-data slot. The script tag itself lives in index.html so the
  * id (which PageMetaSync updates at runtime) can never disagree with the build;
- * this replaces only its contents. An unpublished route — the 404 shell — gets
+ * this replaces only its contents. An unpublished route, the 404 shell, gets
  * an empty tag rather than a graph describing a page that does not exist.
  */
 const LD_RE = /(<script type="application\/ld\+json" id="site-ld">)[\s\S]*?(<\/script>)/
@@ -157,12 +157,12 @@ async function main() {
     for (const page of pages) {
       if (page.description.endsWith('…')) {
         console.log(
-          `  ! ${page.path.padEnd(14)} meta description is over 155 chars and was trimmed — rewrite the copy`,
+          `  ! ${page.path.padEnd(14)} meta description is over 155 chars and was trimmed; rewrite the copy`,
         )
       }
       const html = render(page.path)
       if (!html.includes('class="site-head"')) {
-        throw new Error(`prerender produced no shell for ${page.path} — refusing to write an empty page`)
+        throw new Error(`prerender produced no shell for ${page.path}; refusing to write an empty page`)
       }
       const out = withLd(
         withBody(
@@ -187,7 +187,7 @@ async function main() {
     // The SPA fallback is still needed for genuinely unknown paths, but it must
     // not claim to be the home page or invite a crawler to index a 404.
     const notFound = withMeta(template, {
-      title: `Not found — ${SITE.name}`,
+      title: `Not found | ${SITE.name}`,
       description: 'That link does not match a page on RandomUtils.',
       siteName: SITE.name,
       noindex: true,

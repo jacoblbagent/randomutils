@@ -7,7 +7,7 @@ import type { VideoToolSpec } from '../video/types'
  * QuickTime is a real container, so the copy rules differ from MPEG-TS in two ways:
  *  - there's no ADTS AAC in here, so copied audio needs no bitstream fix (and passing
  *    aac_adtstoasc would fail outright);
- *  - what people drop in is far more varied — iPhone/screen-recording H.264 and HEVC copy
+ *  - what people drop in is far more varied, iPhone/screen-recording H.264 and HEVC copy
  *    straight across, while ProRes, DV, Motion JPEG and PCM/ALAC audio must be re-encoded.
  */
 
@@ -16,7 +16,7 @@ const MOV_RE = /\.(mov|qt)$/i
 export const MOV_SPEC: VideoToolSpec = {
   id: 'mov-to-mp4',
   title: 'MOV → MP4',
-  sub: 'Convert MOV to MP4 in your browser: batch QuickTime (.mov) video into MP4 that plays everywhere. H.264, HEVC and AAC are copied across untouched; camera formats like ProRes, DV and PCM audio are re-encoded. Everything runs with FFmpeg (WebAssembly) — your videos never leave this machine.',
+  sub: 'Convert MOV to MP4 in your browser: batch QuickTime (.mov) video into MP4 that plays everywhere. H.264, HEVC and AAC are copied across untouched; camera formats like ProRes, DV and PCM audio are re-encoded. Everything runs with FFmpeg (WebAssembly), so your videos never leave this machine.',
   accept: '.mov,.qt,video/quicktime',
   isSource: (name) => MOV_RE.test(name),
   pairImages: false,
@@ -30,7 +30,7 @@ export const MOV_SPEC: VideoToolSpec = {
   posters: true,
   dropTitle: 'Drop .mov files here',
   dropNotes: [
-    'or click to browse — you can add more while a batch runs.',
+    'or click to browse, and you can add more while a batch runs.',
     'A frame from each video is used as its row thumbnail.',
   ],
   modes: [
@@ -42,7 +42,7 @@ export const MOV_SPEC: VideoToolSpec = {
     {
       value: 'remux',
       label: 'Stream copy',
-      hint: 'Seconds, lossless. Fails if the video or audio inside has to be re-encoded to play as MP4 — the usual case for ProRes and PCM.',
+      hint: 'Seconds, lossless. Fails if the video or audio inside has to be re-encoded to play as MP4, the usual case for ProRes and PCM.',
     },
     {
       value: 'encode',

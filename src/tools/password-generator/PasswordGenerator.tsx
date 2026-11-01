@@ -21,7 +21,7 @@ import './PasswordGenerator.css'
 /**
  * Password generator: cryptographically random passwords, made in this tab.
  *
- * The page is deliberately three things and no more — the passwords, the count
+ * The page is deliberately three things and no more, the passwords, the count
  * of what the settings actually give you, and the settings. The maths lives in
  * `random.ts`; this file is the readout and the controls.
  *
@@ -39,7 +39,7 @@ const DEFAULT_SETS: Record<SetId, boolean> = { lower: true, upper: true, digits:
 
 const DEFAULT_OPTIONS: Options = { length: 20, sets: DEFAULT_SETS, avoidAmbiguous: true }
 
-/** The passwords a set of options implies — the page's one generation entry point. */
+/** The passwords a set of options implies, the page's one generation entry point. */
 function roll(options: Options, count: number): string[] {
   const pools = poolsFor(options)
   if (pools.length === 0) return []
@@ -83,7 +83,7 @@ async function writeClipboard(text: string): Promise<boolean> {
     await navigator.clipboard.writeText(text)
     return true
   } catch {
-    /* falls through to the old selection trick — usually a permissions refusal */
+    /* falls through to the old selection trick, usually a permissions refusal */
   }
   const scratch = document.createElement('textarea')
   scratch.value = text
@@ -118,7 +118,7 @@ export default function PasswordGenerator() {
 
   /**
    * Every control goes through here, so the password on screen always matches
-   * the chips beside it and there is no "did I regenerate?" step to forget —
+   * the chips beside it and there is no "did I regenerate?" step to forget ,
    * and nothing is redrawn in an effect, which would cost a second render pass
    * for a value that was already knowable when the click arrived.
    */
@@ -147,7 +147,7 @@ export default function PasswordGenerator() {
       setCopied(key)
     } else {
       setCopied(null)
-      setNote('This browser blocked the clipboard — select the password and copy it by hand.')
+      setNote('This browser blocked the clipboard; select the password and copy it by hand.')
     }
   }
 
@@ -169,7 +169,7 @@ export default function PasswordGenerator() {
         <h1>Password generator</h1>
         <p className="pg-head__sub">
           Strong random passwords, drawn from your browser&rsquo;s own cryptographic random
-          source. Choose a length and the characters to allow, then copy — this page has no
+          source. Choose a length and the characters to allow, then copy. This page has no
           request it could send, so nothing generated here can leave the machine.
         </p>
       </header>
@@ -203,7 +203,7 @@ export default function PasswordGenerator() {
             </span>
             <p className="small-note">
               An offline attack at {(GUESSES_PER_SECOND / 1e9).toFixed(0)} billion guesses a
-              second — a stolen password file and a fast hash — would need about{' '}
+              second (a stolen password file and a fast hash) would need about{' '}
               {crackTimeNode(bits)}. That is the kindest case for the attacker; a slow hash or a
               login that throttles attempts takes far longer.
             </p>
@@ -277,7 +277,7 @@ export default function PasswordGenerator() {
           <span>
             <strong>Exclude look-alike characters</strong>
             <span className="small-note">
-              Leaves out 0, O, o, 1, I and l — the ones people mistype when reading a password
+              Leaves out 0, O, o, 1, I and l, the ones people mistype when reading a password
               off a screen or a sheet of paper.
             </span>
           </span>
@@ -312,7 +312,7 @@ export default function PasswordGenerator() {
 
         <p className="small-note">
           The digits-only pool is {DIGITS.length} characters and the symbols are the ones that
-          survive a signup form, a shell and a config file — no quotes, no backslash, no spaces.
+          survive a signup form, a shell and a config file: no quotes, no backslash, no spaces.
           Nothing is saved: no list of what you generated, no cookie, nothing in local storage.
           The password is on screen until you close the tab.
         </p>
@@ -320,17 +320,17 @@ export default function PasswordGenerator() {
 
       <ToolGuide heading="About this tool">
         <section className="doc__section">
-          <h2>Length beats cleverness</h2>
+          <h2>Why length matters more than a clever substitution</h2>
           <p>
             Every extra character multiplies the work an attacker has to do, while a clever
-            substitution (<code>p@ssw0rd</code>) does not — crackers try exactly those swaps
+            substitution (<code>p@ssw0rd</code>) does not, because crackers try those swaps
             first. The number to watch is the entropy figure above: bits, not &ldquo;looks
             complicated&rdquo;. Thirty bits falls to a laptop; a hundred and twenty does not fall
             to anything.
           </p>
           <p>
             That is why the length slider is the first control. If a site rejects the symbols,
-            the answer is not to hunt for a symbol it accepts — drop symbols, raise the length,
+            the answer is not to hunt for a symbol it accepts. Drop symbols, raise the length,
             and come out with more entropy than you started with.
           </p>
         </section>
@@ -347,7 +347,7 @@ export default function PasswordGenerator() {
             <li>
               Each index is taken by <strong>rejection</strong>, not by modulo: a draw that falls
               outside the largest whole multiple of the pool size is thrown away and redrawn. The
-              lazy version — <code>draw % poolSize</code> — quietly gives the first few
+              lazy version, <code>draw % poolSize</code>, quietly gives the first few
               characters in the pool an extra chance, and a generator with a bias in it is not one
               to trust for anything else.
             </li>
@@ -371,23 +371,23 @@ export default function PasswordGenerator() {
             </li>
             <li>
               <strong>Excluding look-alikes</strong> removes 0, O, o, 1, I and l. It costs a
-              little entropy — the pool drops from 86 characters to 80 — which is far less than
+              little entropy: the pool drops from 86 characters to 80, which is far less than
               one extra character buys back. Turn it on if you ever read a password off a screen;
               leave it off if you only ever paste from a password manager.
             </li>
             <li>
-              With every set on the pool is 86 characters — about 6.4 bits per character — so a
+              With every set on the pool is 86 characters, about 6.4 bits per character, so a
               20-character password is around 128 bits, and 126 with the look-alikes excluded.
             </li>
           </ul>
         </section>
 
         <section className="doc__section">
-          <h2>What the crack-time number means — and what it hides</h2>
+          <h2>What the crack-time number means, and what it hides</h2>
           <p>
             The estimate assumes an attacker who has the password, offline, and can try 100
             billion guesses a second: a fast unsalted hash (MD5, SHA-1) on serious hardware. It is
-            an <em>average</em> case — half the space — and it is the kindest thing that could
+            an <em>average</em> case (half the space), and it is the kindest thing that could
             happen to a password, so treat it as a floor, not a guarantee. Against a slow,
             salted hash such as bcrypt, or a login that throttles attempts, the same password
             lasts orders of magnitude longer.
@@ -405,7 +405,7 @@ export default function PasswordGenerator() {
           <h2>Privacy, in one line</h2>
           <p>
             This page makes no network request after it loads, so there is nowhere for a password
-            to go. The one place it leaves the page is your clipboard when you press Copy — on the
+            to go. The one place it leaves the page is your clipboard when you press Copy. On the
             way, check whether your clipboard is synced across devices or kept in a history, and
             clear it with <code>Ctrl</code>+<code>Shift</code>+<code>Delete</code> or the OS
             clipboard viewer if that matters. Nothing else is kept: closing the tab erases the

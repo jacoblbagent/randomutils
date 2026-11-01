@@ -62,7 +62,7 @@ export default function JobRow({
   const [draft, setDraft] = useState('')
   const editRef = useRef<HTMLInputElement | null>(null)
   // Checkboxes' native 'change' event carries no modifier-key info (it's a plain Event, not a
-  // MouseEvent), so the shift state is captured on the preceding 'click' (which does have it —
+  // MouseEvent), so the shift state is captured on the preceding 'click' (which does have it ,
   // click always fires immediately before change) and read back when 'change' fires.
   const checkShiftRef = useRef(false)
 
@@ -92,7 +92,7 @@ export default function JobRow({
       }}
       onClick={(e) => {
         // Row acts as "View" everywhere except its buttons/links/rename field (star, download, retry, remove, rename),
-        // and only once the file has actually converted — nothing to watch before that. Shift/cmd/ctrl-click select
+        // and only once the file has actually converted, nothing to watch before that. Shift/cmd/ctrl-click select
         // instead of viewing, same as Finder/Gmail/etc: shift extends a range from the last pick, cmd/ctrl toggles one.
         if (status !== 'done') return
         if ((e.target as HTMLElement).closest('button, a, input')) return

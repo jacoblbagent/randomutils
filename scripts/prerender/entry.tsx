@@ -1,5 +1,5 @@
 /**
- * Prerender entry — renders the real app shell for one route to HTML.
+ * Prerender entry, renders the real app shell for one route to HTML.
  *
  * Loaded by scripts/prerender.mjs through Vite's SSR module runner, so it uses
  * the same components, the same CSS imports and the same TypeScript source as

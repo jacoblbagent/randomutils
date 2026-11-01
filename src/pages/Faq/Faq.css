@@ -1,4 +1,4 @@
-/* FAQ — the prose frame lives in App.css (.doc primitives). Only the question
+/* FAQ, the prose frame lives in App.css (.doc primitives). Only the question
    spacing needs a nudge: each answer is its own .doc__section, so keep them a
    little further apart than the prose pages' sections. */
 

@@ -7,7 +7,7 @@ export type ConvertMode = 'auto' | 'remux' | 'encode'
 
 export type JobStatus = 'queued' | 'converting' | 'done' | 'error'
 
-/** What the converter is doing right now — surfaced in the row's meta line. */
+/** What the converter is doing right now, surfaced in the row's meta line. */
 export type JobPhase = 'loading' | 'reading' | 'remux' | 'encode'
 
 /** Per-stream decision: copy as-is when the player can take it, otherwise re-encode. */
@@ -46,7 +46,7 @@ export interface JobResult {
 export interface Job {
   id: number
   file: File
-  /** Filename minus its source extension — the base of the row name and the .mp4 name. */
+  /** Filename minus its source extension, the base of the row name and the .mp4 name. */
   stem: string
   status: JobStatus
   phase: JobPhase | null
@@ -55,7 +55,7 @@ export interface Job {
   error: string
   /** User-edited display name (spaces allowed), or null to use the original. */
   customName: string | null
-  /** A sidecar was added for this recording (DVR `.star` files — TS tool only). */
+  /** A sidecar was added for this recording (DVR `.star` files, TS tool only). */
   starred: boolean
   /** Object URL of a frame pulled from the source, when the format asks for posters. */
   poster: string | null
@@ -70,10 +70,10 @@ export interface ConvertHandlers {
 /**
  * Everything that differs between one converter and another. A tool page is a
  * `ConvertQueue` plus one of these; the queue itself knows nothing about .ts or
- * .mov — only what the spec says.
+ * .mov, only what the spec says.
  */
 export interface VideoToolSpec {
-  /** Tool id — also the localStorage namespace for favorites and dismissed names. */
+  /** Tool id, also the localStorage namespace for favorites and dismissed names. */
   id: string
   title: string
   /** Lede under the title. */

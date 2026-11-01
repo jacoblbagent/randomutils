@@ -6,7 +6,7 @@ import './Privacy.css'
  * Privacy policy.
  *
  * Two jobs: state plainly what the tools do with your files (nothing leaves the
- * browser), and disclose the one third party the site actually loads — Google
+ * browser), and disclose the one third party the site actually loads, Google
  * AdSense. Ad review expects a linked privacy page on an ad-serving site, and
  * this is also the page a visitor checks against the "nothing is uploaded"
  * claim in the footer, so the wording here has to stay true to the code.
@@ -28,7 +28,7 @@ export default function Privacy() {
         {SITE.name} is a set of small tools that run inside your browser. The tools are the whole product:
         every file you open in one of them is processed on your own machine by FFmpeg compiled to
         WebAssembly, and every password is drawn from your browser's own random source. Neither is
-        uploaded, transmitted or stored anywhere — there is no account, no server-side processing,
+        uploaded, transmitted or stored anywhere: there is no account, no server-side processing,
         and no copy of your file leaves your device.
       </p>
 
@@ -100,7 +100,7 @@ export default function Privacy() {
         <p>
           The site is a static build hosted on GitHub Pages and served at{' '}
           <a href={SITE.url}>{SITE.url.replace('https://', '')}</a>. Serving a page normally means the host
-          records the request — IP address, user agent, timestamp — for security and delivery. That logging
+          records the request (IP address, user agent, timestamp) for security and delivery. That logging
           is GitHub's, not ours; see GitHub's{' '}
           <a
             href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
@@ -134,7 +134,7 @@ export default function Privacy() {
         <h2>Contact</h2>
         <p>
           Questions about this policy, a correction, or a privacy request (there is no data about you for us
-          to hand over, but ask anyway) — see the{' '}
+          to hand over, but ask anyway). See the{' '}
           <Link to="/contact">contact page</Link>, or email{' '}
           <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>.
         </p>

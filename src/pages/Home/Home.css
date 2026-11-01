@@ -2,7 +2,7 @@
 
 .home__hero { display: grid; gap: var(--s2); }
 
-/* The page's h1 — same scale and weight as the .doc headings on the prose
+/* The page's h1, same scale and weight as the .doc headings on the prose
    pages, so the home page reads as the same site rather than a second design. */
 .home__title {
   margin: 0;

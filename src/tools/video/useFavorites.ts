@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 
 // Favorites are remembered by name + size, so re-adding the same file after a reload keeps its star.
 // The namespace is the tool id, so each converter keeps its own list; for ts-to-mp4 the key is
-// deliberately unchanged from the standalone TS → MP4 app, whose deploy shared this origin — stars
+// deliberately unchanged from the standalone TS → MP4 app, whose deploy shared this origin, stars
 // saved there still apply here.
 export const favoriteKey = (file: File) => `${file.name}|${file.size}`
 

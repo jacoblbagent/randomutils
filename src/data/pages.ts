@@ -1,5 +1,5 @@
 /**
- * The page registry — every URL the site answers with a real, indexable page.
+ * The page registry, every URL the site answers with a real, indexable page.
  *
  * This is the single source of truth for `<title>`, the meta description, the
  * canonical URL and sitemap.xml: `scripts/prerender.mjs` reads it at build time
@@ -13,7 +13,7 @@ import { SITE, siteUrl } from '../config/site'
 import { tools } from './tools'
 
 export interface PageMeta {
-  /** Route path as react-router sees it — '/' for home, no trailing slash. */
+  /** Route path as react-router sees it, '/' for home, no trailing slash. */
   path: string
   /** Full <title> text. */
   title: string
@@ -31,15 +31,15 @@ export interface PageMeta {
 const STATIC_PAGES: PageMeta[] = [
   {
     path: '/',
-    title: `${SITE.name} — browser tools that never upload your files`,
+    title: `${SITE.name}: browser tools that never upload your files`,
     description:
-      'Browser tools that never upload your files: convert TS and MOV video to MP4, pull a video’s audio, or generate a strong password — all locally.',
+      'Browser tools that never upload your files: convert TS and MOV video to MP4, pull a video’s audio, or generate a strong password, all locally.',
     heading: SITE.name,
     inSitemap: true,
   },
   {
     path: '/privacy',
-    title: `Privacy policy — ${SITE.name}`,
+    title: `Privacy policy | ${SITE.name}`,
     description:
       'What we do with the files you open in a RandomUtils tool (nothing leaves your browser) and what our one third party, Google AdSense, does with cookies.',
     heading: 'Privacy policy',
@@ -47,15 +47,15 @@ const STATIC_PAGES: PageMeta[] = [
   },
   {
     path: '/contact',
-    title: `Contact — ${SITE.name}`,
+    title: `Contact | ${SITE.name}`,
     description:
-      'Report a broken conversion, ask about a format, or reach the owner about advertising, business or takedown questions — no GitHub account needed.',
+      'Report a broken conversion, ask about a format, or reach the owner about advertising, business or takedown questions. No GitHub account needed.',
     heading: 'Contact',
     inSitemap: true,
   },
   {
     path: '/about',
-    title: `About — ${SITE.name}`,
+    title: `About | ${SITE.name}`,
     description:
       'What RandomUtils is, why every tool runs entirely in your browser instead of uploading your files, what the site deliberately does not do, and who runs it.',
     heading: 'About',
@@ -63,7 +63,7 @@ const STATIC_PAGES: PageMeta[] = [
   },
   {
     path: '/faq',
-    title: `FAQ — ${SITE.name}`,
+    title: `FAQ | ${SITE.name}`,
     description:
       'Why a file is skipped, why the FFmpeg engine reloads mid-batch, whether anything is uploaded, and how to install the site as an app.',
     heading: 'Frequently asked questions',
@@ -71,7 +71,7 @@ const STATIC_PAGES: PageMeta[] = [
   },
   {
     path: '/terms',
-    title: `Terms of use — ${SITE.name}`,
+    title: `Terms of use | ${SITE.name}`,
     description:
       'The plain terms for the RandomUtils tools: free to use, provided as-is without warranty, your files stay yours, and the site is supported by advertising.',
     heading: 'Terms of use',
@@ -82,7 +82,7 @@ const STATIC_PAGES: PageMeta[] = [
 /**
  * Trim a description to the length search engines actually display.
  *
- * Only a backstop — every page carries hand-written copy that fits, and the
+ * Only a backstop, every page carries hand-written copy that fits, and the
  * build logs a note when this fires. It is careful about *how* it cuts: a plain
  * 155-character slice can leave the text ending on a dangling article
  * ("… compiled to", "… so the"), which reads as broken in a search result, so
@@ -99,7 +99,7 @@ function clamp(text: string, max = 155): string {
 
 /**
  * Tool pages read their copy from the tool registry (src/data/tools.ts), where
- * each tool carries a hand-written `seo.title` and `seo.description` — the two
+ * each tool carries a hand-written `seo.title` and `seo.description`, the two
  * fields a crawler sees, kept beside the card copy so they cannot drift.
  */
 const TOOL_PAGES: PageMeta[] = tools.map((tool) => ({
@@ -113,7 +113,7 @@ const TOOL_PAGES: PageMeta[] = tools.map((tool) => ({
 /**
  * Every page's final metadata. Descriptions go through `clamp` here rather than
  * at each call site, so a description that grows past the length a search result
- * displays is trimmed by the build instead of shipping long — and the prerender
+ * displays is trimmed by the build instead of shipping long, and the prerender
  * prints a note when that happens, which is the signal to rewrite the copy.
  */
 export const pages: PageMeta[] = [...STATIC_PAGES, ...TOOL_PAGES].map((page) => ({
@@ -130,7 +130,7 @@ export function pageMetaFor(pathname: string): PageMeta | undefined {
   return pages.find((page) => page.path === path)
 }
 
-/** The canonical URL of a route — what the <link rel="canonical"> points at. */
+/** The canonical URL of a route, what the <link rel="canonical"> points at. */
 export function canonicalFor(path: string): string {
   return siteUrl(path)
 }

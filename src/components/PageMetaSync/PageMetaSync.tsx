@@ -8,8 +8,8 @@ import { structuredDataJson } from '../../data/structuredData'
  * Keeps the document head in step with the route.
  *
  * The build already writes the correct title, description and canonical into
- * each prerendered page (scripts/prerender.mjs), so a cold load — and every
- * crawler — sees the right thing without running any JavaScript. This is for
+ * each prerendered page (scripts/prerender.mjs), so a cold load, and every
+ * crawler, sees the right thing without running any JavaScript. This is for
  * what happens next: a visitor clicking between tools, where nothing would
  * reload the document and the tab would keep saying "RandomUtils".
  *
@@ -18,7 +18,7 @@ import { structuredDataJson } from '../../data/structuredData'
  * address bar can say /privacy while the canonical says /privacy/.
  *
  * The JSON-LD block (`script#site-ld`) is refreshed the same way, from the same
- * module the prerender writes it from — a tool page clicked into from the home
+ * module the prerender writes it from, a tool page clicked into from the home
  * page ends up with that tool's graph, not the home page's.
  *
  * Unknown routes (the SPA's NotFound view) get noindex and drop the canonical,
@@ -29,7 +29,7 @@ export default function PageMetaSync() {
 
   useEffect(() => {
     const meta = pageMetaFor(pathname)
-    const title = meta ? meta.title : `Not found — ${SITE.name}`
+    const title = meta ? meta.title : `Not found | ${SITE.name}`
     const description = meta ? meta.description : 'That link does not match a page on RandomUtils.'
 
     document.title = title

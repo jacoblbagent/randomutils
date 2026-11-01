@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from 'react'
 import { FFmpeg } from '@ffmpeg/ffmpeg'
 import { fetchFile } from '@ffmpeg/util'
-// Bundled locally by Vite — no CDN required.
+// Bundled locally by Vite, no CDN required.
 import coreURL from '@ffmpeg/core?url'
 import wasmURL from '@ffmpeg/core/wasm?url'
 import type { ConvertHandlers, ConvertMode, ConvertPlan, ConvertResult, StreamInfo } from './types'
@@ -78,7 +78,7 @@ export class CancelledError extends Error {
   }
 }
 
-// ffmpeg.wasm's linear memory only ever grows within one engine instance — deleting files frees
+// ffmpeg.wasm's linear memory only ever grows within one engine instance, deleting files frees
 // the virtual filesystem but not the wasm heap ceiling, so a long batch of large files eventually
 // traps with "RuntimeError: memory access out of bounds". Recycling (terminate + reload on the
 // next file) resets that ceiling before it's hit, and after every file so the reload is cheap
@@ -225,7 +225,7 @@ export function useFFmpeg({ adtsAudio, posters }: FFmpegOptions) {
         result = { blob: new Blob([bytes.buffer as ArrayBuffer], { type: 'video/mp4' }), mode: used }
 
         // Thumbnail, best-effort: a failure here must never mark a converted file as failed.
-        // It has to run *before* the `finally` cleanup below — the source file is still in the
+        // It has to run *before* the `finally` cleanup below, the source file is still in the
         // wasm filesystem at this point and is deleted the moment this try block exits.
         if (posters) {
           try {
@@ -241,12 +241,12 @@ export function useFFmpeg({ adtsAudio, posters }: FFmpegOptions) {
               }
             }
           } catch {
-            /* no poster — the row shows the empty thumb box */
+            /* no poster, the row shows the empty thumb box */
           }
         }
       } catch (err) {
         if (cancelledRef.current) throw new CancelledError()
-        // A wasm trap leaves this instance unreliable for every file after it — recycle now so
+        // A wasm trap leaves this instance unreliable for every file after it, recycle now so
         // the failure can't cascade onto the next one.
         if (isFatalWasmError(err)) recycle()
         throw err

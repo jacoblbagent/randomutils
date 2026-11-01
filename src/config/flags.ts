@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from 'react'
 
 /* =========================================================================
-   Feature flags — the one gate everything new goes behind.
+   Feature flags, the one gate everything new goes behind.
 
    Adding a feature or a major change: register a flag here, default it to
    `false`, gate the code with `useFlag('id')` (or `isEnabled('id')` outside a
@@ -9,18 +9,18 @@ import { useSyncExternalStore } from 'react'
 
    A flag resolves from three places, highest precedence first:
 
-     1. The URL — `?flags=tool-search` (on), `?flags=!tool-search` (off),
+     1. The URL: `?flags=tool-search` (on), `?flags=!tool-search` (off),
         comma-separated, page-scoped. A shareable preview link: it does not
         stick once the query is gone.
-     2. localStorage `randomutils.flags` — what the flags panel writes, so a
+     2. localStorage `randomutils.flags`: what the flags panel writes, so a
         flip in one browser survives reloads with no redeploy.
-     3. `FLAGS` below — the committed default, what CI and fresh visitors get.
+     3. `FLAGS` below: the committed default, what CI and fresh visitors get.
 
    Open the panel with `?flags=1` on any URL, or Shift+Alt+F. From the console:
    `randomutils.flags.set('tool-search', true)`.
 
-   Runtime flags are for UI-level gating. A flag that carries weight — a bundled
-   dataset, MBs of assets, another big dependency — must ALSO be evaluated at
+   Runtime flags are for UI-level gating. A flag that carries weight, a bundled
+   dataset, MBs of assets, another big dependency, must ALSO be evaluated at
    build time by a module-level `const` in a branch Rollup can fold
    (`if (!BIG) return EMPTY`), so the payload is tree-shaken out of the bundle.
    Runtime overrides can only hide a feature, never un-ship it.
@@ -46,7 +46,7 @@ export const FLAGS: Record<FlagId, FlagSpec> = {
   'tool-search': {
     default: true,
     label: 'Tool search',
-    description: 'Filter box beside the tag row above the home grid — matches name, tagline and tags.',
+    description: 'Filter box beside the tag row above the home grid. Matches name, tagline and tags.',
   },
   'ts-to-mp4': {
     default: true,
@@ -104,7 +104,7 @@ function writeSaved(): void {
     if (Object.keys(saved).length === 0) window.localStorage.removeItem(STORE_KEY)
     else window.localStorage.setItem(STORE_KEY, JSON.stringify(saved))
   } catch {
-    /* private mode / storage disabled — the page-scoped state still works */
+    /* private mode / storage disabled, the page-scoped state still works */
   }
 }
 
@@ -171,7 +171,7 @@ export function isEnabled(id: FlagId): boolean {
   return override ?? FLAGS[id].default
 }
 
-/** Where the current value came from — surfaced in the panel. */
+/** Where the current value came from, surfaced in the panel. */
 export function flagSource(id: FlagId): FlagSource {
   if (id in fromUrl) return 'url'
   if (id in saved) return 'saved'
@@ -213,7 +213,7 @@ export function setPanelOpen(open: boolean): void {
 }
 
 /**
- * A link that reproduces the current flag state for anyone who opens it —
+ * A link that reproduces the current flag state for anyone who opens it ,
  * every flag that differs from its committed default.
  */
 export function flagPreviewUrl(): string {
@@ -258,7 +258,7 @@ export function useFlag(id: FlagId): boolean {
   )
 }
 
-/** Every flag at once — for a list that filters on several of them. */
+/** Every flag at once, for a list that filters on several of them. */
 export function useFlags(): Record<FlagId, boolean> {
   return useSyncExternalStore(subscribe, flagsOf, flagsOf)
 }

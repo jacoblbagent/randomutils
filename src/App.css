@@ -1,9 +1,9 @@
 /* =========================================================================
-   RandomUtils — tokens first, then the primitives every page shares.
+   RandomUtils, tokens first, then the primitives every page shares.
 
    One place declares colour, space (4px grid), radius, and type; pages and
    tools only consume them. Component styles live next to their component
-   (ComponentName/ComponentName.css) — only cross-cutting primitives live here.
+   (ComponentName/ComponentName.css) , only cross-cutting primitives live here.
    ========================================================================= */
 
 :root {
@@ -31,11 +31,11 @@
   --danger-soft: #fbeae8;
   --warn: #92500f;
 
-  /* chip (counts) — grey stone-300, 4px radius */
+  /* chip (counts), grey stone-300, 4px radius */
   --chip-bg: #d6d3d1;
   --chip-ink: #3d3a38;
 
-  /* space — 4px grid */
+  /* space, 4px grid */
   --s1: 4px;
   --s2: 8px;
   --s3: 12px;
@@ -108,7 +108,7 @@ body {
   line-height: 1.5;
 }
 
-/* Browser surfaces — themed from the palette, not left to defaults */
+/* Browser surfaces, themed from the palette, not left to defaults */
 ::selection { background: color-mix(in srgb, var(--accent) 26%, transparent); color: var(--text); }
 * { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
 *::-webkit-scrollbar { width: 10px; height: 10px; }
@@ -157,7 +157,7 @@ body {
 .primary:disabled, .secondary:disabled { opacity: 0.45; cursor: not-allowed; }
 .small { padding: 7px var(--s3); font-size: var(--t-sm); }
 
-/* standalone / inline text actions — ghost, underlined */
+/* standalone / inline text actions, ghost, underlined */
 .link {
   appearance: none;
   border: 0;
@@ -204,7 +204,7 @@ body {
   transform-origin: left center;
   transform: scaleX(0);
   background: var(--accent);
-  transition: transform 0.2s ease-out; /* transform only — never layout width */
+  transition: transform 0.2s ease-out; /* transform only, never layout width */
 }
 .bar > .indeterminate { animation: pulse 1.2s ease-in-out infinite; }
 @keyframes pulse { 50% { opacity: 0.35; } }

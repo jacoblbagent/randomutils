@@ -25,43 +25,39 @@ export default function TsToMp4() {
         <VStack gap={2}>
           <Heading level={2}>What a .ts file is</Heading>
           <Text as="p" color="secondary">
-            A <Code>.ts</Code> file is an MPEG transport stream: the container broadcasters and
-            tuners write because it is built to survive a lossy signal. Instead of an index at
-            the head of the file, as MP4 has, it is a continuous run of small fixed-size packets,
-            which lets a receiver tune in mid-stream and start playing. That design is why a
-            recording plays fine in VLC and badly, or not at all, in QuickTime, on most
-            phones, and in editors that expect a seekable file. The video inside is fine; the container is the
-            problem, and moving it into MP4 is what this tool does.
+            A <Code>.ts</Code> file is an MPEG transport stream: the container tuners write because
+            it survives a lossy signal. It has no index at the head like MP4, just a continuous run
+            of small fixed-size packets, so a receiver can tune in mid-stream. That is why a
+            recording plays in VLC and badly, or not at all, in QuickTime, on most phones, and in
+            editors that expect a seekable file. The video inside is fine; the container is the
+            problem, and this tool moves it into MP4.
           </Text>
           <Text as="p" color="secondary">
-            You will usually meet one of three things, and they are the same conversion here:
-            a capture from a network tuner such as an HDHomeRun, a recording pulled off a cable
-            box or DVR, or an over-the-air capture. Files named <Code>.mts</Code> or{' '}
-            <Code>.m2ts</Code> are the same family under different initials: AVCHD camcorders
-            and Blu-ray use those extensions, and this tool takes all three.
+            Recordings usually come from a network tuner such as an HDHomeRun, a cable box or DVR,
+            or an over-the-air capture. <Code>.mts</Code> and <Code>.m2ts</Code> are the same family
+            from AVCHD camcorders and Blu-ray, and this tool takes all three.
           </Text>
         </VStack>
 
         <VStack gap={2}>
           <Heading level={2}>Stream copy or re-encode?</Heading>
           <Text as="p" color="secondary">
-            <strong>Auto</strong> is the right answer almost every time: it copies the video and
-            audio across untouched where they are already playable in an MP4, and re-encodes only
-            the parts that are not. A copy is lossless and limited by your disk rather than your
-            processor, so a two-hour recording finishes in seconds.
+            <strong>Auto</strong> is right almost every time: it copies video and audio untouched
+            where an MP4 can hold them and re-encodes only what it cannot. A copy is lossless and
+            limited by disk rather than processor, so a two-hour recording finishes in seconds.
           </Text>
           <List listStyle="disc">
-            <ListItem label={<Text color="secondary"><strong>Stream copy</strong>: force it when you know the recording is already H.264 or HEVC video with AAC audio and you want the fastest, pixel-identical result. If the video cannot legally sit in an MP4 it will fail outright rather than re-encode silently, which is what choosing it is for.</Text>} />
-            <ListItem label={<Text color="secondary"><strong>Re-encode</strong>: H.264 video and AAC audio, playable anywhere, but slow: roughly real time or worse on a laptop, and it discards the original quality in favour of compatibility. Reach for it when Auto produced a file that still will not play, or when you want the safest possible copy of an odd recording.</Text>} />
+            <ListItem label={<Text color="secondary"><strong>Stream copy</strong>: force it when the recording is H.264 or HEVC with AAC and you want the fastest, identical result. If the video cannot sit in an MP4 it fails rather than re-encoding silently.</Text>} />
+            <ListItem label={<Text color="secondary"><strong>Re-encode</strong>: H.264 + AAC, playable anywhere, but slow, roughly real time on a laptop, and it discards the original quality. Use it when Auto produced a file that still will not play.</Text>} />
           </List>
         </VStack>
 
         <VStack gap={2}>
           <Heading level={2}>The 50 MB floor, and DVR .star files</Heading>
           <List listStyle="disc">
-            <ListItem label={<Text color="secondary">Any <Code>.ts</Code> under {MIN_SIZE_MB} MB is skipped when you add it. Small files are almost always stubs, ad-break fragments or index scraps rather than real recordings, and converting them is noise. If a genuine clip is under the floor, the <Link href="/contact">contact page</Link> explains what to send.</Text>} />
-            <ListItem label={<Text color="secondary">A <Code>.star</Code> file sitting next to a recording (<Code>hdz_0000.ts.star</Code>{' '} and the like) is a DVR sidecar naming the programme. Drop it in with the video and it is never converted itself; it just flags the matching row and rides along into the output name.</Text>} />
-            <ListItem label={<Text color="secondary">A same-named <Code>.jpg</Code> becomes that row&rsquo;s thumbnail, since DVRs usually ship one beside each recording.</Text>} />
+            <ListItem label={<Text color="secondary">Any <Code>.ts</Code> under {MIN_SIZE_MB} MB is skipped. Files that small are almost always stubs, ad-break fragments or index scraps. For a genuine smaller clip, see the <Link href="/contact">contact page</Link>.</Text>} />
+            <ListItem label={<Text color="secondary">A <Code>.star</Code> file sitting next to a recording (<Code>hdz_0000.ts.star</Code>{' '} and the like) is a DVR sidecar naming the programme. Drop it in with the video and it is never converted itself; it flags the matching row and rides into the output name.</Text>} />
+            <ListItem label={<Text color="secondary">A same-named <Code>.jpg</Code> becomes that row&rsquo;s thumbnail.</Text>} />
           </List>
         </VStack>
 
@@ -70,22 +66,21 @@ export default function TsToMp4() {
           <List listStyle="disc">
             <ListItem label={<Text color="secondary"><strong>The MP4 plays but has no sound.</strong> The audio was probably AC-3, which MP4 players commonly refuse. Re-run that file with <strong>Re-encode</strong>.</Text>} />
             <ListItem label={<Text color="secondary"><strong>The picture shows comb-like lines on movement.</strong> The source is interlaced. <strong>Re-encode</strong> de-interlaces; a stream copy cannot.</Text>} />
-            <ListItem label={<Text color="secondary"><strong>&ldquo;Stream copy failed.&rdquo;</strong> Expected: the video inside the stream is not MP4-legal. Auto or Re-encode handles it.</Text>} />
-            <ListItem label={<Text color="secondary"><strong>A very large file stops part-way.</strong> The whole input and output sit in the page&rsquo;s memory, so a single recording over roughly 2 GB may run out of room. Split it first, or convert on a machine with more free memory.</Text>} />
+            <ListItem label={<Text color="secondary"><strong>&ldquo;Stream copy failed.&rdquo;</strong> The video inside the stream is not MP4-legal. Auto or Re-encode handles it.</Text>} />
+            <ListItem label={<Text color="secondary"><strong>A very large file stops part-way.</strong> Input and output sit in page memory, so a recording over roughly 2 GB may run out of room. Split it first.</Text>} />
             <ListItem label={<Text color="secondary"><strong>Dropping a file does nothing.</strong> Check the extension is{' '} <Code>.ts</Code>, <Code>.mts</Code> or <Code>.m2ts</Code>, and that the file is over{' '} {MIN_SIZE_MB} MB.</Text>} />
           </List>
           <Text as="p" type="supporting">
-            Still stuck? The <Link href="/contact">contact page</Link> lists exactly what to include
-            so it can be worked out without sending the file.
+            Still stuck? The <Link href="/contact">contact page</Link> lists what to include.
           </Text>
         </VStack>
 
         <VStack gap={2}>
-          <Heading level={2}>Privacy, in one line</Heading>
+          <Heading level={2}>Privacy</Heading>
           <Text as="p" color="secondary">
-            The conversion runs in this tab with FFmpeg compiled to WebAssembly, so the recording
-            never leaves your machine: there is no upload step, and nothing is kept after you
-            close the tab. The <Link href="/privacy">privacy page</Link> is the long version.
+            The conversion runs in this tab on FFmpeg compiled to WebAssembly, so the recording never
+            leaves your machine and nothing is kept after the tab closes. The{' '}
+            <Link href="/privacy">privacy page</Link> is the long version.
           </Text>
         </VStack>
       </ToolGuide>

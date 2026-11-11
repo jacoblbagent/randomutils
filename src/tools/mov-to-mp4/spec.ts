@@ -16,7 +16,7 @@ const MOV_RE = /\.(mov|qt)$/i
 export const MOV_SPEC: VideoToolSpec = {
   id: 'mov-to-mp4',
   title: 'MOV → MP4',
-  sub: 'Convert MOV to MP4 in your browser: batch QuickTime (.mov) video into MP4 that plays everywhere. H.264, HEVC and AAC are copied across untouched; camera formats like ProRes, DV and PCM audio are re-encoded. Everything runs with FFmpeg (WebAssembly), so your videos never leave this machine.',
+  sub: 'Convert MOV to MP4 in your browser: batch .mov files into MP4 that plays everywhere. H.264, HEVC and AAC are copied untouched; ProRes, DV and PCM audio are re-encoded. Nothing is uploaded.',
   accept: '.mov,.qt,video/quicktime',
   isSource: (name) => MOV_RE.test(name),
   pairImages: false,
@@ -37,19 +37,19 @@ export const MOV_SPEC: VideoToolSpec = {
     {
       value: 'auto',
       label: 'Auto',
-      hint: 'Copies H.264, HEVC, AAC and MP3 as-is and re-encodes only what MP4 players refuse (ProRes, DV, PCM, ALAC…).',
+      hint: 'Copies H.264, HEVC, AAC and MP3 as-is, re-encodes what MP4 players refuse (ProRes, DV, PCM, ALAC…).',
     },
     {
       value: 'remux',
       label: 'Stream copy',
-      hint: 'Seconds, lossless. Fails if the video or audio inside has to be re-encoded to play as MP4, the usual case for ProRes and PCM.',
+      hint: 'Seconds, lossless. Fails when the video or audio has to be re-encoded, as with ProRes and PCM.',
     },
     {
       value: 'encode',
       label: 'Re-encode',
-      hint: 'H.264 + AAC. Works for any input, but much slower.',
+      hint: 'H.264 + AAC. Any input, much slower.',
     },
   ],
-  note: 'Files convert one at a time; each input and output sits in browser memory, so single files over ~2 GB may fail. “Download all” bundles every converted file into one .zip.',
+  note: 'Files convert one at a time, and each input and output sits in browser memory, so files over ~2 GB may fail. Download all bundles the results into one .zip.',
   zipDefault: 'converted-videos',
 }

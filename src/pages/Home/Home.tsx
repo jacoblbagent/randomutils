@@ -29,15 +29,13 @@ export default function Home() {
   return (
     <Page>
       <VStack gap={2}>
-        {/* The page's one h1. It states what the site is rather than repeating
-            the brand the header already carries, the title says the same thing,
-            so the tab, the crawler and the reader agree. */}
+        {/* The page's one h1. */}
         <Heading level={1} type="display-2">
           Browser tools that never upload your files
         </Heading>
         <Text type="large" color="secondary">
-          A hub for small, single-purpose tools. Each one runs entirely in your browser, with no
-          accounts, no uploads, and no server holding your files.
+          Small single-purpose tools that run entirely in your browser. No accounts, no uploads, no
+          server holding your files.
         </Text>
       </VStack>
 
@@ -71,12 +69,9 @@ export default function Home() {
       </VStack>
 
       <Text color="secondary">
-        Every tool here is a page, not a service. The work happens on your own machine: the video
-        tools on FFmpeg compiled to WebAssembly, the password and UUID generators on your
-        browser&rsquo;s own crypto. Nothing you open or generate is uploaded, and nothing is kept
-        when you close the tab. Nothing depends on trusting us to leave a setting alone, because
-        there is no upload step to disable. <Link href="/about">How that works</Link>, and what the
-        site does and does not do, is on the about page.
+        The video tools run on FFmpeg compiled to WebAssembly; the password and UUID generators use
+        your browser&rsquo;s own crypto. Nothing you open or generate is uploaded, and nothing
+        survives closing the tab. <Link href="/about">How that works</Link>.
       </Text>
     </Page>
   )

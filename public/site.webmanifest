@@ -1,7 +1,7 @@
 {
   "name": "RandomUtils",
   "short_name": "RandomUtils",
-  "description": "Small, single-purpose browser tools: convert TS and MOV video to MP4, pull the audio out of a video, or generate strong passwords. Everything runs locally, and nothing is uploaded.",
+  "description": "Convert TS and MOV video to MP4, extract audio, generate passwords and UUIDs. Runs in your browser; nothing is uploaded.",
   "id": "/",
   "start_url": "/",
   "scope": "/",

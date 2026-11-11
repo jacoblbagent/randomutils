@@ -19,7 +19,7 @@ export const MIN_SIZE_MB = 50
 export const TS_SPEC: VideoToolSpec = {
   id: 'ts-to-mp4',
   title: 'TS → MP4',
-  sub: 'Convert TS to MP4 in your browser: batch MPEG transport stream (.ts, .mts, .m2ts) recordings, stream-copied where they already fit an MP4. Everything runs with FFmpeg (WebAssembly), so your videos never leave this machine.',
+  sub: 'Convert TS to MP4 in your browser: batch .ts, .mts and .m2ts recordings, stream-copied where they already fit an MP4. Nothing is uploaded.',
   accept: '.ts,.mts,.m2ts,video/mp2t,.jpg,.jpeg,.png,image/jpeg,image/png,.txt,.star,text/plain',
   isSource: (name) => TS_RE.test(name),
   pairImages: true,
@@ -38,13 +38,13 @@ export const TS_SPEC: VideoToolSpec = {
   dropTitle: 'Drop .ts files here',
   dropNotes: [
     'or click to browse, and you can add more while a batch runs.',
-    `Under ${MIN_SIZE_MB} MB is skipped. Pair a same-named .jpg to use as its thumbnail.`,
+    `Under ${MIN_SIZE_MB} MB is skipped. A same-named .jpg is used as its thumbnail.`,
   ],
   modes: [
-    { value: 'auto', label: 'Auto', hint: "Copies what macOS can play as-is, re-encodes only what it can't." },
-    { value: 'remux', label: 'Stream copy', hint: 'Seconds, lossless. Fails if the video must be re-encoded to play on a Mac.' },
-    { value: 'encode', label: 'Re-encode', hint: 'H.264 + AAC. Works for any input, but much slower.' },
+    { value: 'auto', label: 'Auto', hint: 'Copies what already plays in an MP4, re-encodes the rest.' },
+    { value: 'remux', label: 'Stream copy', hint: 'Seconds, lossless. Fails if the video must be re-encoded.' },
+    { value: 'encode', label: 'Re-encode', hint: 'H.264 + AAC. Any input, much slower.' },
   ],
-  note: 'Files convert one at a time; each input and output sits in browser memory, so single files over ~2 GB may fail. “Download all” bundles every converted file into one .zip.',
+  note: 'Files convert one at a time, and each input and output sits in browser memory, so files over ~2 GB may fail. Download all bundles the results into one .zip.',
   zipDefault: 'converted-videos',
 }

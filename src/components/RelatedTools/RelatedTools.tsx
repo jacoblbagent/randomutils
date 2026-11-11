@@ -37,8 +37,7 @@ export default function RelatedTools({ currentId }: { currentId: string }) {
         ))}
       </List>
       <Text type="supporting">
-        Same setup on every page: the work happens in this tab, on your own machine, and nothing
-        you open or generate is uploaded.
+        Every tool works this way: in this tab, on your machine, nothing uploaded.
       </Text>
     </VStack>
   )

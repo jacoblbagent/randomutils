@@ -71,7 +71,8 @@ export default function CookieBanner() {
         </Text>
         <Text as="p" type="supporting">
           Ads served by Google AdSense may set cookies to show and measure them. Every tool runs in
-          your browser, and your files are never uploaded. <Link href="/privacy">Cookie policy</Link>
+          your browser, and your files are never uploaded.{' '}
+          <Link href="/privacy">Privacy policy</Link>
         </Text>
         <HStack gap={2} hAlign="end">
           <Button

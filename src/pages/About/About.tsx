@@ -15,8 +15,6 @@ import Page from '../../components/Page/Page'
  * does not do, and who is behind it. Everything here is a statement about how
  * the site is actually built (see src/tools/video/useFFmpeg.ts for the claim
  * that nothing is uploaded), so the wording has to stay true to the code.
- *
- * (Written for this site as built; it is not legal advice.)
  */
 export default function About() {
   return (
@@ -25,79 +23,58 @@ export default function About() {
       <VStack gap={1}>
         <Heading level={1}>About {SITE.name}</Heading>
         <Text as="p" type="supporting">
-          Run by {SITE.owner}, individually, with no company behind it.
+          Run by {SITE.owner}, with no company behind it.
         </Text>
       </VStack>
 
       <Text as="p" type="large" color="secondary">
-        {SITE.name} is a small set of single-purpose tools for everyday chores: converting a DVR
-        recording or a QuickTime clip into an MP4 that plays anywhere, pulling the audio track out
-        of a video, and generating a password or a UUID that is genuinely random. Each one does
-        that one job and nothing else.
+        {SITE.name} is a small set of single-purpose tools: convert a DVR recording or a QuickTime
+        clip to MP4, extract a video&rsquo;s audio, generate a password or a UUID. Each does one job.
       </Text>
 
       <VStack gap={2}>
-        <Heading level={2}>What makes it different</Heading>
+        <Heading level={2}>Everything runs in your browser</Heading>
         <Text as="p" color="secondary">
-          The tools run entirely in your browser: the video converters on FFmpeg compiled to
-          WebAssembly, the password and UUID generators on the browser's own cryptographic random
-          source. What you drop in, or ask for, is handled on your own machine, and there is no
-          upload step because there is no server to upload to. There are no accounts, no sign-up,
-          no queue on someone else's disk, and no copy of your file (or of a password or id you
-          generated) anywhere you cannot see. Close the tab and it is gone.
+          The video converters run on FFmpeg compiled to WebAssembly, the password and UUID
+          generators on the browser&rsquo;s cryptographic random source. Files are read and written
+          on your own machine, with no upload step and no server to upload to. There are no
+          accounts, no queue on someone else&rsquo;s disk, and no copy of your file anywhere you
+          cannot see. Close the tab and it is gone.
         </Text>
         <Text as="p" color="secondary">
-          This matters most for the files people convert here. A DVR recording may carry something
-          you would rather not hand to a stranger, and a work clip may be confidential before it is
-          shared. Sending either one to a conversion website means trusting that site to delete it
-          afterwards. Here that question does not come up, because nothing leaves your device.
-        </Text>
-        <Text as="p" color="secondary">
-          The tools also keep working on a plane, on a locked-down work laptop, or anywhere a
-          conversion site would be blocked, because once the page has loaded there is no network
-          call left to make.
+          That matters for the files people bring here: a DVR recording or a work clip you would
+          rather not hand to a stranger. A conversion site means trusting it to delete the file
+          afterwards. Here nothing leaves your device, and the tools keep working offline, on a
+          plane or on a locked-down laptop, once the page has loaded.
         </Text>
       </VStack>
 
       <VStack gap={2}>
         <Heading level={2}>What the site does not do</Heading>
         <List listStyle="disc">
-          <ListItem label={<Text color="secondary">It does not upload, store, log or forward your files. There is no upload endpoint.</Text>} />
-          <ListItem label={<Text color="secondary">It does not ask you to create an account, or even to give a name.</Text>} />
-          <ListItem label={<Text color="secondary">It does not run analytics on your files, or on you: the only third party the page loads is the ad service.</Text>} />
-          <ListItem label={<Text color="secondary">It does not install anything, ask for unusual permissions, or keep a copy after the tab closes.</Text>} />
-          <ListItem label={<Text color="secondary">It does not put a watermark on the output or cap how many files you convert.</Text>} />
+          <ListItem label={<Text color="secondary">Upload, store, log or forward your files. There is no upload endpoint.</Text>} />
+          <ListItem label={<Text color="secondary">Ask for an account, or even a name.</Text>} />
+          <ListItem label={<Text color="secondary">Run analytics on your files, or on you. The only third party is the ad service.</Text>} />
+          <ListItem label={<Text color="secondary">Install anything, request unusual permissions, or keep a copy after the tab closes.</Text>} />
+          <ListItem label={<Text color="secondary">Watermark the output or cap how many files you convert.</Text>} />
         </List>
         <Text as="p" color="secondary">
-          What the browser does keep, a few preference toggles in local storage, is set out in full
-          on the <Link href="/privacy">privacy page</Link>.
-        </Text>
-      </VStack>
-
-      <VStack gap={2}>
-        <Heading level={2}>Where the tools came from</Heading>
-        <Text as="p" color="secondary">
-          They started as one-off scripts for a real problem: a pile of DVR recordings that would
-          not open in QuickTime, and a batch of clips that needed only their audio. A desktop tool
-          meant installing one, and a website meant handing over files that had no business leaving
-          the machine. Running FFmpeg inside the page removed both problems, and the result was
-          worth keeping and sharing.
+          The few preferences the browser keeps are listed on the{' '}
+          <Link href="/privacy">privacy page</Link>.
         </Text>
       </VStack>
 
       <VStack gap={2}>
         <Heading level={2}>How it is paid for</Heading>
         <Text as="p" color="secondary">
-          The site is free and has no paid tier. It is supported by advertising served by Google
-          AdSense, which is the only third party the page loads. There are no sponsored
-          recommendations, no affiliate links in the tool copy, and no attempt to sell you an
-          upgrade. The ad service and the cookies it uses are described on the{' '}
-          <Link href="/privacy">privacy page</Link>.
+          Free, with no paid tier. Ads served by Google AdSense pay for it, and that is the only
+          third party the page loads. No sponsored recommendations, no affiliate links, no upsell.
+          The <Link href="/privacy">privacy page</Link> covers the ad cookies.
         </Text>
       </VStack>
 
       <VStack gap={2}>
-        <Heading level={2}>Open source, and how to reach me</Heading>
+        <Heading level={2}>Source and contact</Heading>
         <Text as="p" color="secondary">
           The source is public: read it, file an issue, or run your own copy:{' '}
           <Link href={SITE.repo} target="_blank">
@@ -106,16 +83,16 @@ export default function About() {
           </Link>
           . For a broken conversion, a format request, an ad question or a takedown, email{' '}
           <Link href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</Link>, or see the{' '}
-          <Link href="/contact">contact page</Link> for exactly what to include. Replies are best
-          effort, usually within a few days.
+          <Link href="/contact">contact page</Link> for what to include. Replies are best effort,
+          usually within a few days.
         </Text>
       </VStack>
 
       <VStack gap={2}>
         <Heading level={2}>Using the site</Heading>
         <Text as="p" color="secondary">
-          The tools are free to use, provided as-is and without warranty, and your files stay
-          yours. Those terms, in full, are on the <Link href="/terms">terms of use</Link>.
+          Free to use, provided as-is and without warranty, and your files stay yours. The full
+          terms are on the <Link href="/terms">terms of use</Link>.
         </Text>
       </VStack>
     </VStack>

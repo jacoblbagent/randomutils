@@ -1,11 +1,10 @@
 /**
  * The page registry, every URL the site answers with a real, indexable page.
  *
- * This is the single source of truth for `<title>`, the meta description, the
- * canonical URL and sitemap.xml: `scripts/prerender.mjs` reads it at build time
- * to emit one static HTML file per route (so GitHub Pages answers 200 instead
- * of serving the 404 fallback), and `PageMetaSync` in App.tsx reads it at
- * runtime to keep the head correct while a visitor navigates client-side.
+ * Single source of truth for `<title>`, the meta description, the canonical URL
+ * and sitemap.xml: `scripts/prerender.mjs` reads it at build time to emit one
+ * static HTML file per route, and `PageMetaSync` reads it at runtime to keep the
+ * head correct while a visitor navigates client-side.
  *
  * Adding a page: add its route in App.tsx and an entry here.
  */
@@ -21,10 +20,7 @@ export interface PageMeta {
   description: string
   /** Page heading, where one is not rendered by the page body. */
   heading: string
-  /**
-   * Whether the page belongs in sitemap.xml. Pages a crawler should not index
-   * (the 404 shell) are left out.
-   */
+  /** Whether the page belongs in sitemap.xml. */
   inSitemap: boolean
 }
 
@@ -33,7 +29,7 @@ const STATIC_PAGES: PageMeta[] = [
     path: '/',
     title: `${SITE.name}: browser tools that never upload your files`,
     description:
-      'Browser tools that never upload your files: convert TS and MOV video to MP4, pull a video’s audio, or generate a strong password or UUID, all locally.',
+      'Convert TS and MOV video to MP4, extract a video’s audio, or generate a password or UUID. All in your browser, with no uploads.',
     heading: SITE.name,
     inSitemap: true,
   },
@@ -41,7 +37,7 @@ const STATIC_PAGES: PageMeta[] = [
     path: '/privacy',
     title: `Privacy policy | ${SITE.name}`,
     description:
-      'What we do with the files you open in a RandomUtils tool (nothing leaves your browser) and what our one third party, Google AdSense, does with cookies.',
+      'What RandomUtils does with your files (nothing leaves your browser) and what the one third party, Google AdSense, does with cookies.',
     heading: 'Privacy policy',
     inSitemap: true,
   },
@@ -49,7 +45,7 @@ const STATIC_PAGES: PageMeta[] = [
     path: '/contact',
     title: `Contact | ${SITE.name}`,
     description:
-      'Report a broken conversion, ask about a format, or reach the owner about advertising, business or takedown questions. No GitHub account needed.',
+      'Report a broken conversion, ask about a format, or reach the owner about advertising or takedown. No GitHub account needed.',
     heading: 'Contact',
     inSitemap: true,
   },
@@ -57,7 +53,7 @@ const STATIC_PAGES: PageMeta[] = [
     path: '/about',
     title: `About | ${SITE.name}`,
     description:
-      'What RandomUtils is, why every tool runs entirely in your browser instead of uploading your files, what the site deliberately does not do, and who runs it.',
+      'What RandomUtils is, why every tool runs in your browser, what the site does not do, and who runs it.',
     heading: 'About',
     inSitemap: true,
   },
@@ -65,7 +61,7 @@ const STATIC_PAGES: PageMeta[] = [
     path: '/faq',
     title: `FAQ | ${SITE.name}`,
     description:
-      'Why a file is skipped, why the FFmpeg engine reloads mid-batch, whether anything is uploaded, and how to install the site as an app.',
+      'Why a file is skipped, why FFmpeg reloads mid-batch, whether anything is uploaded, and how to install the site as an app.',
     heading: 'Frequently asked questions',
     inSitemap: true,
   },
@@ -73,20 +69,18 @@ const STATIC_PAGES: PageMeta[] = [
     path: '/terms',
     title: `Terms of use | ${SITE.name}`,
     description:
-      'The plain terms for the RandomUtils tools: free to use, provided as-is without warranty, your files stay yours, and the site is supported by advertising.',
+      'Terms for the RandomUtils tools: free, provided as-is without warranty, your files stay yours, funded by advertising.',
     heading: 'Terms of use',
     inSitemap: true,
   },
 ]
 
 /**
- * Trim a description to the length search engines actually display.
+ * Trim a description to the length search engines display.
  *
- * Only a backstop, every page carries hand-written copy that fits, and the
- * build logs a note when this fires. It is careful about *how* it cuts: a plain
- * 155-character slice can leave the text ending on a dangling article
- * ("… compiled to", "… so the"), which reads as broken in a search result, so
- * trailing function words are dropped before the ellipsis goes on.
+ * Only a backstop: every page carries hand-written copy that fits, and the
+ * build logs a note when this fires. Trailing function words are dropped before
+ * the ellipsis, so a cut never ends on a dangling article.
  */
 const DANGLING = /(?:[,;:]|\s(?:a|an|the|and|or|but|for|to|of|in|on|at|by|with|from|that|this|it|its|is|are|was|as|so|than|then|into|over|your|you|we|our))+$/i
 
@@ -97,11 +91,7 @@ function clamp(text: string, max = 155): string {
   return `${cut.replace(DANGLING, '')}…`
 }
 
-/**
- * Tool pages read their copy from the tool registry (src/data/tools.ts), where
- * each tool carries a hand-written `seo.title` and `seo.description`, the two
- * fields a crawler sees, kept beside the card copy so they cannot drift.
- */
+/** Tool pages read their copy from the tool registry (src/data/tools.ts). */
 const TOOL_PAGES: PageMeta[] = tools.map((tool) => ({
   path: tool.path,
   title: tool.seo.title,
@@ -110,12 +100,7 @@ const TOOL_PAGES: PageMeta[] = tools.map((tool) => ({
   inSitemap: true,
 }))
 
-/**
- * Every page's final metadata. Descriptions go through `clamp` here rather than
- * at each call site, so a description that grows past the length a search result
- * displays is trimmed by the build instead of shipping long, and the prerender
- * prints a note when that happens, which is the signal to rewrite the copy.
- */
+/** Every page's final metadata, descriptions clamped in one place. */
 export const pages: PageMeta[] = [...STATIC_PAGES, ...TOOL_PAGES].map((page) => ({
   ...page,
   description: clamp(page.description),

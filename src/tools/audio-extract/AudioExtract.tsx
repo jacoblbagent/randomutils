@@ -296,8 +296,8 @@ export default function AudioExtract() {
         />
         <Heading level={1}>Video → Audio</Heading>
         <Text type="large" color="secondary">
-          Extract the audio from a video and download it as WAV or MP3. Everything runs in this tab
-          with FFmpeg (WebAssembly): no upload, no server, and your file never leaves this machine.
+          Extract audio from a video as WAV or MP3. Everything runs in this tab on FFmpeg
+          (WebAssembly): no upload, no server, and your file never leaves the machine.
         </Text>
       </VStack>
 
@@ -308,7 +308,7 @@ export default function AudioExtract() {
         accept={ACCEPT}
         value={null}
         onChange={(files) => addFiles((files as File[] | null) ?? null)}
-        description="Or click to browse, and you can add more while a batch runs. MP4, MOV, MKV, WebM, AVI, FLV, TS and more. Audio files work too."
+        description="Or click to browse, and you can add more while a batch runs. MP4, MOV, MKV, WebM, AVI, FLV, TS and more; audio files work too."
       />
 
       {skipped && (
@@ -469,32 +469,27 @@ export default function AudioExtract() {
       )}
 
       <Text type="supporting">
-        Files are processed one at a time, entirely in browser memory, so a single video over ~2 GB
-        may fail. The first file loads the ~31 MB FFmpeg core (cached by the browser afterwards).
-        Audio is taken from the first audio track and re-encoded: WAV keeps the source sample rate,
-        MP3 is 192 kbps.
+        Files are processed one at a time in browser memory, so a video over ~2 GB may fail. The
+        first file loads the ~31 MB FFmpeg core, cached afterwards. Audio comes from the first track
+        and is re-encoded: WAV keeps the source sample rate, MP3 is 192 kbps.
       </Text>
 
       <ToolGuide heading="About this tool">
         <VStack gap={2}>
           <Heading level={2}>WAV or MP3?</Heading>
-          <Text as="p" color="secondary">
-            The choice is between a file that is faithful and a file that is small, and only you
-            know which the job needs.
-          </Text>
           <List listStyle="disc">
-            <ListItem label={<Text color="secondary"><strong>WAV</strong>: uncompressed 16-bit PCM at the source&rsquo;s own sample rate. Lossless, so nothing is thrown away, and every editor and audio tool accepts it. The cost is size: a stereo WAV is roughly 10 MB per minute, which adds up fast over a long recording. Choose WAV when you are going to edit, transcribe, or re-encode the audio later, or when quality is the whole point.</Text>} />
-            <ListItem label={<Text color="secondary"><strong>MP3</strong>: 192 kbps, which is transparent enough for speech and fine for most music. Roughly a tenth the size of the WAV and plays on literally anything. Choose MP3 when the audio is the finished product (a podcast, a voice memo, a soundtrack you want on a phone) rather than the start of more work.</Text>} />
+            <ListItem label={<Text color="secondary"><strong>WAV</strong>: uncompressed 16-bit PCM at the source&rsquo;s own sample rate. Lossless and accepted by every editor, at roughly 10 MB per minute stereo. Choose it when you will edit, transcribe or re-encode the audio later.</Text>} />
+            <ListItem label={<Text color="secondary"><strong>MP3</strong>: 192 kbps, transparent enough for speech and fine for most music, about a tenth the WAV&rsquo;s size and plays on anything. Choose it when the audio is the finished product: a podcast, a voice memo, a soundtrack for a phone.</Text>} />
           </List>
         </VStack>
 
         <VStack gap={2}>
           <Heading level={2}>Where the audio comes from</Heading>
           <List listStyle="disc">
-            <ListItem label={<Text color="secondary">The audio is taken from the <strong>first audio track</strong> in the file, and it is re-encoded to the format you pick. For a normal video with one audio track, that is simply &ldquo;the&rdquo; audio.</Text>} />
-            <ListItem label={<Text color="secondary">A video with several audio tracks, such as a film with multiple language dubs, yields the first one. If you need a different track, that is worth a note on the{' '} <Link href="/contact">contact page</Link>.</Text>} />
-            <ListItem label={<Text color="secondary">A video with <strong>no</strong> audio track at all has nothing to extract; the tool will report a failure rather than invent a silent file.</Text>} />
-            <ListItem label={<Text color="secondary">Audio files themselves work as input too: taking the audio &ldquo;out of&rdquo; an MP3 is just a format conversion, and WAV→MP3 or MP3→WAV is a perfectly good use of this tool.</Text>} />
+            <ListItem label={<Text color="secondary">Audio comes from the <strong>first audio track</strong> and is re-encoded to the format you pick. For a normal video with one track, that is the audio.</Text>} />
+            <ListItem label={<Text color="secondary">A video with several tracks, such as multiple language dubs, yields the first. For another track, note it on the{' '} <Link href="/contact">contact page</Link>.</Text>} />
+            <ListItem label={<Text color="secondary">A video with <strong>no</strong> audio track fails rather than producing a silent file.</Text>} />
+            <ListItem label={<Text color="secondary">Audio files work as input too: WAV→MP3 or MP3→WAV is a format conversion.</Text>} />
           </List>
         </VStack>
 
@@ -502,18 +497,18 @@ export default function AudioExtract() {
           <Heading level={2}>Formats it accepts</Heading>
           <Text as="p" color="secondary">
             Video: MP4, MOV, MKV, WebM, AVI, FLV, WMV, MPEG, TS, M2TS, 3GP, OGV, VOB, MXF and
-            more. Audio: MP3, WAV, M4A, AAC, FLAC, OGG, Opus, WMA, AIFF and more. If a file is
-            neither video nor audio it is skipped and named in a note above the queue.
+            more. Audio: MP3, WAV, M4A, AAC, FLAC, OGG, Opus, WMA, AIFF and more. Anything else is
+            skipped and named above the queue.
           </Text>
         </VStack>
 
         <VStack gap={2}>
           <Heading level={2}>If something goes wrong</Heading>
           <List listStyle="disc">
-            <ListItem label={<Text color="secondary"><strong>The job fails at &ldquo;Extracting audio&rdquo;.</strong> Usually a video with no audio track, or a file whose audio is in a codec the bundled FFmpeg build cannot decode. Try another file to confirm the tool itself is fine.</Text>} />
-            <ListItem label={<Text color="secondary"><strong>The WAV is enormous.</strong> Expected, since it is uncompressed. If size rather than fidelity is the problem, extract to MP3 instead.</Text>} />
-            <ListItem label={<Text color="secondary"><strong>A rental or store-bought download fails.</strong> Protected (DRM) files are deliberately unreadable by any ordinary tool; this one is no exception, and the files are not yours to convert.</Text>} />
-            <ListItem label={<Text color="secondary"><strong>A very long video stops part-way.</strong> The whole file and its audio output live in the page&rsquo;s memory, so a single video over roughly 2 GB may run out of room.</Text>} />
+            <ListItem label={<Text color="secondary"><strong>The job fails at &ldquo;Extracting audio&rdquo;.</strong> Usually no audio track, or a codec the bundled FFmpeg cannot decode. Try another file to confirm the tool itself is fine.</Text>} />
+            <ListItem label={<Text color="secondary"><strong>The WAV is enormous.</strong> It is uncompressed. Extract to MP3 if size matters more than fidelity.</Text>} />
+            <ListItem label={<Text color="secondary"><strong>A rental or store-bought download fails.</strong> DRM files are unreadable by ordinary tools, and are not yours to convert.</Text>} />
+            <ListItem label={<Text color="secondary"><strong>A very long video stops part-way.</strong> The file and its output live in page memory, so a video over roughly 2 GB may run out of room.</Text>} />
           </List>
           <Text as="p" type="supporting">
             Still stuck? The <Link href="/contact">contact page</Link> lists exactly what to include.
@@ -521,11 +516,10 @@ export default function AudioExtract() {
         </VStack>
 
         <VStack gap={2}>
-          <Heading level={2}>Privacy, in one line</Heading>
+          <Heading level={2}>Privacy</Heading>
           <Text as="p" color="secondary">
-            Video is often the most personal thing on a phone, and a voice recording more so. The
-            extraction runs in this tab on FFmpeg compiled to WebAssembly, so the file never
-            leaves your machine, with no upload and nothing kept after the tab closes. The{' '}
+            The extraction runs in this tab on FFmpeg compiled to WebAssembly, so the file never
+            leaves your machine and nothing is kept after the tab closes. The{' '}
             <Link href="/privacy">privacy page</Link> is the long version.
           </Text>
         </VStack>

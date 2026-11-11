@@ -45,7 +45,7 @@ export default function SiteFooter() {
                 <Link href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</Link>
               </HStack>
               <Text type="supporting">
-                {SITE.name} runs in your browser. No account, no upload, no server holding your files.
+                {SITE.name} runs in your browser: no account, no upload, no server.
               </Text>
             </VStack>
           </LayoutContent>

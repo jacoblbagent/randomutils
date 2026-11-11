@@ -23,12 +23,9 @@ import { DEFAULT_FORMAT, VERSIONS, generateMany, timestampOf, type Format, type 
 /**
  * UUID generator: version 4 and version 7 identifiers, made in this tab.
  *
- * Same shape as the password generator, because it is the same kind of tool: a
- * readout of what the settings produce, then the settings. The maths is in
- * `uuid.ts`; this file is the readout, the controls and the copy buttons.
- *
- * The site's promise is that nothing is uploaded, and this page keeps it in the
- * strongest form available: it has no request it could make.
+ * Same shape as the password generator: a readout of what the settings produce,
+ * then the settings. The maths is in `uuid.ts`; this file is the readout, the
+ * controls and the copy buttons. The page has no request it could make.
  */
 
 const COUNTS = [1, 5, 10, 25, 100]
@@ -48,9 +45,8 @@ export default function UuidGenerator() {
 
   /**
    * Every control funnels through here, so the ids on screen always match the
-   * chips beside them and there is no "did I regenerate?" step to forget. Like
-   * the password generator, nothing is redrawn in an effect: the value is
-   * knowable when the click arrives.
+   * chips beside them. Nothing is redrawn in an effect: the value is knowable
+   * when the click arrives.
    */
   const apply = useCallback(
     (patch: { version?: Version; format?: Format; count?: number }) => {
@@ -106,9 +102,8 @@ export default function UuidGenerator() {
         />
         <Heading level={1}>UUID generator</Heading>
         <Text type="large" color="secondary">
-          Version 4 and version 7 UUIDs, drawn from your browser&rsquo;s own cryptographic random
-          source. Pick a version and a format, then copy. This page has no request it could send,
-          so nothing generated here can leave the machine.
+          Version 4 and version 7 UUIDs from your browser&rsquo;s cryptographic random source. Pick
+          a version and a format, then copy. The page makes no network request.
         </Text>
       </VStack>
 
@@ -141,8 +136,8 @@ export default function UuidGenerator() {
 
           {firstStamp && (
             <Text type="supporting">
-              The first id carries {firstStamp.toLocaleString()} (your local time), and every id
-              in this batch sorts after the one before it.
+              The first id carries {firstStamp.toLocaleString()} (your local time), and each id in
+              this batch sorts after the one before it.
             </Text>
           )}
           {note && <Text type="supporting">{note}</Text>}
@@ -223,8 +218,8 @@ export default function UuidGenerator() {
           </HStack>
 
           <Text type="supporting">
-            Nothing is saved: no history of what you generated, no cookie, nothing in local
-            storage. The ids are on screen until you close the tab.
+            Nothing is saved: no history, no cookie, no local storage. The ids last until you close
+            the tab.
           </Text>
         </VStack>
       </Card>
@@ -233,44 +228,42 @@ export default function UuidGenerator() {
         <VStack gap={2}>
           <Heading level={2}>Which version to use</Heading>
           <Text as="p" color="secondary">
-            Version 4 is 122 random bits with nothing else in them, so an id tells nobody when or
-            where it was made, and two ids never collide by anything but chance. It is the right
-            default for anything a user can see: a reset token, a share link, a record id.
+            Version 4 is 122 random bits and nothing else, so an id reveals nothing about when or
+            where it was made, and collisions are pure chance. It is the right default for anything
+            user-visible: a reset token, a share link, a record id.
           </Text>
           <Text as="p" color="secondary">
-            Version 7 puts a 48-bit millisecond timestamp first. That is worth having when the ids
-            land in a database primary key, because the index is written in roughly insertion
-            order instead of scattering each insert across the tree. The cost is that an id reveals
-            the millisecond it was created in, which is harmless in most systems and a detail to
-            think about in a public one.
+            Version 7 starts with a 48-bit millisecond timestamp. That helps when ids are a database
+            primary key, because inserts land in roughly index order instead of scattering. The cost
+            is that an id reveals its creation millisecond: harmless in most systems, worth
+            thinking about in a public one.
           </Text>
         </VStack>
 
         <VStack gap={2}>
           <Heading level={2}>What makes a v7 sort correctly</Heading>
           <List listStyle="disc">
-            <ListItem label={<Text color="secondary">The first 48 bits are the timestamp, big-endian, so a byte-wise comparison of two ids compares the times they were made. Because it is a fixed-width prefix, sorting the text sorts the time.</Text>} />
-            <ListItem label={<Text color="secondary">The next 12 bits are a counter, not random filler. Several ids made inside the same millisecond would otherwise have identical prefixes and sort arbitrarily; the counter is advanced for each one, so this page&rsquo;s batches come out in the order they were generated. When the counter runs out, the timestamp is borrowed forward by one millisecond.</Text>} />
-            <ListItem label={<Text color="secondary">The remaining 62 bits are random, and the version and variant nibbles are stamped over the buffer rather than drawn, so the id is still self-describing.</Text>} />
+            <ListItem label={<Text color="secondary">The first 48 bits are a big-endian timestamp, so a byte-wise comparison compares creation time, and sorting the text sorts the time.</Text>} />
+            <ListItem label={<Text color="secondary">The next 12 bits are a counter, not random filler. Ids made in the same millisecond would otherwise share a prefix and sort arbitrarily; the counter advances per id, so batches come out in generation order. On overflow the timestamp borrows the next millisecond.</Text>} />
+            <ListItem label={<Text color="secondary">The remaining 62 bits are random, and the version and variant nibbles are stamped over the buffer rather than drawn.</Text>} />
           </List>
         </VStack>
 
         <VStack gap={2}>
           <Heading level={2}>Where the randomness comes from</Heading>
           <List listStyle="disc">
-            <ListItem label={<Text color="secondary"><Code>crypto.getRandomValues</Code>, the same source the browser uses for TLS keys, not <Code>Math.random</Code>, whose output becomes predictable once enough of it has been seen.</Text>} />
-            <ListItem label={<Text color="secondary">No modulo arithmetic touches the random bytes: the timestamp and the counter are written into their own fields and the rest of the buffer is used as drawn, so there is no reduction step that could bias a bit.</Text>} />
-            <ListItem label={<Text color="secondary">The hyphens, braces and letter case are display-only. They change the string, never the 128 bits, and a reader that takes either form gets the same uuid.</Text>} />
+            <ListItem label={<Text color="secondary"><Code>crypto.getRandomValues</Code>, the source the browser uses for TLS keys, not <Code>Math.random</Code>, whose output becomes predictable once enough of it is seen.</Text>} />
+            <ListItem label={<Text color="secondary">No modulo arithmetic touches the random bytes: the timestamp and the counter occupy their own fields and the rest is used as drawn.</Text>} />
+            <ListItem label={<Text color="secondary">Hyphens, braces and case are display only. They change the string, never the 128 bits.</Text>} />
           </List>
         </VStack>
 
         <VStack gap={2}>
-          <Heading level={2}>Privacy, in one line</Heading>
+          <Heading level={2}>Privacy</Heading>
           <Text as="p" color="secondary">
-            This page makes no network request after it loads, so there is nowhere for an id to go.
-            The one place it leaves the page is your clipboard when you press Copy. Closing the tab
-            erases the list, and the <Link href="/privacy">privacy page</Link> covers the rest of the
-            site.
+            The page makes no network request after it loads, so an id has nowhere to go. It leaves
+            only through your clipboard when you press Copy. Closing the tab erases the list; the{' '}
+            <Link href="/privacy">privacy page</Link> covers the rest.
           </Text>
         </VStack>
       </ToolGuide>

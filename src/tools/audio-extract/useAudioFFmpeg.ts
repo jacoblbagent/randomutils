@@ -31,14 +31,14 @@ export const FORMATS: Record<AudioFormat, FormatSpec> = {
     ext: 'wav',
     mime: 'audio/wav',
     label: 'WAV',
-    hint: 'Uncompressed 16-bit PCM at the source sample rate. Lossless and accepted by every editor, but big files.',
+    hint: 'Uncompressed 16-bit PCM at the source sample rate. Lossless, every editor takes it, but big.',
     args: ['-c:a', 'pcm_s16le'],
   },
   mp3: {
     ext: 'mp3',
     mime: 'audio/mpeg',
     label: 'MP3',
-    hint: '192 kbps MP3. A small file that plays on anything, the choice when size or compatibility matters.',
+    hint: '192 kbps. Small, plays anywhere; the choice when size or compatibility matters.',
     args: ['-c:a', 'libmp3lame', '-b:a', '192k'],
   },
 }

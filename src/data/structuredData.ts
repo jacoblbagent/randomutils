@@ -29,7 +29,7 @@ const ORG_ID = `${HOME}#organization`
 const SITE_ID = `${HOME}#website`
 
 /** Home-page description, reused for the WebSite node. */
-const SITE_DESCRIPTION = 'Small, single-purpose browser tools that run entirely in your browser: video and audio conversion, password and UUID generation. Nothing is uploaded.'
+const SITE_DESCRIPTION = 'Browser tools that convert video and audio and generate passwords and UUIDs. Nothing is uploaded.'
 
 /** The publisher of every page, referenced by @id, defined once per graph. */
 function organization(): Json {

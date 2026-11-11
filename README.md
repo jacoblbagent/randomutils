@@ -15,10 +15,11 @@ you cannot see.
 | **MOV → MP4** | `/mov-to-mp4` | Batch-convert QuickTime (`.mov`, `.qt`) video. H.264/HEVC/AAC/MP3 are copied across untouched; ProRes, DV, Motion JPEG and PCM/ALAC audio are re-encoded. No size floor. |
 | **Video → Audio** | `/audio-extract` | Pull a video's audio track out on its own as **WAV** (lossless) or **MP3**. |
 | **Password generator** | `/password-generator` | Draw cryptographically random passwords from the browser's own CSPRNG, with the entropy and estimated offline crack time shown beside them. Not a media tool: it needs no WebAssembly and no FFmpeg. |
+| **UUID generator** | `/uuid-generator` | Version 4 and version 7 UUIDs from the browser's CSPRNG, up to 100 at a time, with hyphens, braces and letter case as display options. v7 ids carry the timestamp first, so a batch sorts in generation order. |
 
 The three video tools run on FFmpeg compiled to WebAssembly, bundled with the site, not
-fetched from a CDN. The password generator is plain JavaScript on Web Crypto, so it carries
-none of that 32 MB payload.
+fetched from a CDN. The password and UUID generators are plain JavaScript on Web Crypto, so they
+carry none of that 32 MB payload.
 
 ## Requirements and quick start
 
@@ -65,7 +66,7 @@ Five files decide what exists. A new tool touches three of them; a new prose pag
    A tool that is not a file converter also sets `subCategory`, `appCategory` and
    `browserRequirements`. The JSON-LD blocks default to the video-converter answers
    (`File converter` / `MultimediaApplication` / `Requires JavaScript and WebAssembly`), and the
-   password generator is none of those three.
+   password and UUID generators are none of those three.
 2. `src/data/pages.ts` is the **page registry**: every URL the site answers with a real,
    indexable page, with its `<title>`, meta description and `inSitemap`. Tool pages are derived
    from `tools.ts` (their title and description come from `tool.seo`), so a tool needs no entry
@@ -166,6 +167,8 @@ console: `randomutils.flags.set('tool-search', true)` / `.clear(id)` / `.reset()
 | `ts-to-mp4` | on | Grid card, footer count and `/ts-to-mp4`. |
 | `mov-to-mp4` | on | Grid card, footer count and `/mov-to-mp4`. |
 | `audio-extract` | on | Grid card, footer count and `/audio-extract`. |
+| `password-generator` | on | Grid card, footer count and `/password-generator`. |
+| `uuid-generator` | on | Grid card, footer count and `/uuid-generator`. |
 | `tool-search` | off | Filter box above the home grid (matches name, tagline, tags). |
 
 Runtime flags are UI-level gating only. A flag that carries weight, such as a bundled dataset,
@@ -298,7 +301,8 @@ src/
 ├── components/              SiteHeader, SiteFooter, ToolCard, ToolGuide, RelatedTools,
 │                            ScrollToTop, PageMetaSync
 ├── pages/                   Home, About, Faq, Privacy, Terms, Contact, NotFound
-└── tools/                   video/ (shared kit), ts-to-mp4/, mov-to-mp4/, audio-extract/
+└── tools/                   video/ (shared kit), ts-to-mp4/, mov-to-mp4/, audio-extract/,
+                             password-generator/, uuid-generator/
 
 scripts/
 ├── deploy.sh                publish dist/ to gh-pages
@@ -317,7 +321,7 @@ chips, and the `.doc` prose frame used by About/Faq/Privacy/Terms/Contact and ev
 ## Local checks before shipping
 
 ```bash
-npm run build     # prerender lists every route and sitemap.xml reports "10 URLs (all routes)"
+npm run build     # prerender lists every route and sitemap.xml reports "11 URLs (all routes)"
 npm run lint      # oxlint: only the pre-existing ConvertQueue/AudioExtract warnings
 npm run preview -- --port 4199
 curl -s -o /dev/null -w '%{http_code}\n' http://localhost:4199/privacy/   # trailing slash matters

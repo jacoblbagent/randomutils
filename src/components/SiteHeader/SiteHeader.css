@@ -47,3 +47,16 @@
 }
 
 .site-head__link:hover { color: var(--text); }
+
+/* Under 560px the brand plus four links do not fit on one row (they overflowed
+   the viewport by ~25px at 390px), so the nav takes its own row and spreads
+   across it. Two rows of a small sticky header beats a page that scrolls
+   sideways. */
+@media (max-width: 560px) {
+  .site-head { flex-wrap: wrap; gap: var(--s2); }
+  .site-head__links {
+    width: 100%;
+    gap: var(--s3);
+    justify-content: space-between;
+  }
+}

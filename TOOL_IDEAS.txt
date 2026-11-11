@@ -312,7 +312,7 @@ CODE / DEV
   JWT signer
   hash generator (MD5/SHA)
   HMAC generator
-  UUID (v1/v4/v7)
+  UUID (v4/v7)                       [shipped]
   ULID
   NanoID
   password generator                 [shipped]

@@ -27,9 +27,9 @@ export default function Privacy() {
       <p className="doc__lede">
         {SITE.name} is a set of small tools that run inside your browser. The tools are the whole product:
         every file you open in one of them is processed on your own machine by FFmpeg compiled to
-        WebAssembly, and every password is drawn from your browser's own random source. Neither is
-        uploaded, transmitted or stored anywhere: there is no account, no server-side processing,
-        and no copy of your file leaves your device.
+        WebAssembly, and every password or UUID is drawn from your browser's own random source.
+        Neither is uploaded, transmitted or stored anywhere: there is no account, no server-side
+        processing, and no copy of your file leaves your device.
       </p>
 
       <section className="doc__section">

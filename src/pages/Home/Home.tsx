@@ -59,11 +59,11 @@ export default function Home() {
       <section className="home__hero">
         <p className="home__lede">
           Every tool here is a page, not a service. The work happens on your own machine: the video
-          tools on FFmpeg compiled to WebAssembly, the password generator on your browser&rsquo;s own
-          crypto. Nothing you open or generate is uploaded, and nothing is kept when you close the
-          tab. Nothing depends on trusting us to leave a setting alone, because there is no upload
-          step to disable. <Link className="link" to="/about">How that works</Link>, and what the
-          site does and does not do, is on the about page.
+          tools on FFmpeg compiled to WebAssembly, the password and UUID generators on your
+          browser&rsquo;s own crypto. Nothing you open or generate is uploaded, and nothing is kept
+          when you close the tab. Nothing depends on trusting us to leave a setting alone, because
+          there is no upload step to disable. <Link className="link" to="/about">How that works</Link>,
+          and what the site does and does not do, is on the about page.
         </p>
       </section>
     </div>

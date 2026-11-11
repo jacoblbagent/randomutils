@@ -27,19 +27,19 @@ export default function About() {
       <p className="doc__lede">
         {SITE.name} is a small set of single-purpose tools for everyday chores: converting a DVR
         recording or a QuickTime clip into an MP4 that plays anywhere, pulling the audio track out
-        of a video, and generating a password that is genuinely random. Each one does that one job
-        and nothing else.
+        of a video, and generating a password or a UUID that is genuinely random. Each one does
+        that one job and nothing else.
       </p>
 
       <section className="doc__section">
         <h2>What makes it different</h2>
         <p>
           The tools run entirely in your browser: the video converters on FFmpeg compiled to
-          WebAssembly, the password generator on the browser's own cryptographic random source.
-          What you drop in, or ask for, is handled on your own machine, and there is no upload step
-          because there is no server to upload to. There are no accounts, no sign-up, no queue on
-          someone else's disk, and no copy of your file (or of a password you generated) anywhere
-          you cannot see. Close the tab and it is gone.
+          WebAssembly, the password and UUID generators on the browser's own cryptographic random
+          source. What you drop in, or ask for, is handled on your own machine, and there is no
+          upload step because there is no server to upload to. There are no accounts, no sign-up,
+          no queue on someone else's disk, and no copy of your file (or of a password or id you
+          generated) anywhere you cannot see. Close the tab and it is gone.
         </p>
         <p>
           This matters most for the files people convert here. A DVR recording may carry something

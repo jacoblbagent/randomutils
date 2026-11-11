@@ -163,6 +163,32 @@ export const tools: Tool[] = [
       ],
     },
   },
+  {
+    id: 'uuid-generator',
+    name: 'UUID generator',
+    tagline: 'Version 4 and version 7 UUIDs, made in this tab',
+    description:
+      'Pick v4 for an identifier that carries nothing but randomness, or v7 for one that starts with the millisecond it was made and therefore sorts by creation date. Batches of up to 100, with hyphens, braces and letter case as options, all drawn from the browser’s cryptographic source.',
+    path: '/uuid-generator',
+    tags: ['Developer', 'UUID', 'Offline'],
+    flag: 'uuid-generator',
+    subCategory: 'UUID generator',
+    appCategory: 'DeveloperApplication',
+    browserRequirements: 'Requires JavaScript (Web Crypto)',
+    seo: {
+      title: `UUID Generator: v4 and v7 IDs, No Upload | RandomUtils`,
+      description:
+        'Generate version 4 and version 7 UUIDs in your browser: choose the version, hyphens, braces, case and how many, then copy. Nothing is uploaded.',
+      anchor: 'UUID generator',
+      features: [
+        'Version 4 UUIDs from 122 random bits, version 7 with a 48-bit timestamp',
+        'v7 batches come out in the order they were generated',
+        'Hyphens, braces and letter case as display options, up to 100 at a time',
+        'Copy one id or the whole batch, with no upload step',
+        'No upload: nothing you generate leaves your machine',
+      ],
+    },
+  },
 ]
 
 /** Everything whose flag is on, what the grid, the count and the routes use. */

@@ -32,6 +32,7 @@ export type FlagId =
   | 'mov-to-mp4'
   | 'audio-extract'
   | 'password-generator'
+  | 'uuid-generator'
 
 export interface FlagSpec {
   /** Committed default. Keep `false` until the change is ready for everyone. */
@@ -68,6 +69,11 @@ export const FLAGS: Record<FlagId, FlagSpec> = {
     label: 'Password generator',
     description:
       'Grid card, footer count and the /password-generator route for the password generator.',
+  },
+  'uuid-generator': {
+    default: true,
+    label: 'UUID generator',
+    description: 'Grid card, footer count and the /uuid-generator route for the UUID generator.',
   },
 }
 

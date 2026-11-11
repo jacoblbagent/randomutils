@@ -16,6 +16,7 @@ import {
   type Options,
   type SetId,
 } from './random'
+import { writeClipboard } from '../../lib/clipboard'
 import './PasswordGenerator.css'
 
 /**
@@ -75,31 +76,6 @@ function crackTimeNode(bits: number): ReactNode {
       10<sup>{exponent}</sup> years
     </>
   )
-}
-
-/** Clipboard, with a fallback for the browsers that refuse the async API. */
-async function writeClipboard(text: string): Promise<boolean> {
-  try {
-    await navigator.clipboard.writeText(text)
-    return true
-  } catch {
-    /* falls through to the old selection trick, usually a permissions refusal */
-  }
-  const scratch = document.createElement('textarea')
-  scratch.value = text
-  scratch.setAttribute('readonly', '')
-  scratch.style.position = 'fixed'
-  scratch.style.top = '-1000px'
-  document.body.appendChild(scratch)
-  scratch.select()
-  let copied = false
-  try {
-    copied = document.execCommand('copy')
-  } catch {
-    copied = false
-  }
-  scratch.remove()
-  return copied
 }
 
 export default function PasswordGenerator() {

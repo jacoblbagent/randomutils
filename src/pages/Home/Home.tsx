@@ -1,9 +1,15 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { TextInput } from '@astryxdesign/core/TextInput'
+import { Heading } from '@astryxdesign/core/Heading'
+import { Text } from '@astryxdesign/core/Text'
+import { Grid } from '@astryxdesign/core/Grid'
+import { VStack } from '@astryxdesign/core/Stack'
+import { EmptyState } from '@astryxdesign/core/EmptyState'
+import { Link } from '@astryxdesign/core/Link'
+import Page from '../../components/Page/Page'
 import ToolCard from '../../components/ToolCard/ToolCard'
 import { useFlag } from '../../config/flags'
 import { useTools, type Tool } from '../../data/tools'
-import './Home.css'
 
 function matches(tool: Tool, query: string): boolean {
   const needle = query.trim().toLowerCase()
@@ -21,51 +27,57 @@ export default function Home() {
   const shown = available.filter((tool) => matches(tool, query))
 
   return (
-    <div className="home">
-      <section className="home__hero">
+    <Page>
+      <VStack gap={2}>
         {/* The page's one h1. It states what the site is rather than repeating
             the brand the header already carries, the title says the same thing,
             so the tab, the crawler and the reader agree. */}
-        <h1 className="home__title">Browser tools that never upload your files</h1>
-        <p className="home__lede">
+        <Heading level={1} type="display-2">
+          Browser tools that never upload your files
+        </Heading>
+        <Text type="large" color="secondary">
           A hub for small, single-purpose tools. Each one runs entirely in your browser, with no
           accounts, no uploads, and no server holding your files.
-        </p>
-      </section>
+        </Text>
+      </VStack>
 
-      <section className="home__tools">
+      <VStack gap={3}>
         {search && (
-          <div className="home__controls">
-            <input
-              type="search"
-              className="home__search"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Filter tools…"
-              aria-label="Filter tools"
-            />
-          </div>
+          <TextInput
+            type="search"
+            label="Filter tools"
+            isLabelHidden
+            placeholder="Filter tools"
+            value={query}
+            onChange={setQuery}
+            startIcon="search"
+            hasClear
+            width="100%"
+          />
         )}
-        <div className="tool-grid">
-          {shown.map((tool) => (
-            <ToolCard key={tool.id} tool={tool} />
-          ))}
-        </div>
-        {shown.length === 0 && (
-          <p className="small-note home__note">Nothing matches “{query.trim()}”.</p>
+        {shown.length > 0 ? (
+          <Grid columns={{ minWidth: 260, max: 3 }} gap={3}>
+            {shown.map((tool) => (
+              <ToolCard key={tool.id} tool={tool} />
+            ))}
+          </Grid>
+        ) : (
+          <EmptyState
+            title={`Nothing matches “${query.trim()}”`}
+            description="Try a format, a file type or a job, such as MP4, audio or UUID."
+            headingLevel={2}
+          />
         )}
-      </section>
+      </VStack>
 
-      <section className="home__hero">
-        <p className="home__lede">
-          Every tool here is a page, not a service. The work happens on your own machine: the video
-          tools on FFmpeg compiled to WebAssembly, the password and UUID generators on your
-          browser&rsquo;s own crypto. Nothing you open or generate is uploaded, and nothing is kept
-          when you close the tab. Nothing depends on trusting us to leave a setting alone, because
-          there is no upload step to disable. <Link className="link" to="/about">How that works</Link>,
-          and what the site does and does not do, is on the about page.
-        </p>
-      </section>
-    </div>
+      <Text color="secondary">
+        Every tool here is a page, not a service. The work happens on your own machine: the video
+        tools on FFmpeg compiled to WebAssembly, the password and UUID generators on your
+        browser&rsquo;s own crypto. Nothing you open or generate is uploaded, and nothing is kept
+        when you close the tab. Nothing depends on trusting us to leave a setting alone, because
+        there is no upload step to disable. <Link href="/about">How that works</Link>, and what the
+        site does and does not do, is on the about page.
+      </Text>
+    </Page>
   )
 }

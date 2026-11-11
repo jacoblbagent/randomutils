@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { AppShell as Shell } from '@astryxdesign/core/AppShell'
 import PageMetaSync from './components/PageMetaSync/PageMetaSync'
 import SiteFooter from './components/SiteFooter/SiteFooter'
 import SiteHeader from './components/SiteHeader/SiteHeader'
@@ -41,30 +42,31 @@ export function AppShell() {
       <ScrollToTop />
       <PageMetaSync />
       <CookieBanner />
-      <div className="app">
-        <SiteHeader />
-        <main className="page">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/privacy" element={<Privacy />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/faq" element={<Faq />} />
-            <Route path="/contact" element={<Contact />} />
-            {flags['ts-to-mp4'] && <Route path="/ts-to-mp4" element={<TsToMp4 />} />}
-            {flags['mov-to-mp4'] && <Route path="/mov-to-mp4" element={<MovToMp4 />} />}
-            {flags['audio-extract'] && <Route path="/audio-extract" element={<AudioExtract />} />}
-            {flags['password-generator'] && (
-              <Route path="/password-generator" element={<PasswordGenerator />} />
-            )}
-            {flags['uuid-generator'] && (
-              <Route path="/uuid-generator" element={<UuidGenerator />} />
-            )}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </main>
-        <SiteFooter />
-      </div>
+      {/* height="auto": the page grows with its content and scrolls with the
+          document, which is what a prerendered static page needs. The footer
+          sits outside the shell so it is a real footer landmark, not a child
+          of the main landmark AppShell renders. */}
+      <Shell height="auto" contentPadding={0} variant="section" topNav={<SiteHeader />}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/faq" element={<Faq />} />
+          <Route path="/contact" element={<Contact />} />
+          {flags['ts-to-mp4'] && <Route path="/ts-to-mp4" element={<TsToMp4 />} />}
+          {flags['mov-to-mp4'] && <Route path="/mov-to-mp4" element={<MovToMp4 />} />}
+          {flags['audio-extract'] && <Route path="/audio-extract" element={<AudioExtract />} />}
+          {flags['password-generator'] && (
+            <Route path="/password-generator" element={<PasswordGenerator />} />
+          )}
+          {flags['uuid-generator'] && (
+            <Route path="/uuid-generator" element={<UuidGenerator />} />
+          )}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Shell>
+      <SiteFooter />
       <FlagsPanel />
     </>
   )

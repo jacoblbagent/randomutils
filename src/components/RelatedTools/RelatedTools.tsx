@@ -1,6 +1,9 @@
-import { Link } from 'react-router-dom'
+import { VStack } from '@astryxdesign/core/Stack'
+import { Heading } from '@astryxdesign/core/Heading'
+import { Text } from '@astryxdesign/core/Text'
+import { List, ListItem } from '@astryxdesign/core/List'
+import { Divider } from '@astryxdesign/core/Divider'
 import { useTools } from '../../data/tools'
-import './RelatedTools.css'
 
 /**
  * The links from this tool to its siblings, sitting under the guide.
@@ -18,24 +21,25 @@ export default function RelatedTools({ currentId }: { currentId: string }) {
   if (others.length === 0) return null
 
   return (
-    <nav className="related-tools" aria-labelledby="related-tools-title">
-      <h2 className="related-tools__title" id="related-tools-title">
+    <VStack gap={3} maxWidth="68ch">
+      <Divider />
+      <Heading level={2}>
         {others.length === 1 ? 'The other browser tool' : 'Other browser tools'}
-      </h2>
-      <ul className="related-tools__list">
+      </Heading>
+      <List hasDividers>
         {others.map((tool) => (
-          <li className="related-tools__item" key={tool.id}>
-            <Link className="related-tools__link" to={tool.path}>
-              <span className="related-tools__name">{tool.seo.anchor}</span>
-              <span className="related-tools__line">{tool.tagline}</span>
-            </Link>
-          </li>
+          <ListItem
+            key={tool.id}
+            href={tool.path}
+            label={tool.seo.anchor}
+            description={tool.tagline}
+          />
         ))}
-      </ul>
-      <p className="related-tools__note">
+      </List>
+      <Text type="supporting">
         Same setup on every page: the work happens in this tab, on your own machine, and nothing
         you open or generate is uploaded.
-      </p>
-    </nav>
+      </Text>
+    </VStack>
   )
 }

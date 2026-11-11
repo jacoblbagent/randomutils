@@ -1,7 +1,10 @@
-import { Link } from 'react-router-dom'
+import { Section } from '@astryxdesign/core/Section'
+import { Layout, LayoutContent } from '@astryxdesign/core/Layout'
+import { VStack, HStack } from '@astryxdesign/core/Stack'
+import { Text } from '@astryxdesign/core/Text'
+import { Link } from '@astryxdesign/core/Link'
 import { SITE } from '../../config/site'
 import { useTools } from '../../data/tools'
-import './SiteFooter.css'
 
 /**
  * Footer. It carries the pages a visitor (and an ad reviewer) should be able to
@@ -14,37 +17,40 @@ import './SiteFooter.css'
  */
 export default function SiteFooter() {
   const tools = useTools()
+
   return (
-    <footer className="site-foot">
-      {tools.length > 0 && (
-        <nav className="site-foot__links" aria-label="Tools">
-          {tools.map((tool) => (
-            <Link className="site-foot__link" to={tool.path} key={tool.id}>
-              {tool.seo.anchor}
-            </Link>
-          ))}
-        </nav>
-      )}
-      <nav className="site-foot__links" aria-label="Site information">
-        <Link className="site-foot__link" to="/about">
-          About
-        </Link>
-        <Link className="site-foot__link" to="/faq">
-          FAQ
-        </Link>
-        <Link className="site-foot__link" to="/privacy">
-          Privacy
-        </Link>
-        <Link className="site-foot__link" to="/terms">
-          Terms
-        </Link>
-        <Link className="site-foot__link" to="/contact">
-          Contact
-        </Link>
-        <a className="site-foot__link" href={`mailto:${SITE.contactEmail}`}>
-          {SITE.contactEmail}
-        </a>
-      </nav>
-    </footer>
+    <Section variant="transparent" padding={0} dividers={['top']}>
+      <Layout
+        height="auto"
+        contentWidth={960}
+        padding={4}
+        content={
+          <LayoutContent>
+            <VStack gap={3}>
+              {tools.length > 0 && (
+                <HStack gap={2} wrap="wrap">
+                  {tools.map((tool) => (
+                    <Link key={tool.id} href={tool.path}>
+                      {tool.seo.anchor}
+                    </Link>
+                  ))}
+                </HStack>
+              )}
+              <HStack gap={2} wrap="wrap">
+                <Link href="/about">About</Link>
+                <Link href="/faq">FAQ</Link>
+                <Link href="/privacy">Privacy</Link>
+                <Link href="/terms">Terms</Link>
+                <Link href="/contact">Contact</Link>
+                <Link href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</Link>
+              </HStack>
+              <Text type="supporting">
+                {SITE.name} runs in your browser. No account, no upload, no server holding your files.
+              </Text>
+            </VStack>
+          </LayoutContent>
+        }
+      />
+    </Section>
   )
 }

@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Card } from '@astryxdesign/core/Card'
+import { VStack, HStack } from '@astryxdesign/core/Stack'
+import { Text } from '@astryxdesign/core/Text'
+import { Button } from '@astryxdesign/core/Button'
+import { Link } from '@astryxdesign/core/Link'
 import './CookieBanner.css'
 
 type CookieConsent = {
@@ -41,9 +45,12 @@ function writeConsentToStorage(consent: CookieConsent) {
 
 /**
  * Consent notice for the ads that fund the site. A floating card in the content
- * column, not a full-width bar, it never covers the tool a visitor came for.
+ * column, not a full-width bar, so it never covers the tool a visitor came for.
  * Stays out of the way once answered: either choice is remembered under
  * `randomutils.cookie.consent` and the card is never shown again.
+ *
+ * The card is an Astryx Card; CookieBanner.css keeps only the fixed position,
+ * which is layout the Card has no prop for.
  */
 export default function CookieBanner() {
   const [consent, setConsent] = useState<CookieConsent>(readConsentFromStorage)
@@ -57,31 +64,29 @@ export default function CookieBanner() {
   }
 
   return (
-    <div className="cookie-banner" role="dialog" aria-label="Cookie consent">
-      <p className="cookie-banner__title">Cookies on RandomUtils</p>
-      <p className="cookie-banner__body">
-        Ads served by Google AdSense may set cookies to show and measure them. Every tool runs in
-        your browser, and your files are never uploaded.{' '}
-        <Link className="cookie-banner__policy" to="/privacy">
-          Cookie policy
-        </Link>
-      </p>
-      <div className="cookie-banner__actions">
-        <button
-          type="button"
-          className="secondary small"
-          onClick={() => setConsent(prev => ({ ...prev, dismissed: true }))}
-        >
-          Reject
-        </button>
-        <button
-          type="button"
-          className="primary small"
-          onClick={() => setConsent(prev => ({ ...prev, analytics: true }))}
-        >
-          Accept
-        </button>
-      </div>
-    </div>
+    <Card className="ru-cookie" elevation="med" padding={3}>
+      <VStack gap={2}>
+        <Text as="p" type="label">
+          Cookies on RandomUtils
+        </Text>
+        <Text as="p" type="supporting">
+          Ads served by Google AdSense may set cookies to show and measure them. Every tool runs in
+          your browser, and your files are never uploaded. <Link href="/privacy">Cookie policy</Link>
+        </Text>
+        <HStack gap={2} hAlign="end">
+          <Button
+            label="Reject"
+            size="sm"
+            onClick={() => setConsent((prev) => ({ ...prev, dismissed: true }))}
+          />
+          <Button
+            label="Accept"
+            size="sm"
+            variant="primary"
+            onClick={() => setConsent((prev) => ({ ...prev, analytics: true }))}
+          />
+        </HStack>
+      </VStack>
+    </Card>
   )
 }

@@ -1,16 +1,16 @@
 import type { ReactNode } from 'react'
-import './ToolGuide.css'
+import { VStack } from '@astryxdesign/core/Stack'
+import { Heading } from '@astryxdesign/core/Heading'
+import { Divider } from '@astryxdesign/core/Divider'
 
 /**
- * The reference that sits under a converter: what the format actually is, when
- * a stream copy is safe versus when a re-encode is the only way through, and
- * the handful of failures people actually hit.
+ * The reference that sits under a tool: what the format actually is, when a
+ * stream copy is safe versus when a re-encode is the only way through, and the
+ * handful of failures people actually hit.
  *
  * The tool is the product and stays the first thing on the page, this is a
- * sibling below it, not a preamble above it. Layout comes from the shared .doc
- * prose frame in App.css, so a guide reads like the privacy and contact pages
- * rather than a second design; only the separator and the heading scale are
- * local.
+ * sibling below it, not a preamble above it. One 68ch column and the theme's
+ * heading and body styles, so a guide reads like the privacy and about pages.
  */
 export default function ToolGuide({
   heading,
@@ -21,11 +21,10 @@ export default function ToolGuide({
   children: ReactNode
 }) {
   return (
-    <article className="doc tool-guide">
-      <header className="tool-guide__head">
-        <h2 className="tool-guide__title">{heading}</h2>
-      </header>
+    <VStack gap={3} maxWidth="68ch">
+      <Divider />
+      <Heading level={2}>{heading}</Heading>
       {children}
-    </article>
+    </VStack>
   )
 }

@@ -55,10 +55,38 @@ function installDomShim() {
     addEventListener: () => {},
     removeEventListener: () => {},
     matchMedia: () => ({ matches: false, addEventListener: () => {}, removeEventListener: () => {} }),
+    // Astryx touches these at module scope (entry-animation timers, observers).
+    // Nothing is mounted yet during a prerender, so the stubs never fire.
+    requestAnimationFrame: () => 0,
+    cancelAnimationFrame: () => {},
+    setTimeout: () => 0,
+    clearTimeout: () => {},
   }
   globalThis.window = win
   globalThis.localStorage = store
   globalThis.sessionStorage = store
+  globalThis.requestAnimationFrame = win.requestAnimationFrame
+  globalThis.cancelAnimationFrame = win.cancelAnimationFrame
+  if (!globalThis.ResizeObserver) {
+    globalThis.ResizeObserver = class {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    }
+  }
+  if (!globalThis.IntersectionObserver) {
+    globalThis.IntersectionObserver = class {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+      takeRecords() {
+        return []
+      }
+      root = null
+      rootMargin = ''
+      thresholds = []
+    }
+  }
 }
 
 /** Escape text for an HTML attribute or element body. */
@@ -161,7 +189,7 @@ async function main() {
         )
       }
       const html = render(page.path)
-      if (!html.includes('class="site-head"')) {
+      if (!html.includes('astryx-app-shell')) {
         throw new Error(`prerender produced no shell for ${page.path}; refusing to write an empty page`)
       }
       const out = withLd(

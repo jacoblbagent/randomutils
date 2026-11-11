@@ -1,10 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
 import type { Ref } from 'react'
+import { VStack, HStack, StackItem } from '@astryxdesign/core/Stack'
+import { Text } from '@astryxdesign/core/Text'
+import { Badge } from '@astryxdesign/core/Badge'
+import { Button } from '@astryxdesign/core/Button'
+import { IconButton } from '@astryxdesign/core/IconButton'
+import { CheckboxInput } from '@astryxdesign/core/CheckboxInput'
+import { Icon } from '@astryxdesign/core/Icon'
+import { ProgressBar } from '@astryxdesign/core/ProgressBar'
+import { Thumbnail } from '@astryxdesign/core/Thumbnail'
 import type { Job } from '../types'
 import { baseName, downloadFilename, formatBytes, PHASE_LABEL } from '../utils'
-import { IconDownload, IconPencil, IconX } from '../../../icons/Icons'
-import StarButton from '../StarButton/StarButton'
-import StatusIcon from '../StatusIcon/StatusIcon'
+import { IconDownload, IconPencil, IconStar, IconX } from '../../../icons/Icons'
 import Viewer from '../Viewer/Viewer'
 import './JobRow.css'
 
@@ -29,7 +36,14 @@ interface JobRowProps {
   onChangeViewing: (id: number) => void
   onCloseViewing: () => void
   /** Set only on the row currently being viewed, so the row can scroll itself into view. */
-  viewingRowRef?: Ref<HTMLLIElement>
+  viewingRowRef?: Ref<HTMLElement>
+}
+
+const STATUS_BADGE = {
+  queued: { variant: 'neutral' as const, label: 'Queued' },
+  converting: { variant: 'info' as const, label: 'Converting' },
+  done: { variant: 'success' as const, label: 'Done' },
+  error: { variant: 'error' as const, label: 'Failed' },
 }
 
 export default function JobRow({
@@ -61,13 +75,10 @@ export default function JobRow({
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState('')
   const editRef = useRef<HTMLInputElement | null>(null)
-  // Checkboxes' native 'change' event carries no modifier-key info (it's a plain Event, not a
-  // MouseEvent), so the shift state is captured on the preceding 'click' (which does have it ,
-  // click always fires immediately before change) and read back when 'change' fires.
-  const checkShiftRef = useRef(false)
 
   const indeterminate = isActive && (phase === 'loading' || phase === 'reading')
   const name = baseName(job)
+  const badge = STATUS_BADGE[status]
 
   const startEdit = () => {
     setDraft(name)
@@ -82,8 +93,20 @@ export default function JobRow({
     if (editing) editRef.current?.select()
   }, [editing])
 
+  // The download has to carry a filename, and Button has no download attribute, so the
+  // click drives a throwaway anchor: same bytes, same name, one real button for the user.
+  const download = () => {
+    if (!result) return
+    const a = document.createElement('a')
+    a.href = result.url
+    a.download = downloadFilename(job)
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+  }
+
   return (
-    <li
+    <section
       ref={viewingRowRef}
       className={`job ${status} ${isActive ? 'active' : ''} ${isViewing ? 'viewing' : ''} ${isLast ? 'last' : ''} ${status !== 'done' ? 'no-view' : ''}`}
       onPointerDown={(e) => {
@@ -91,9 +114,8 @@ export default function JobRow({
         onInteract()
       }}
       onClick={(e) => {
-        // Row acts as "View" everywhere except its buttons/links/rename field (star, download, retry, remove, rename),
-        // and only once the file has actually converted, nothing to watch before that. Shift/cmd/ctrl-click select
-        // instead of viewing, same as Finder/Gmail/etc: shift extends a range from the last pick, cmd/ctrl toggles one.
+        // Row acts as "View" everywhere except its buttons/links/inputs, and only once the file
+        // has actually converted. Shift/cmd/ctrl-click select instead, same as Finder or Gmail.
         if (status !== 'done') return
         if ((e.target as HTMLElement).closest('button, a, input')) return
         if (e.shiftKey) return onRangeSelect()
@@ -101,116 +123,115 @@ export default function JobRow({
         onView()
       }}
     >
-      <div className="job-main">
-        {status === 'done' && (
-          <input
-            type="checkbox"
-            className="select-check"
-            checked={isSelected}
-            onClick={(e) => {
-              e.stopPropagation()
-              checkShiftRef.current = e.shiftKey
-            }}
-            onChange={() => {
-              // The native toggle already ran (or didn't); either way this is a controlled input,
-              // so the next render sets `checked` to whatever our selection state says regardless.
-              if (checkShiftRef.current) onRangeSelect()
-              else onToggleSelect()
-            }}
-            aria-label={`Select ${name}`}
-          />
-        )}
-        {image ? (
-          <img className="thumb" src={image} alt="" />
-        ) : (
-          <div className="thumb thumb-empty" aria-hidden="true" />
-        )}
-        <div className="job-info">
-          <div className="job-name">
-            <span className="muted idx">{index}.</span>
-            {editing ? (
-              <input
-                ref={editRef}
-                type="text"
-                className="name-edit"
-                value={draft}
-                onChange={(e) => setDraft(e.target.value)}
-                onBlur={commit}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') e.currentTarget.blur()
-                  if (e.key === 'Escape') setEditing(false)
-                }}
-                onClick={(e) => e.stopPropagation()}
-              />
-            ) : (
-              <>
-                <span className="ellipsis" title={file.name}>
-                  {name}
-                </span>
-                <StatusIcon status={status} />
-                <button
-                  type="button"
-                  className="icon rename-btn"
-                  aria-label={`Rename ${name}`}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    startEdit()
-                  }}
-                >
-                  <IconPencil />
-                </button>
-              </>
-            )}
-          </div>
-          <div className="job-meta muted">
-            {formatBytes(file.size)}
-            {status === 'queued' && ' · Waiting'}
-            {status === 'converting' && ` · ${(phase && PHASE_LABEL[phase]) || 'Starting…'}${indeterminate ? '' : ` ${pct}%`}`}
-            {status === 'done' && result && ` · ${result.seconds.toFixed(1)}s`}
-            {status === 'error' && <span className="error-text"> · {error}</span>}
-          </div>
-        </div>
-        <div className="job-actions">
-          <span className="fav-dl">
-            <StarButton on={favorite} name={file.name} onClick={onToggleFavorite} />
+      <VStack gap={2}>
+        <HStack gap={3} vAlign="center" wrap="wrap">
+          {status === 'done' && (
+            <CheckboxInput
+              label={`Select ${name}`}
+              isLabelHidden
+              value={isSelected}
+              onChange={() => onToggleSelect()}
+            />
+          )}
+          {image ? (
+            <Thumbnail src={image} alt="" />
+          ) : (
+            <span className="thumb thumb-empty" aria-hidden="true" />
+          )}
+          <StackItem size="fill">
+            <VStack gap={0.5}>
+              <HStack gap={1.5} vAlign="center">
+                <Text type="supporting">{index}.</Text>
+                {editing ? (
+                  <input
+                    ref={editRef}
+                    type="text"
+                    className="name-edit"
+                    value={draft}
+                    onChange={(e) => setDraft(e.target.value)}
+                    onBlur={commit}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') e.currentTarget.blur()
+                      if (e.key === 'Escape') setEditing(false)
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                ) : (
+                  <>
+                    <Text maxLines={1}>{name}</Text>
+                    <Badge variant={badge.variant} label={badge.label} />
+                    <IconButton
+                      label={`Rename ${name}`}
+                      icon={<Icon icon={IconPencil} size="sm" />}
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        startEdit()
+                      }}
+                    />
+                  </>
+                )}
+              </HStack>
+              <Text type="supporting">
+                {formatBytes(file.size)}
+                {status === 'queued' && ' · Waiting'}
+                {status === 'converting' &&
+                  ` · ${(phase && PHASE_LABEL[phase]) || 'Starting…'}${indeterminate ? '' : ` ${pct}%`}`}
+                {status === 'done' && result && ` · ${result.seconds.toFixed(1)}s`}
+                {status === 'error' && ` · ${error}`}
+              </Text>
+            </VStack>
+          </StackItem>
+          <HStack gap={1} vAlign="center">
+            <IconButton
+              label={favorite ? `Remove ${name} from favorites` : `Add ${name} to favorites`}
+              icon={<Icon icon={IconStar} size="sm" />}
+              variant={favorite ? 'secondary' : 'ghost'}
+              size="sm"
+              aria-pressed={favorite}
+              onClick={() => onToggleFavorite()}
+            />
             {status === 'done' && result && (
-              <a className="secondary small" href={result.url} download={downloadFilename(job)}>
-                <IconDownload />
-                Download
-              </a>
+              <Button
+                label="Download"
+                size="sm"
+                icon={<Icon icon={IconDownload} size="sm" />}
+                onClick={() => download()}
+              />
             )}
-          </span>
-          {status === 'error' && (
-            <button className="secondary small" onClick={onRetry}>
-              Retry
-            </button>
-          )}
-          {!isActive && (
-            <button className="icon" aria-label={`Remove ${file.name}`} onClick={onRemove}>
-              <IconX />
-            </button>
-          )}
-        </div>
-      </div>
+            {status === 'error' && <Button label="Retry" size="sm" onClick={() => onRetry()} />}
+            {!isActive && (
+              <IconButton
+                label={`Remove ${file.name}`}
+                icon={<Icon icon={IconX} size="sm" />}
+                variant="ghost"
+                size="sm"
+                onClick={() => onRemove()}
+              />
+            )}
+          </HStack>
+        </HStack>
 
-      {status === 'converting' && (
-        <div className="bar" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100}>
-          <div
-            className={indeterminate ? 'indeterminate' : ''}
-            style={{ transform: `scaleX(${indeterminate ? 1 : progress})` }}
+        {status === 'converting' && (
+          <ProgressBar
+            label={`${name} progress`}
+            value={indeterminate ? 0 : pct}
+            isIndeterminate={indeterminate}
+            isLabelHidden
           />
-        </div>
-      )}
+        )}
 
-      {isViewing && (
-        <Viewer
-          jobs={viewerJobs}
-          viewingId={job.id}
-          onChange={onChangeViewing}
-          onClose={onCloseViewing}
-          onToggleFavorite={onToggleFavorite}
-        />
-      )}
-    </li>
+        {isViewing && (
+          <Viewer
+            jobs={viewerJobs}
+            viewingId={job.id}
+            onChange={onChangeViewing}
+            onClose={onCloseViewing}
+            onToggleFavorite={onToggleFavorite}
+          />
+        )}
+      </VStack>
+    </section>
   )
 }

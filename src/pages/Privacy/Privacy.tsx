@@ -1,6 +1,11 @@
-import { Link } from 'react-router-dom'
 import { SITE } from '../../config/site'
-import './Privacy.css'
+import { VStack } from '@astryxdesign/core/Stack'
+import { Heading } from '@astryxdesign/core/Heading'
+import { Text } from '@astryxdesign/core/Text'
+import { List, ListItem } from '@astryxdesign/core/List'
+import { Link } from '@astryxdesign/core/Link'
+import { Code } from '@astryxdesign/core/Code'
+import Page from '../../components/Page/Page'
 
 /**
  * Privacy policy.
@@ -18,127 +23,96 @@ import './Privacy.css'
  */
 export default function Privacy() {
   return (
-    <article className="doc privacy">
-      <header className="doc__head">
-        <h1>Privacy policy</h1>
-        <p className="doc__stamp">Last updated 21 October 2026</p>
-      </header>
+    <Page gap={5}>
+      <VStack gap={5} maxWidth="68ch">
+      <VStack gap={1}>
+        <Heading level={1}>Privacy policy</Heading>
+        <Text as="p" type="supporting">Last updated 21 October 2026</Text>
+      </VStack>
 
-      <p className="doc__lede">
+      <Text as="p" type="large" color="secondary">
         {SITE.name} is a set of small tools that run inside your browser. The tools are the whole product:
         every file you open in one of them is processed on your own machine by FFmpeg compiled to
         WebAssembly, and every password or UUID is drawn from your browser's own random source.
         Neither is uploaded, transmitted or stored anywhere: there is no account, no server-side
         processing, and no copy of your file leaves your device.
-      </p>
+      </Text>
 
-      <section className="doc__section">
-        <h2>What stays on your device</h2>
-        <ul>
-          <li>
-            Files you drop into a converter are read locally to convert them. The results are produced in
-            the page and handed straight back to you as downloads.
-          </li>
-          <li>
-            Passwords generated here are made in the page by your browser's cryptographic random
-            source. They are shown to you, and put on your clipboard only if you press Copy. The
-            site keeps no list of them, and they are never written to storage.
-          </li>
-          <li>
-            The queue, the conversion and the results live only in the page's memory. Closing or reloading
-            the tab discards them.
-          </li>
-          <li>
-            A few preferences are saved in your browser's <code>localStorage</code> so a reload keeps
-            them: the feature-flag switches (<code>randomutils.flags</code>), and each converter's starred
-            files and &ldquo;previously removed&rdquo; list. They stay in your browser, are not sent
-            anywhere, and clearing site data removes them.
-          </li>
-          <li>
-            We have no way to see your files. There is no upload endpoint, no analytics on the files, and
-            no copy of them on any server we control.
-          </li>
-        </ul>
-      </section>
+      <VStack gap={2}>
+        <Heading level={2}>What stays on your device</Heading>
+        <List listStyle="disc">
+          <ListItem label={<Text color="secondary">Files you drop into a converter are read locally to convert them. The results are produced in the page and handed straight back to you as downloads.</Text>} />
+          <ListItem label={<Text color="secondary">Passwords generated here are made in the page by your browser's cryptographic random source. They are shown to you, and put on your clipboard only if you press Copy. The site keeps no list of them, and they are never written to storage.</Text>} />
+          <ListItem label={<Text color="secondary">The queue, the conversion and the results live only in the page's memory. Closing or reloading the tab discards them.</Text>} />
+          <ListItem label={<Text color="secondary">A few preferences are saved in your browser's <Code>localStorage</Code> so a reload keeps them: the feature-flag switches (<Code>randomutils.flags</Code>), and each converter's starred files and &ldquo;previously removed&rdquo; list. They stay in your browser, are not sent anywhere, and clearing site data removes them.</Text>} />
+          <ListItem label={<Text color="secondary">We have no way to see your files. There is no upload endpoint, no analytics on the files, and no copy of them on any server we control.</Text>} />
+        </List>
+      </VStack>
 
-      <section className="doc__section">
-        <h2>Advertising</h2>
-        <p>
+      <VStack gap={2}>
+        <Heading level={2}>Advertising</Heading>
+        <Text as="p" color="secondary">
           The site is supported by advertising served by Google AdSense, which is the only third party the
           page loads. AdSense is a third-party ad vendor, and it uses cookies:
-        </p>
-        <ul>
-          <li>Third-party vendors, including Google, use cookies to serve ads based on your visits to this site and other sites.</li>
-          <li>Google's use of advertising cookies lets it and its partners show you ads based on your visit here and elsewhere on the internet.</li>
-          <li>
-            You can opt out of personalised advertising at{' '}
-            <a href="https://adssettings.google.com/" target="_blank" rel="noreferrer">
-              Google Ad Settings
-            </a>
-            . Google describes what it collects and how it uses it in its{' '}
-            <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noreferrer">
-              advertising and partner-sites policy
-            </a>
-            .
-          </li>
-          <li>
-            Other third-party vendors and ad networks may place or read cookies, or use web beacons, when an
-            ad is served. Where the law requires consent for personalised advertising, that consent is
-            collected by Google's consent tooling before personalised ads are shown; declining still shows
-            ads, just not personalised ones.
-          </li>
-        </ul>
-        <p>
+        </Text>
+        <List listStyle="disc">
+          <ListItem label={<Text color="secondary">Third-party vendors, including Google, use cookies to serve ads based on your visits to this site and other sites.</Text>} />
+          <ListItem label={<Text color="secondary">Google's use of advertising cookies lets it and its partners show you ads based on your visit here and elsewhere on the internet.</Text>} />
+          <ListItem label={<Text color="secondary">You can opt out of personalised advertising at{' '} <Link href="https://adssettings.google.com/" target="_blank"> Google Ad Settings </Link> . Google describes what it collects and how it uses it in its{' '} <Link href="https://policies.google.com/technologies/partner-sites" target="_blank"> advertising and partner-sites policy </Link> .</Text>} />
+          <ListItem label={<Text color="secondary">Other third-party vendors and ad networks may place or read cookies, or use web beacons, when an ad is served. Where the law requires consent for personalised advertising, that consent is collected by Google's consent tooling before personalised ads are shown; declining still shows ads, just not personalised ones.</Text>} />
+        </List>
+        <Text as="p" color="secondary">
           The site itself sets no cookie of its own, runs no analytics, and builds no profile of you. The
           publisher id used for ad serving is recorded publicly in{' '}
-          <a href={`${SITE.url}/ads.txt`}>ads.txt</a>.
-        </p>
-      </section>
+          <Link href={`${SITE.url}/ads.txt`}>ads.txt</Link>.
+        </Text>
+      </VStack>
 
-      <section className="doc__section">
-        <h2>Hosting and server logs</h2>
-        <p>
+      <VStack gap={2}>
+        <Heading level={2}>Hosting and server logs</Heading>
+        <Text as="p" color="secondary">
           The site is a static build hosted on GitHub Pages and served at{' '}
-          <a href={SITE.url}>{SITE.url.replace('https://', '')}</a>. Serving a page normally means the host
+          <Link href={SITE.url}>{SITE.url.replace('https://', '')}</Link>. Serving a page normally means the host
           records the request (IP address, user agent, timestamp) for security and delivery. That logging
           is GitHub's, not ours; see GitHub's{' '}
-          <a
+          <Link
             href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement"
             target="_blank"
             rel="noreferrer"
           >
             privacy statement
-          </a>
+          </Link>
           . We do not collect, store or process that data ourselves, and nothing in a tool session reaches
           the host at all.
-        </p>
-      </section>
+        </Text>
+      </VStack>
 
-      <section className="doc__section">
-        <h2>Children</h2>
-        <p>
+      <VStack gap={2}>
+        <Heading level={2}>Children</Heading>
+        <Text as="p" color="secondary">
           The site has no accounts, no uploads and no sign-up, and it is not directed at children. We do not
           knowingly collect personal information from anyone, including children.
-        </p>
-      </section>
+        </Text>
+      </VStack>
 
-      <section className="doc__section">
-        <h2>Changes to this policy</h2>
-        <p>
+      <VStack gap={2}>
+        <Heading level={2}>Changes to this policy</Heading>
+        <Text as="p" color="secondary">
           If what the site loads or stores changes, this page changes with it and the date at the top moves
           forward. The current version is always the one served here.
-        </p>
-      </section>
+        </Text>
+      </VStack>
 
-      <section className="doc__section">
-        <h2>Contact</h2>
-        <p>
+      <VStack gap={2}>
+        <Heading level={2}>Contact</Heading>
+        <Text as="p" color="secondary">
           Questions about this policy, a correction, or a privacy request (there is no data about you for us
           to hand over, but ask anyway). See the{' '}
-          <Link to="/contact">contact page</Link>, or email{' '}
-          <a href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</a>.
-        </p>
-      </section>
-    </article>
+          <Link href="/contact">contact page</Link>, or email{' '}
+          <Link href={`mailto:${SITE.contactEmail}`}>{SITE.contactEmail}</Link>.
+        </Text>
+      </VStack>
+    </VStack>
+    </Page>
   )
 }

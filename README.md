@@ -47,13 +47,15 @@ npm run deploy       # build + publish dist/ to the gh-pages branch
 
 ## Stack
 
-React 19 · Vite 8 · TypeScript (strict) · `react-router-dom` 7 (`BrowserRouter`) · plain CSS
-with custom-property tokens · `oxlint` · `@fontsource-variable/instrument-sans` ·
-`@ffmpeg/ffmpeg` + `@ffmpeg/core` + `@ffmpeg/util` · `jszip`.
+React 19 · Vite 8 · TypeScript (strict) · `react-router-dom` 7 (`BrowserRouter`) · the Astryx
+design system (`@astryxdesign/core` + `@astryxdesign/theme-neutral` + `@stylexjs/stylex`) ·
+`oxlint` · `@ffmpeg/ffmpeg` + `@ffmpeg/core` + `@ffmpeg/util` · `jszip`.
 
-No state library, no CSS framework, no component kit, no analytics. Type checking runs with
-`strict`, `noUnusedLocals`, `noUnusedParameters`, `verbatimModuleSyntax` and
-`erasableSyntaxOnly` on (`tsconfig.app.json`).
+No state library, no analytics. Every surface is an Astryx component; `src/App.css` holds only
+the brand mark and the legacy token aliases. The theme wraps the app in `src/main.tsx` and again
+in `scripts/prerender/entry.tsx`, so the prerendered markup carries the same theme scope as the
+hydrated page. Type checking runs with `strict`, `noUnusedLocals`, `noUnusedParameters`,
+`verbatimModuleSyntax` and `erasableSyntaxOnly` on (`tsconfig.app.json`).
 
 ## The registries and where a change lands
 
@@ -226,7 +228,8 @@ there still apply on `/ts-to-mp4`. “Download all” zips the finished files wi
 
 ## Adding a tool
 
-1. `src/tools/<tool-id>/`: the component, with its CSS beside it.
+1. `src/tools/<tool-id>/`: the component. Layout comes from Astryx; a small local CSS file only
+   for what the system has no component for, styled from `--color-*` / `--spacing-*` tokens.
 2. `src/data/tools.ts`: append an entry, with `flag: '<id>'`. This gives the card, the footer
    count, the page metadata and a sitemap entry in one edit.
 3. `src/App.tsx`: `<Route path="/<tool-id>" element={<Tool />} />`.
@@ -237,8 +240,8 @@ copy rules, drop copy, modes) and a one-line page rendering `<ConvertQueue spec=
 shared kit supplies the engine, queue and viewer.
 
 **A new prose page** (About, Privacy, Terms, Contact all use it): add the `<Route>` in `App.tsx`
-and a `STATIC_PAGES` entry in `src/data/pages.ts`, then reuse the `.doc` frame from `App.css`,
-never a second design.
+and a `STATIC_PAGES` entry in `src/data/pages.ts`, then reuse the `Page` frame
+(`src/components/Page`) with `Text` / `Heading` / `List` inside it, never a second design.
 
 ## Deploy
 
@@ -289,8 +292,8 @@ enforced and the certificate covers both hosts. `public/CNAME` pins the custom d
 
 ```
 src/
-├── App.tsx / App.css        shell (header + routes + footer), and the tokens + shared primitives
-├── main.tsx                 createRoot, font import, App.css
+├── App.tsx / App.css        shell (Astryx AppShell + TopNav + routes), brand mark + token aliases
+├── main.tsx                 createRoot, Astryx reset/theme CSS, Theme + LinkProvider, App.css
 ├── config/
 │   ├── flags.ts             the flag registry + store
 │   ├── site.ts              origin, repo, owner, contact address, publisher id, siteUrl()
@@ -314,9 +317,10 @@ public/                      .nojekyll, CNAME, ads.txt, robots.txt, site.webmani
 TOOL_IDEAS.txt               the backlog of client-side-only tool ideas; shipped ones are marked
 ```
 
-Component styles sit next to their component (`ComponentName/ComponentName.css`). Only
-cross-cutting primitives live in `App.css`: tokens, buttons, `.link`, `.icon`, progress bar,
-chips, and the `.doc` prose frame used by About/Faq/Privacy/Terms/Contact and every tool guide.
+Component styles sit next to their component when a component still needs one. Otherwise the
+Astryx theme owns colour, type, spacing and radius: nothing in `src/` may hardcode a hex or a
+pixel value where a token exists. `src/App.css` holds the brand mark and the legacy alias block;
+delete an alias when its last consumer goes.
 
 ## Local checks before shipping
 

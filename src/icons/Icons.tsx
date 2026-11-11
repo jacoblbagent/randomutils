@@ -15,9 +15,9 @@ const base: SVGProps<SVGSVGElement> = {
   focusable: false,
 }
 
-export function IconStar({ filled = false }: { filled?: boolean }) {
+export function IconStar({ filled = false, ...rest }: SVGProps<SVGSVGElement> & { filled?: boolean }) {
   return (
-    <svg {...base} fill={filled ? 'currentColor' : 'none'}>
+    <svg {...base} {...rest} fill={filled ? 'currentColor' : 'none'}>
       <path d="M12 3.75l2.6 5.27 5.82.85-4.21 4.1 1 5.8L12 17.04l-5.21 2.73 1-5.8-4.21-4.1 5.82-.85z" />
     </svg>
   )

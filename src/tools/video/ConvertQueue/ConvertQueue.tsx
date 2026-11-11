@@ -1,16 +1,27 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import JSZip from 'jszip'
-import { Link } from 'react-router-dom'
-import { IconArrowLeft } from '../../../icons/Icons'
-import InfoTip from '../InfoTip/InfoTip'
+import { VStack, HStack, StackItem } from '@astryxdesign/core/Stack'
+import { Heading } from '@astryxdesign/core/Heading'
+import { Text } from '@astryxdesign/core/Text'
+import { Button } from '@astryxdesign/core/Button'
+import { Badge } from '@astryxdesign/core/Badge'
+import { Banner } from '@astryxdesign/core/Banner'
+import { CheckboxInput } from '@astryxdesign/core/CheckboxInput'
+import { FileInput } from '@astryxdesign/core/FileInput'
+import { Icon } from '@astryxdesign/core/Icon'
+import { ProgressBar } from '@astryxdesign/core/ProgressBar'
+import {
+  SegmentedControl,
+  SegmentedControlItem,
+} from '@astryxdesign/core/SegmentedControl'
+import { TextInput } from '@astryxdesign/core/TextInput'
+import { IconArrowLeft, IconStar } from '../../../icons/Icons'
 import JobRow from '../JobRow/JobRow'
-import Toast from '../Toast/Toast'
 import type { Job, JobStatus, VideoToolSpec } from '../types'
 import { useDismissedNames } from '../useDismissedNames'
 import { CancelledError, useFFmpeg } from '../useFFmpeg'
 import { useFavorites } from '../useFavorites'
 import { baseKey, compareJobs, downloadFilename, isImage, makeJob } from '../utils'
-import './ConvertQueue.css'
 
 /**
  * The whole converter page, format-agnostic: drop zone, queue, per-row state, selection,
@@ -24,7 +35,6 @@ export default function ConvertQueue({ spec }: { spec: VideoToolSpec }) {
   const [mode, setMode] = useState(spec.modes[0].value)
   const [running, setRunning] = useState(false) // queue is processing
   const [activeId, setActiveId] = useState<number | null>(null)
-  const [dragging, setDragging] = useState(false)
   const [toast, setToast] = useState<{ id: number; message: string } | null>(null)
   const [thumbs, setThumbs] = useState<Record<string, string>>({}) // baseKey -> object URL
   const thumbsRef = useRef(thumbs)
@@ -94,7 +104,6 @@ export default function ConvertQueue({ spec }: { spec: VideoToolSpec }) {
     if (target !== null) window.scrollTo({ top: target, behavior: 'instant' })
   }, [viewingId])
 
-  const inputRef = useRef<HTMLInputElement | null>(null)
   const jobsRef = useRef(jobs)
   jobsRef.current = jobs
 
@@ -115,7 +124,7 @@ export default function ConvertQueue({ spec }: { spec: VideoToolSpec }) {
     }
   }, [])
 
-  const addFiles = (list: FileList | null) => {
+  const addFiles = (list: FileList | File[] | null) => {
     const files = Array.from(list ?? [])
     // Paired images and sidecars are consumed, never queued: they dress up a source file instead.
     const images = spec.pairImages ? files.filter((f) => isImage(f.name)) : []
@@ -373,174 +382,169 @@ export default function ConvertQueue({ spec }: { spec: VideoToolSpec }) {
   const doneJobsForViewer = visibleJobs.filter((j) => j.status === 'done')
 
   return (
-    <div className="tool">
-      <header className="tool-head">
-        <Link className="tool-head__back" to="/">
-          <IconArrowLeft />
-          All tools
-        </Link>
-        <h1>{spec.title}</h1>
-        <p className="tool-head__sub">{spec.sub}</p>
-      </header>
-
-      <section
-        className={`drop ${dragging ? 'drag' : ''}`}
-        onClick={() => inputRef.current?.click()}
-        onDragOver={(e) => {
-          e.preventDefault()
-          setDragging(true)
-        }}
-        onDragLeave={() => setDragging(false)}
-        onDrop={(e) => {
-          e.preventDefault()
-          setDragging(false)
-          addFiles(e.dataTransfer.files)
-        }}
-      >
-        <input
-          ref={inputRef}
-          type="file"
-          multiple
-          accept={spec.accept}
-          hidden
-          onChange={(e) => {
-            addFiles(e.target.files)
-            e.target.value = ''
-          }}
+    <VStack gap={4}>
+      <VStack gap={2}>
+        <Button
+          label="All tools"
+          variant="ghost"
+          size="sm"
+          icon={<Icon icon={IconArrowLeft} size="sm" />}
+          href="/"
         />
-        <strong>{spec.dropTitle}</strong>
-        {spec.dropNotes.map((note) => (
-          <span className="small-note" key={note}>
-            {note}
-          </span>
-        ))}
-      </section>
+        <Heading level={1}>{spec.title}</Heading>
+        <Text type="large" color="secondary">
+          {spec.sub}
+        </Text>
+      </VStack>
+
+      <FileInput
+        label={spec.dropTitle}
+        mode="dropzone"
+        isMultiple
+        accept={spec.accept}
+        value={null}
+        onChange={(files) => addFiles((files as File[] | null) ?? null)}
+        description={spec.dropNotes.join(' · ')}
+      />
 
       {dismissed.size > 0 && (
-        <div className="dismissed-note muted small-note">
-          <span>
-            {dismissed.size} previously removed file{dismissed.size > 1 ? 's are' : ' is'} skipped
-            automatically on upload.
-          </span>
-          <button className="link" onClick={clearDismissed}>
-            Clear list
-          </button>
-        </div>
+        <HStack gap={2} wrap="wrap" vAlign="center">
+          <StackItem size="fill">
+            <Text type="supporting">
+              {dismissed.size} previously removed file{dismissed.size > 1 ? 's are' : ' is'} skipped
+              automatically on upload.
+            </Text>
+          </StackItem>
+          <Button label="Clear list" size="sm" variant="ghost" onClick={clearDismissed} />
+        </HStack>
       )}
 
-      {toast && <Toast key={toast.id} message={toast.message} onClose={() => setToast(null)} />}
+      {toast && (
+        <Banner
+          status="warning"
+          title={toast.message}
+          isDismissable
+          onDismiss={() => setToast(null)}
+          collapsible={false}
+        />
+      )}
 
-      <fieldset className="modes" disabled={running}>
-        <legend>Conversion method</legend>
-        <div className="segmented">
-          {spec.modes.map(({ value, label, hint }) => (
-            <label key={value} className={mode === value ? 'on' : ''}>
-              <input
-                type="radio"
-                name="mode"
-                value={value}
-                checked={mode === value}
-                onChange={() => setMode(value)}
-              />
-              <span>{label}</span>
-              <InfoTip text={hint} />
-            </label>
+      <VStack gap={1}>
+        <SegmentedControl
+          label="Conversion method"
+          value={mode}
+          onChange={(value) => setMode(value as typeof mode)}
+          isDisabled={running}
+        >
+          {spec.modes.map(({ value, label }) => (
+            <SegmentedControlItem key={value} value={value} label={label} />
           ))}
-        </div>
-      </fieldset>
+        </SegmentedControl>
+        <Text type="supporting">{spec.modes.find((m) => m.value === mode)?.hint}</Text>
+      </VStack>
 
       {total > 0 && (
-        <section className="batch">
-          <div className="batch-head">
-            <div className="batch-status">
+        <VStack gap={3}>
+          <HStack gap={2} wrap="wrap" vAlign="center">
+            <StackItem size="fill">
               {running && active ? (
-                <>
-                  <strong>
+                <VStack gap={0.5}>
+                  <Text type="label">
                     Converting {activePos} of {total}
-                  </strong>
-                  <span className="muted ellipsis">{active.file.name}</span>
-                </>
+                  </Text>
+                  <Text type="supporting" maxLines={1}>
+                    {active.file.name}
+                  </Text>
+                </VStack>
               ) : (
-                <strong>
-                  {total} file{total > 1 ? 's' : ''}
-                  <span className="chips">
-                    {counts.done > 0 && <span className="chip">{counts.done} done</span>}
-                    {counts.error > 0 && <span className="chip">{counts.error} failed</span>}
-                    {counts.queued > 0 && <span className="chip">{counts.queued} queued</span>}
-                  </span>
-                </strong>
+                <HStack gap={2} wrap="wrap" vAlign="center">
+                  <Text type="label">
+                    {total} file{total > 1 ? 's' : ''}
+                  </Text>
+                  {counts.done > 0 && (
+                    <Badge variant="success" label={`${counts.done} done`} />
+                  )}
+                  {counts.error > 0 && (
+                    <Badge variant="error" label={`${counts.error} failed`} />
+                  )}
+                  {counts.queued > 0 && <Badge label={`${counts.queued} queued`} />}
+                </HStack>
               )}
-            </div>
-            <div className="actions">
+            </StackItem>
+            <HStack gap={2} wrap="wrap">
               {running ? (
-                <button className="secondary" onClick={stop}>
-                  Stop
-                </button>
+                <Button label="Stop" onClick={stop} />
               ) : (
                 counts.queued > 0 && (
-                  <button className="primary" onClick={startBatch}>
-                    {counts.done || counts.error
-                      ? `Convert ${counts.queued} queued`
-                      : `Convert all (${total})`}
-                  </button>
+                  <Button
+                    variant="primary"
+                    onClick={startBatch}
+                    label={
+                      counts.done || counts.error
+                        ? `Convert ${counts.queued} queued`
+                        : `Convert all (${total})`
+                    }
+                  />
                 )
               )}
-              {counts.done > 1 && (
-                <span className="dl-group">
-                  <label className="select-all">
-                    <input
-                      type="checkbox"
-                      checked={allDoneSelected}
-                      onChange={toggleSelectAll}
-                      aria-label="Select all converted files"
-                    />
-                    Select all
-                  </label>
-                  <input
-                    type="text"
-                    className="dl-folder"
-                    placeholder="Zip name"
-                    aria-label="Name for the download zip file"
-                    value={zipName}
-                    onChange={(e) => setZipName(e.target.value)}
-                    maxLength={80}
-                    disabled={zipping}
-                  />
-                  {selectedDoneCount > 0 ? (
-                    <button className="secondary" onClick={downloadSelected} disabled={zipping}>
-                      {zipping ? 'Zipping…' : `Download selected as .zip (${selectedDoneCount})`}
-                    </button>
-                  ) : (
-                    <button className="secondary" onClick={downloadAll} disabled={zipping}>
-                      {zipping ? 'Zipping…' : `Download all as .zip (${counts.done})`}
-                    </button>
-                  )}
-                </span>
-              )}
               {favCount > 0 && (
-                <button
-                  className={`secondary fav-filter ${favoritesOnly ? 'on' : ''}`}
+                <Button
+                  label={`Favorites (${favCount})`}
+                  size="sm"
+                  variant={favoritesOnly ? 'secondary' : 'ghost'}
+                  icon={<Icon icon={IconStar} size="sm" />}
                   aria-pressed={favoritesOnly}
-                  onClick={() => setFavoritesOnly((v) => !v)}
-                >
-                  ★ Favorites ({favCount})
-                </button>
+                  onClick={() => setFavoritesOnly((value) => !value)}
+                />
               )}
               {counts.done > 0 && !running && (
-                <button className="link" onClick={clearFinished}>
-                  Clear done
-                </button>
+                <Button label="Clear done" size="sm" variant="ghost" onClick={clearFinished} />
               )}
-            </div>
-          </div>
+            </HStack>
+          </HStack>
 
           {(running || finished > 0) && (
-            <div className="bar thin" aria-label="Overall progress">
-              <div style={{ transform: `scaleX(${overall})` }} />
-            </div>
+            <ProgressBar
+              label="Overall progress"
+              value={Math.round(overall * 100)}
+              isLabelHidden
+            />
           )}
 
-          <ul className="jobs">
+          {counts.done > 1 && (
+            <HStack gap={2} wrap="wrap" vAlign="center">
+              <CheckboxInput
+                label="Select all converted files"
+                value={allDoneSelected}
+                onChange={toggleSelectAll}
+              />
+              <TextInput
+                label="Zip name"
+                isLabelHidden
+                placeholder="Zip name"
+                value={zipName}
+                onChange={setZipName}
+                size="sm"
+                width={180}
+                isDisabled={zipping}
+              />
+              {selectedDoneCount > 0 ? (
+                <Button
+                  label={zipping ? 'Zipping…' : `Download selected as .zip (${selectedDoneCount})`}
+                  onClick={downloadSelected}
+                  isDisabled={zipping}
+                />
+              ) : (
+                <Button
+                  label={zipping ? 'Zipping…' : `Download all as .zip (${counts.done})`}
+                  onClick={downloadAll}
+                  isDisabled={zipping}
+                />
+              )}
+            </HStack>
+          )}
+
+          <VStack gap={2}>
             {visibleJobs.map((job) => {
               const isViewing = job.id === viewingId
               return (
@@ -562,8 +566,6 @@ export default function ConvertQueue({ spec }: { spec: VideoToolSpec }) {
                   onRemove={() => remove(job.id)}
                   onRetry={() => retry(job.id)}
                   onRename={(value) => rename(job.id, value)}
-                  // Only used when isViewing, the viewer renders nested inside this row so it
-                  // visually reads as one card instead of two bordered pieces with a gap.
                   viewerJobs={doneJobsForViewer}
                   onChangeViewing={setViewingId}
                   onCloseViewing={() => setViewingId(null)}
@@ -571,11 +573,11 @@ export default function ConvertQueue({ spec }: { spec: VideoToolSpec }) {
                 />
               )
             })}
-          </ul>
-        </section>
+          </VStack>
+        </VStack>
       )}
 
-      <p className="tool-note muted">{spec.note}</p>
-    </div>
+      <Text type="supporting">{spec.note}</Text>
+    </VStack>
   )
 }

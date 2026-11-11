@@ -1,9 +1,22 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import JSZip from 'jszip'
-import { Link } from 'react-router-dom'
 import RelatedTools from '../../components/RelatedTools/RelatedTools'
 import ToolGuide from '../../components/ToolGuide/ToolGuide'
 import { IconArrowLeft, IconDownload, IconX } from '../../icons/Icons'
+import { VStack, HStack, StackItem } from '@astryxdesign/core/Stack'
+import { Heading } from '@astryxdesign/core/Heading'
+import { Text } from '@astryxdesign/core/Text'
+import { Button } from '@astryxdesign/core/Button'
+import { IconButton } from '@astryxdesign/core/IconButton'
+import { Badge } from '@astryxdesign/core/Badge'
+import { Banner } from '@astryxdesign/core/Banner'
+import { FileInput } from '@astryxdesign/core/FileInput'
+import { Icon } from '@astryxdesign/core/Icon'
+import { List, ListItem } from '@astryxdesign/core/List'
+import { ProgressBar } from '@astryxdesign/core/ProgressBar'
+import { SegmentedControl, SegmentedControlItem } from '@astryxdesign/core/SegmentedControl'
+import { Link } from '@astryxdesign/core/Link'
+import Page from '../../components/Page/Page'
 import {
   CancelledError,
   FORMATS,
@@ -11,7 +24,6 @@ import {
   useAudioFFmpeg,
   type AudioFormat,
 } from './useAudioFFmpeg'
-import './AudioExtract.css'
 
 /**
  * Video → Audio: drop a video (or audio) file in, pick WAV or MP3, get the audio track back
@@ -78,10 +90,8 @@ export default function AudioExtract() {
   const [format, setFormat] = useState<AudioFormat>('wav')
   const [running, setRunning] = useState(false)
   const [activeId, setActiveId] = useState<number | null>(null)
-  const [dragging, setDragging] = useState(false)
   const [skipped, setSkipped] = useState('')
   const [zipping, setZipping] = useState(false)
-  const inputRef = useRef<HTMLInputElement | null>(null)
   const nextId = useRef(1)
   const jobsRef = useRef(jobs)
   jobsRef.current = jobs
@@ -109,7 +119,7 @@ export default function AudioExtract() {
     [],
   )
 
-  const addFiles = (list: FileList | null) => {
+  const addFiles = (list: FileList | File[] | null) => {
     const files = Array.from(list ?? [])
     const good = files.filter(isMedia)
     const bad = files.filter((f) => !isMedia(f))
@@ -251,6 +261,17 @@ export default function AudioExtract() {
     }
   }
 
+  // Button has no download attribute, so a throwaway anchor carries the filename.
+  const downloadFile = (job: Job) => {
+    if (!job.result) return
+    const a = document.createElement('a')
+    a.href = job.result.url
+    a.download = job.result.name
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+  }
+
   const counts = useMemo(() => {
     const c: Record<JobStatus, number> = { queued: 0, working: 0, done: 0, error: 0 }
     for (const j of jobs) c[j.status] += 1
@@ -264,317 +285,253 @@ export default function AudioExtract() {
   const ext = FORMATS[format].ext
 
   return (
-    <div className="ax">
-      <header className="ax-head">
-        <Link className="ax-head__back" to="/">
-          <IconArrowLeft />
-          All tools
-        </Link>
-        <h1>Video → Audio</h1>
-        <p className="ax-head__sub">
-          Extract the audio from a video and download it as WAV or MP3. Everything runs in
-          this tab with FFmpeg (WebAssembly): no upload, no server, and your file never leaves this
-          machine.
-        </p>
-      </header>
-
-      <section
-        className={`ax-drop${dragging ? ' drag' : ''}`}
-        onClick={() => inputRef.current?.click()}
-        onDragOver={(e) => {
-          e.preventDefault()
-          setDragging(true)
-        }}
-        onDragLeave={() => setDragging(false)}
-        onDrop={(e) => {
-          e.preventDefault()
-          setDragging(false)
-          addFiles(e.dataTransfer.files)
-        }}
-      >
-        <input
-          ref={inputRef}
-          type="file"
-          multiple
-          accept={ACCEPT}
-          hidden
-          onChange={(e) => {
-            addFiles(e.target.files)
-            e.target.value = ''
-          }}
+    <Page>
+      <VStack gap={2}>
+        <Button
+          label="All tools"
+          variant="ghost"
+          size="sm"
+          icon={<Icon icon={IconArrowLeft} size="sm" />}
+          href="/"
         />
-        <strong>Drop video files here</strong>
-        <span className="ax-note">or click to browse, and you can add more while a batch runs.</span>
-        <span className="ax-note">
-          MP4, MOV, MKV, WebM, AVI, FLV, TS and more. Audio files work too.
-        </span>
-      </section>
+        <Heading level={1}>Video → Audio</Heading>
+        <Text type="large" color="secondary">
+          Extract the audio from a video and download it as WAV or MP3. Everything runs in this tab
+          with FFmpeg (WebAssembly): no upload, no server, and your file never leaves this machine.
+        </Text>
+      </VStack>
+
+      <FileInput
+        label="Drop video files here"
+        mode="dropzone"
+        isMultiple
+        accept={ACCEPT}
+        value={null}
+        onChange={(files) => addFiles((files as File[] | null) ?? null)}
+        description="Or click to browse, and you can add more while a batch runs. MP4, MOV, MKV, WebM, AVI, FLV, TS and more. Audio files work too."
+      />
 
       {skipped && (
-        <p className="ax-skip small-note">
-          {skipped}{' '}
-          <button className="link" onClick={() => setSkipped('')}>
-            Dismiss
-          </button>
-        </p>
+        <Banner
+          status="warning"
+          title={skipped}
+          isDismissable
+          onDismiss={() => setSkipped('')}
+          collapsible={false}
+        />
       )}
 
-      <fieldset className="ax-formats" disabled={running}>
-        <legend>Output format</legend>
-        <div className="ax-segmented">
+      <VStack gap={1}>
+        <SegmentedControl
+          label="Output format"
+          value={format}
+          onChange={(value) => setFormat(value as typeof format)}
+          isDisabled={running}
+        >
           {FORMAT_IDS.map((id) => (
-            <label key={id} className={format === id ? 'on' : ''}>
-              <input
-                type="radio"
-                name="format"
-                value={id}
-                checked={format === id}
-                onChange={() => setFormat(id)}
-              />
-              <span className="ax-seg-label">{FORMATS[id].label}</span>
-              <span className="ax-seg-hint">{FORMATS[id].hint}</span>
-            </label>
+            <SegmentedControlItem key={id} value={id} label={FORMATS[id].label} />
           ))}
-        </div>
-      </fieldset>
+        </SegmentedControl>
+        <Text type="supporting">{FORMATS[format].hint}</Text>
+      </VStack>
 
       {total > 0 && (
-        <section className="ax-batch">
-          <div className="ax-batch-head">
-            <div className="ax-batch-status">
+        <VStack gap={3}>
+          <HStack gap={2} wrap="wrap" vAlign="center">
+            <StackItem size="fill">
               {running && active ? (
-                <>
-                  <strong>
+                <VStack gap={0.5}>
+                  <Text type="label">
                     Extracting {jobs.indexOf(active) + 1} of {total}
-                  </strong>
-                  <span className="muted ellipsis">{active.file.name}</span>
-                </>
+                  </Text>
+                  <Text type="supporting" maxLines={1}>
+                    {active.file.name}
+                  </Text>
+                </VStack>
               ) : (
-                <strong>
-                  {total} file{total > 1 ? 's' : ''}
-                  <span className="chips">
-                    {counts.done > 0 && <span className="chip">{counts.done} done</span>}
-                    {counts.error > 0 && <span className="chip">{counts.error} failed</span>}
-                    {counts.queued > 0 && <span className="chip">{counts.queued} queued</span>}
-                  </span>
-                </strong>
+                <HStack gap={2} wrap="wrap" vAlign="center">
+                  <Text type="label">
+                    {total} file{total > 1 ? 's' : ''}
+                  </Text>
+                  {counts.done > 0 && <Badge variant="success" label={`${counts.done} done`} />}
+                  {counts.error > 0 && <Badge variant="error" label={`${counts.error} failed`} />}
+                  {counts.queued > 0 && <Badge label={`${counts.queued} queued`} />}
+                  {!running && engine === 'loading' && <Text type="supporting">Loading FFmpeg…</Text>}
+                </HStack>
               )}
-              {!running && engine === 'loading' && <span className="small-note">Loading FFmpeg…</span>}
-            </div>
-            <div className="ax-actions">
+            </StackItem>
+            <HStack gap={2} wrap="wrap">
               {running ? (
-                <button className="secondary small" onClick={stop}>
-                  Stop
-                </button>
+                <Button label="Stop" size="sm" onClick={stop} />
               ) : (
                 counts.queued > 0 && (
-                  <button className="primary small" onClick={startBatch}>
-                    {counts.queued === 1 ? `Extract as ${ext.toUpperCase()}` : `Extract ${counts.queued} files`}
-                  </button>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={startBatch}
+                    label={
+                      counts.queued === 1
+                        ? `Extract as ${ext.toUpperCase()}`
+                        : `Extract ${counts.queued} files`
+                    }
+                  />
                 )
               )}
               {counts.done > 1 && (
-                <button
-                  className="secondary small"
+                <Button
+                  size="sm"
+                  isDisabled={zipping}
                   onClick={() => zipAndDownload(jobs.filter((j) => j.status === 'done'))}
-                  disabled={zipping}
-                >
-                  {zipping ? 'Zipping…' : `Download all as .zip (${counts.done})`}
-                </button>
+                  label={zipping ? 'Zipping…' : `Download all as .zip (${counts.done})`}
+                />
               )}
               {counts.done > 0 && !running && (
-                <button className="link" onClick={clearFinished}>
-                  Clear done
-                </button>
+                <Button label="Clear done" size="sm" variant="ghost" onClick={clearFinished} />
               )}
-            </div>
-          </div>
+            </HStack>
+          </HStack>
 
           {(running || finished > 0) && (
-            <div className="bar thin" aria-label="Overall progress">
-              <div style={{ transform: `scaleX(${overall})` }} />
-            </div>
+            <ProgressBar label="Overall progress" value={Math.round(overall * 100)} isLabelHidden />
           )}
 
-          <ul className="ax-jobs">
+          <VStack gap={2}>
             {jobs.map((job) => {
               const index = PHASE_ORDER.indexOf(job.phase)
               return (
-                <li
+                <VStack
                   key={job.id}
+                  gap={2}
+                  padding={3}
                   className={`ax-job ${job.status}${job.id === activeId ? ' active' : ''}`}
                 >
-                  <div className="ax-job-main">
-                    <div className="ax-job-info">
-                      <div className="ax-job-name">
-                        <span className="ellipsis">
+                  <HStack gap={2} vAlign="center" wrap="wrap">
+                    <StackItem size="fill">
+                      <VStack gap={0.5}>
+                        <Text maxLines={1}>
                           {job.stem}
                           <span className="ax-ext">.{job.result?.ext ?? ext}</span>
-                        </span>
-                      </div>
-                      <div className="ax-job-meta">
-                        {job.status === 'done' && job.result ? (
-                          <>
-                            {mb(job.file.size)} → {formatBytes(job.result.size)} · done in{' '}
-                            {job.result.elapsed < 0.1 ? '<0.1' : job.result.elapsed.toFixed(1)}s
-                          </>
-                        ) : job.status === 'error' ? (
-                          <span className="ax-error">{job.error}</span>
-                        ) : job.status === 'working' ? (
-                          <>
-                            {job.phase}
-                            {index > 0 ? ` · step ${index + 1} of ${PHASE_ORDER.length}` : ''}
-                          </>
-                        ) : (
-                          <>{mb(job.file.size)} · queued</>
-                        )}
-                      </div>
-                    </div>
-                    <div className="ax-job-actions">
+                        </Text>
+                        <Text type="supporting">
+                          {job.status === 'done' && job.result ? (
+                            <>
+                              {mb(job.file.size)} → {formatBytes(job.result.size)} · done in{' '}
+                              {job.result.elapsed < 0.1 ? '<0.1' : job.result.elapsed.toFixed(1)}s
+                            </>
+                          ) : job.status === 'error' ? (
+                            job.error
+                          ) : job.status === 'working' ? (
+                            <>
+                              {job.phase}
+                              {index > 0 ? ` · step ${index + 1} of ${PHASE_ORDER.length}` : ''}
+                            </>
+                          ) : (
+                            <>{mb(job.file.size)} · queued</>
+                          )}
+                        </Text>
+                      </VStack>
+                    </StackItem>
+                    <HStack gap={1} vAlign="center">
                       {job.status === 'done' && job.result && (
-                        <a
-                          className="secondary small"
-                          href={job.result.url}
-                          download={job.result.name}
-                          title={`Download ${job.result.name}`}
-                        >
-                          <IconDownload />
-                          {job.result.ext.toUpperCase()}
-                        </a>
+                        <Button
+                          size="sm"
+                          label={job.result.ext.toUpperCase()}
+                          icon={<Icon icon={IconDownload} size="sm" />}
+                          onClick={() => downloadFile(job)}
+                        />
                       )}
                       {job.status === 'error' && (
-                        <button className="secondary small" onClick={() => retry(job.id)}>
-                          Retry
-                        </button>
+                        <Button size="sm" label="Retry" onClick={() => retry(job.id)} />
                       )}
-                      <button
-                        className="icon"
+                      <IconButton
+                        label={`Remove ${job.file.name}`}
+                        tooltip="Remove from list"
+                        icon={<Icon icon={IconX} size="sm" />}
+                        variant="ghost"
+                        size="sm"
+                        isDisabled={job.id === activeId}
                         onClick={() => remove(job.id)}
-                        disabled={job.id === activeId}
-                        aria-label={`Remove ${job.file.name}`}
-                        title="Remove from list"
-                      >
-                        <IconX />
-                      </button>
-                    </div>
-                  </div>
+                      />
+                    </HStack>
+                  </HStack>
                   {(job.status === 'working' || (job.status === 'done' && job.progress < 1)) && (
-                    <div className="bar thin" aria-label={`Progress for ${job.file.name}`}>
-                      <div style={{ transform: `scaleX(${job.progress})` }} />
-                    </div>
+                    <ProgressBar
+                      label={`Progress for ${job.file.name}`}
+                      value={Math.round(job.progress * 100)}
+                      isLabelHidden
+                    />
                   )}
-                </li>
+                </VStack>
               )
             })}
-          </ul>
-        </section>
+          </VStack>
+        </VStack>
       )}
 
-      <p className="ax-note muted">
-        Files are processed one at a time, entirely in browser memory, so a single video over
-        ~2 GB may fail. The first file loads the ~31 MB FFmpeg core (cached by the browser
-        afterwards). Audio is taken from the first audio track and re-encoded: WAV keeps the
-        source sample rate, MP3 is 192 kbps.
-      </p>
+      <Text type="supporting">
+        Files are processed one at a time, entirely in browser memory, so a single video over ~2 GB
+        may fail. The first file loads the ~31 MB FFmpeg core (cached by the browser afterwards).
+        Audio is taken from the first audio track and re-encoded: WAV keeps the source sample rate,
+        MP3 is 192 kbps.
+      </Text>
 
       <ToolGuide heading="About this tool">
-        <section className="doc__section">
-          <h2>WAV or MP3?</h2>
-          <p>
+        <VStack gap={2}>
+          <Heading level={2}>WAV or MP3?</Heading>
+          <Text as="p" color="secondary">
             The choice is between a file that is faithful and a file that is small, and only you
             know which the job needs.
-          </p>
-          <ul>
-            <li>
-              <strong>WAV</strong>: uncompressed 16-bit PCM at the source&rsquo;s own sample
-              rate. Lossless, so nothing is thrown away, and every editor and audio tool accepts
-              it. The cost is size: a stereo WAV is roughly 10 MB per minute, which adds up fast
-              over a long recording. Choose WAV when you are going to edit, transcribe, or
-              re-encode the audio later, or when quality is the whole point.
-            </li>
-            <li>
-              <strong>MP3</strong>: 192 kbps, which is transparent enough for speech and fine for
-              most music. Roughly a tenth the size of the WAV and plays on literally anything.
-              Choose MP3 when the audio is the finished product (a podcast, a voice memo, a
-              soundtrack you want on a phone) rather than the start of more work.
-            </li>
-          </ul>
-        </section>
+          </Text>
+          <List listStyle="disc">
+            <ListItem label={<Text color="secondary"><strong>WAV</strong>: uncompressed 16-bit PCM at the source&rsquo;s own sample rate. Lossless, so nothing is thrown away, and every editor and audio tool accepts it. The cost is size: a stereo WAV is roughly 10 MB per minute, which adds up fast over a long recording. Choose WAV when you are going to edit, transcribe, or re-encode the audio later, or when quality is the whole point.</Text>} />
+            <ListItem label={<Text color="secondary"><strong>MP3</strong>: 192 kbps, which is transparent enough for speech and fine for most music. Roughly a tenth the size of the WAV and plays on literally anything. Choose MP3 when the audio is the finished product (a podcast, a voice memo, a soundtrack you want on a phone) rather than the start of more work.</Text>} />
+          </List>
+        </VStack>
 
-        <section className="doc__section">
-          <h2>Where the audio comes from</h2>
-          <ul>
-            <li>
-              The audio is taken from the <strong>first audio track</strong> in the file, and it
-              is re-encoded to the format you pick. For a normal video with one audio track, that
-              is simply &ldquo;the&rdquo; audio.
-            </li>
-            <li>
-              A video with several audio tracks, such as a film with multiple language dubs,
-              yields the first one. If you need a different track, that is worth a note on the{' '}
-              <Link to="/contact">contact page</Link>.
-            </li>
-            <li>
-              A video with <strong>no</strong> audio track at all has nothing to extract; the
-              tool will report a failure rather than invent a silent file.
-            </li>
-            <li>
-              Audio files themselves work as input too: taking the audio &ldquo;out of&rdquo; an
-              MP3 is just a format conversion, and WAV→MP3 or MP3→WAV is a perfectly good use of
-              this tool.
-            </li>
-          </ul>
-        </section>
+        <VStack gap={2}>
+          <Heading level={2}>Where the audio comes from</Heading>
+          <List listStyle="disc">
+            <ListItem label={<Text color="secondary">The audio is taken from the <strong>first audio track</strong> in the file, and it is re-encoded to the format you pick. For a normal video with one audio track, that is simply &ldquo;the&rdquo; audio.</Text>} />
+            <ListItem label={<Text color="secondary">A video with several audio tracks, such as a film with multiple language dubs, yields the first one. If you need a different track, that is worth a note on the{' '} <Link href="/contact">contact page</Link>.</Text>} />
+            <ListItem label={<Text color="secondary">A video with <strong>no</strong> audio track at all has nothing to extract; the tool will report a failure rather than invent a silent file.</Text>} />
+            <ListItem label={<Text color="secondary">Audio files themselves work as input too: taking the audio &ldquo;out of&rdquo; an MP3 is just a format conversion, and WAV→MP3 or MP3→WAV is a perfectly good use of this tool.</Text>} />
+          </List>
+        </VStack>
 
-        <section className="doc__section">
-          <h2>Formats it accepts</h2>
-          <p>
+        <VStack gap={2}>
+          <Heading level={2}>Formats it accepts</Heading>
+          <Text as="p" color="secondary">
             Video: MP4, MOV, MKV, WebM, AVI, FLV, WMV, MPEG, TS, M2TS, 3GP, OGV, VOB, MXF and
             more. Audio: MP3, WAV, M4A, AAC, FLAC, OGG, Opus, WMA, AIFF and more. If a file is
             neither video nor audio it is skipped and named in a note above the queue.
-          </p>
-        </section>
+          </Text>
+        </VStack>
 
-        <section className="doc__section">
-          <h2>If something goes wrong</h2>
-          <ul>
-            <li>
-              <strong>The job fails at &ldquo;Extracting audio&rdquo;.</strong> Usually a video
-              with no audio track, or a file whose audio is in a codec the bundled FFmpeg build
-              cannot decode. Try another file to confirm the tool itself is fine.
-            </li>
-            <li>
-              <strong>The WAV is enormous.</strong> Expected, since it is uncompressed. If size rather
-              than fidelity is the problem, extract to MP3 instead.
-            </li>
-            <li>
-              <strong>A rental or store-bought download fails.</strong> Protected (DRM) files are
-              deliberately unreadable by any ordinary tool; this one is no exception, and the
-              files are not yours to convert.
-            </li>
-            <li>
-              <strong>A very long video stops part-way.</strong> The whole file and its audio
-              output live in the page&rsquo;s memory, so a single video over roughly 2 GB may run
-              out of room.
-            </li>
-          </ul>
-          <p className="small-note">
-            Still stuck? The <Link to="/contact">contact page</Link> lists exactly what to include.
-          </p>
-        </section>
+        <VStack gap={2}>
+          <Heading level={2}>If something goes wrong</Heading>
+          <List listStyle="disc">
+            <ListItem label={<Text color="secondary"><strong>The job fails at &ldquo;Extracting audio&rdquo;.</strong> Usually a video with no audio track, or a file whose audio is in a codec the bundled FFmpeg build cannot decode. Try another file to confirm the tool itself is fine.</Text>} />
+            <ListItem label={<Text color="secondary"><strong>The WAV is enormous.</strong> Expected, since it is uncompressed. If size rather than fidelity is the problem, extract to MP3 instead.</Text>} />
+            <ListItem label={<Text color="secondary"><strong>A rental or store-bought download fails.</strong> Protected (DRM) files are deliberately unreadable by any ordinary tool; this one is no exception, and the files are not yours to convert.</Text>} />
+            <ListItem label={<Text color="secondary"><strong>A very long video stops part-way.</strong> The whole file and its audio output live in the page&rsquo;s memory, so a single video over roughly 2 GB may run out of room.</Text>} />
+          </List>
+          <Text as="p" type="supporting">
+            Still stuck? The <Link href="/contact">contact page</Link> lists exactly what to include.
+          </Text>
+        </VStack>
 
-        <section className="doc__section">
-          <h2>Privacy, in one line</h2>
-          <p>
+        <VStack gap={2}>
+          <Heading level={2}>Privacy, in one line</Heading>
+          <Text as="p" color="secondary">
             Video is often the most personal thing on a phone, and a voice recording more so. The
             extraction runs in this tab on FFmpeg compiled to WebAssembly, so the file never
             leaves your machine, with no upload and nothing kept after the tab closes. The{' '}
-            <Link to="/privacy">privacy page</Link> is the long version.
-          </p>
-        </section>
+            <Link href="/privacy">privacy page</Link> is the long version.
+          </Text>
+        </VStack>
       </ToolGuide>
 
       <RelatedTools currentId="audio-extract" />
-    </div>
+    </Page>
   )
 }

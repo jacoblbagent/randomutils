@@ -1,27 +1,28 @@
-import { Link } from 'react-router-dom'
+import { ClickableCard } from '@astryxdesign/core/ClickableCard'
+import { Heading } from '@astryxdesign/core/Heading'
+import { Text } from '@astryxdesign/core/Text'
+import { VStack } from '@astryxdesign/core/Stack'
 import type { Tool } from '../../data/tools'
-import { IconArrowRight } from '../../icons/Icons'
-import './ToolCard.css'
 
-/** One card per tool, a whole-card link to its route. */
+/**
+ * One card per tool, the whole card a link to its route.
+ *
+ * ClickableCard gives the link surface, the focus ring and the hover wash, so
+ * the card is one tab stop and the heading alone is not a link inside a link.
+ * The tags are plain supporting text: a list of words, not counts, so they do
+ * not earn a Badge.
+ */
 export default function ToolCard({ tool }: { tool: Tool }) {
   return (
-    <Link className="tool-card" to={tool.path}>
-      <span className="tool-card__head">
-        <span className="tool-card__name">{tool.name}</span>
-        <span className="tool-card__go" aria-hidden="true">
-          <IconArrowRight />
-        </span>
-      </span>
-      <span className="tool-card__tagline">{tool.tagline}</span>
-      <span className="tool-card__desc">{tool.description}</span>
-      <span className="tool-card__tags chips">
-        {tool.tags.map((tag) => (
-          <span className="chip" key={tag}>
-            {tag}
-          </span>
-        ))}
-      </span>
-    </Link>
+    <ClickableCard href={tool.path} label={tool.name} elevation="low">
+      <VStack gap={2}>
+        <VStack gap={1}>
+          <Heading level={3}>{tool.name}</Heading>
+          <Text type="supporting">{tool.tagline}</Text>
+        </VStack>
+        <Text>{tool.description}</Text>
+        <Text type="supporting">{tool.tags.join(' · ')}</Text>
+      </VStack>
+    </ClickableCard>
   )
 }

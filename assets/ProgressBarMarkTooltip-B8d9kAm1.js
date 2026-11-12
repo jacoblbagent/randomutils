@@ -1,0 +1,1 @@
+import{a as e}from"./focusOutline.stylex-DN3ZB2vA.js";import{w as t}from"./index-PEGUDlq8.js";var n=e();function r({content:e,children:r}){return(0,n.jsx)(t,{content:e,placement:`above`,focusTrigger:`always`,children:r})}export{r as default};

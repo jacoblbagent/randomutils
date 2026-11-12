@@ -26,8 +26,9 @@ Shipped — live on randomutils.com today, one tool per route:
   TS->MP4                            /ts-to-mp4
   MOV->MP4                           /mov-to-mp4
   video->audio (MP3/WAV/M4A)         /audio-extract
+  UUID generator                     /uuid-generator
 
-  The three above are marked [shipped] in the list below; everything else in this
+  The four above are marked [shipped] in the list below; everything else in this
   file is still a candidate, not a promise. A new tool is appended to
   src/data/tools.ts, given a route in src/App.tsx and a flag in
   src/config/flags.ts — see the "Adding a tool" section of README.md.
@@ -315,7 +316,7 @@ CODE / DEV
   UUID (v4/v7)                       [shipped]
   ULID
   NanoID
-  password generator                 [shipped]
+  password generator
   passphrase generator (diceware)
   random string generator
   random number generator
@@ -599,5 +600,5 @@ Easy-to-test, high-demand shortlist (all pure client-side):
   QR code generator
   image compressor / converter
   JSON formatter
-  password generator                 [shipped]
+  password generator
   word & character counter

@@ -23,8 +23,8 @@ import { DEFAULT_FORMAT, VERSIONS, generateMany, timestampOf, type Format, type 
 /**
  * UUID generator: version 4 and version 7 identifiers, made in this tab.
  *
- * Same shape as the password generator: a readout of what the settings produce,
- * then the settings. The maths is in `uuid.ts`; this file is the readout, the
+ * A readout of what the settings produce, then the settings.
+ * The maths is in `uuid.ts`; this file is the readout, the
  * controls and the copy buttons. The page has no request it could make.
  */
 

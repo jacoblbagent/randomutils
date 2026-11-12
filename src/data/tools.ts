@@ -117,34 +117,6 @@ export const tools: Tool[] = [
     },
   },
   {
-    id: 'password-generator',
-    name: 'Password generator',
-    tagline: 'Strong random passwords, made in this tab',
-    description:
-      'Pick a length and characters, and get a password from your browser’s cryptographic random source, with its entropy and estimated offline crack time beside it.',
-    path: '/password-generator',
-    tags: ['Security', 'Passwords', 'Offline'],
-    flag: 'password-generator',
-    subCategory: 'Password generator',
-    appCategory: 'SecurityApplication',
-    browserRequirements: 'Requires JavaScript (Web Crypto)',
-    seo: {
-      title: `Password Generator: Strong Random Passwords, No Upload | RandomUtils`,
-      description:
-        'Generate strong random passwords in your browser: pick length and character sets, see entropy and crack time, copy. Nothing is uploaded.',
-      anchor: 'Password generator',
-      features: [
-        'Cryptographically random passwords from Web Crypto',
-        'Choose length and character sets, drop look-alikes',
-        'Entropy score and offline crack time, updated live',
-        'Up to 25 at once, each with a copy button',
-        // Deliberately not NEVER_UPLOADS: that line says "the files never leave your
-        // machine", and there is no file here.
-        'No upload: nothing you generate leaves your machine',
-      ],
-    },
-  },
-  {
     id: 'uuid-generator',
     name: 'UUID generator',
     tagline: 'Version 4 and version 7 UUIDs, made in this tab',

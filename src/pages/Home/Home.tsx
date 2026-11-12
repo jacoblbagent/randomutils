@@ -69,7 +69,7 @@ export default function Home() {
       </VStack>
 
       <Text color="secondary">
-        The video tools run on FFmpeg compiled to WebAssembly; the password and UUID generators use
+        The video tools run on FFmpeg compiled to WebAssembly; the UUID generator uses
         your browser&rsquo;s own crypto. Nothing you open or generate is uploaded, and nothing
         survives closing the tab. <Link href="/about">How that works</Link>.
       </Text>

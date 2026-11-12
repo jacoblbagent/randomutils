@@ -29,7 +29,7 @@ const ORG_ID = `${HOME}#organization`
 const SITE_ID = `${HOME}#website`
 
 /** Home-page description, reused for the WebSite node. */
-const SITE_DESCRIPTION = 'Browser tools that convert video and audio and generate passwords and UUIDs. Nothing is uploaded.'
+const SITE_DESCRIPTION = 'Browser tools that convert video and audio and generate UUIDs. Nothing is uploaded.'
 
 /** The publisher of every page, referenced by @id, defined once per graph. */
 function organization(): Json {
@@ -112,7 +112,7 @@ export function structuredDataFor(pathname: string): Json | null {
       alternateName: tool.name,
       url,
       description: tool.seo.description,
-      // Per-tool, because a password generator is neither multimedia nor a file
+      // Per-tool, because the UUID generator is neither multimedia nor a file
       // converter, and the default was doing the claiming for it.
       applicationCategory: tool.appCategory ?? 'MultimediaApplication',
       applicationSubCategory: tool.subCategory ?? 'File converter',

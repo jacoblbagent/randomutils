@@ -12,11 +12,10 @@ holding your files, no accounts.
 | **TS → MP4** | `/ts-to-mp4` | Batch-convert MPEG transport stream (`.ts`, `.mts`, `.m2ts`) recordings to MP4. Files under 50 MB are skipped on add. |
 | **MOV → MP4** | `/mov-to-mp4` | Batch-convert QuickTime (`.mov`, `.qt`). H.264/HEVC/AAC/MP3 are copied untouched; ProRes, DV, Motion JPEG and PCM/ALAC are re-encoded. No size floor. |
 | **Video → Audio** | `/audio-extract` | Extract a video's audio track as **WAV** (lossless) or **MP3**. |
-| **Password generator** | `/password-generator` | Cryptographically random passwords from the browser's CSPRNG, with entropy and estimated offline crack time. Needs no WebAssembly. |
 | **UUID generator** | `/uuid-generator` | v4 and v7 UUIDs from the CSPRNG, up to 100 at a time, with hyphens, braces and case as options. v7 batches sort in generation order. |
 
 The three video tools run on FFmpeg compiled to WebAssembly, bundled with the site rather than
-fetched from a CDN. The generators are plain JavaScript on Web Crypto, so they carry none of that
+fetched from a CDN. The UUID generator is plain JavaScript on Web Crypto, so it carries none of that
 32 MB payload.
 
 ## Requirements and scripts
@@ -148,7 +147,6 @@ and can copy a preview link. Console: `randomutils.flags.set('tool-search', true
 | `ts-to-mp4` | on | Grid card, footer count and `/ts-to-mp4`. |
 | `mov-to-mp4` | on | Grid card, footer count and `/mov-to-mp4`. |
 | `audio-extract` | on | Grid card, footer count and `/audio-extract`. |
-| `password-generator` | on | Grid card, footer count and `/password-generator`. |
 | `uuid-generator` | on | Grid card, footer count and `/uuid-generator`. |
 | `tool-search` | off | Filter box above the home grid. |
 
@@ -271,7 +269,7 @@ src/
 │                            ScrollToTop, PageMetaSync, CookieBanner
 ├── pages/                   Home, About, Faq, Privacy, Terms, Contact, NotFound
 └── tools/                   video/ (shared kit), ts-to-mp4/, mov-to-mp4/, audio-extract/,
-                             password-generator/, uuid-generator/
+                             uuid-generator/
 
 scripts/
 ├── deploy.sh                publish dist/ to gh-pages
@@ -291,7 +289,7 @@ consumer goes.
 ## Local checks before shipping
 
 ```bash
-npm run build     # prerender lists every route, sitemap reports "11 URLs (all routes)"
+npm run build     # prerender lists every route, sitemap reports "10 URLs (all routes)"
 npm run lint      # only the pre-existing ConvertQueue/AudioExtract warnings
 npm run preview -- --port 4199
 curl -s -o /dev/null -w '%{http_code}\n' http://localhost:4199/privacy/   # trailing slash matters

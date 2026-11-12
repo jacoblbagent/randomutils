@@ -30,8 +30,8 @@ export default function Privacy() {
 
       <Text as="p" type="large" color="secondary">
         {SITE.name} is a set of tools that run inside your browser. Every file you open is
-        processed on your own machine by FFmpeg compiled to WebAssembly, and every password or
-        UUID is drawn from your browser&rsquo;s own random source. Nothing is uploaded,
+        processed on your own machine by FFmpeg compiled to WebAssembly, and every UUID is drawn
+        from your browser&rsquo;s own random source. Nothing is uploaded,
         transmitted or stored: no account, no server-side processing, no copy of your file leaving
         your device.
       </Text>
@@ -40,7 +40,7 @@ export default function Privacy() {
         <Heading level={2}>What stays on your device</Heading>
         <List listStyle="disc">
           <ListItem label={<Text color="secondary">Files you drop into a converter are read locally. Results are produced in the page and handed back as downloads.</Text>} />
-          <ListItem label={<Text color="secondary">Passwords are generated in the page by your browser&rsquo;s cryptographic random source, shown to you, and copied only when you press Copy. No list is kept and nothing is written to storage.</Text>} />
+          <ListItem label={<Text color="secondary">UUIDs are generated in the page by your browser&rsquo;s cryptographic random source and copied only when you press Copy. No list is kept and nothing is written to storage.</Text>} />
           <ListItem label={<Text color="secondary">The queue and the results live in the page&rsquo;s memory. Closing or reloading the tab discards them.</Text>} />
           <ListItem label={<Text color="secondary">A few preferences are saved in <Code>localStorage</Code> so a reload keeps them: the feature-flag switches (<Code>randomutils.flags</Code>), and each converter&rsquo;s starred files and removed list. They stay in your browser, are not sent anywhere, and clearing site data removes them.</Text>} />
           <ListItem label={<Text color="secondary">We cannot see your files: there is no upload endpoint, no analytics on them, and no copy on any server we control.</Text>} />

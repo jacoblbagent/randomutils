@@ -29,7 +29,7 @@ const STATIC_PAGES: PageMeta[] = [
     path: '/',
     title: `${SITE.name}: browser tools that never upload your files`,
     description:
-      'Convert TS and MOV video to MP4, extract a video’s audio, or generate a password or UUID. All in your browser, with no uploads.',
+      'Convert TS and MOV video to MP4, extract a video’s audio, or generate a UUID. All in your browser, with no uploads.',
     heading: SITE.name,
     inSitemap: true,
   },

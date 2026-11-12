@@ -1,8 +1,7 @@
 /**
  * UUID generation, the whole of the maths, with no React in it.
  *
- * Kept apart from the page for the same reason as the password generator's
- * `random.ts`: it can be run straight off disk with
+ * Kept apart from the page so it can be run straight off disk with
  * `node --experimental-strip-types` to check the shape of what it emits, and the
  * one rule that matters (every bit that is meant to be random comes from
  * `crypto.getRandomValues`) lives in a single place.

@@ -16,7 +16,9 @@ import { NumberInput } from '@astryxdesign/core/NumberInput'
 import { Table, type TableColumn } from '@astryxdesign/core/Table'
 import { Link } from '@astryxdesign/core/Link'
 import { Code } from '@astryxdesign/core/Code'
+import { Divider } from '@astryxdesign/core/Divider'
 import Page from '../../components/Page/Page'
+import CompoundChart from './CompoundChart'
 import { project, type YearRow } from './compound'
 
 /**
@@ -194,9 +196,13 @@ export default function CompoundInterest() {
         <VStack gap={3}>
           <Heading level={2}>Year by year</Heading>
           {data.length > 0 ? (
-            <Table data={data} columns={columns} idKey="year" density="compact" />
+            <VStack gap={3}>
+              <CompoundChart rows={rows} principal={principal} currency={currency} />
+              <Divider />
+              <Table data={data} columns={columns} idKey="year" density="compact" />
+            </VStack>
           ) : (
-            <Text color="secondary">Set a number of years above 0 to see the table.</Text>
+            <Text color="secondary">Set a number of years above 0 to see the chart and table.</Text>
           )}
         </VStack>
       </Card>

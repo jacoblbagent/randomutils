@@ -32,6 +32,7 @@ export type FlagId =
   | 'mov-to-mp4'
   | 'audio-extract'
   | 'uuid-generator'
+  | 'compound-interest'
 
 export interface FlagSpec {
   /** Committed default. Keep `false` until the change is ready for everyone. */
@@ -67,6 +68,11 @@ export const FLAGS: Record<FlagId, FlagSpec> = {
     default: true,
     label: 'UUID generator',
     description: 'Grid card, footer count and the /uuid-generator route for the UUID generator.',
+  },
+  'compound-interest': {
+    default: true,
+    label: 'Compound interest',
+    description: 'Grid card, footer count and the /compound-interest route for the calculator.',
   },
 }
 

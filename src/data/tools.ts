@@ -142,6 +142,32 @@ export const tools: Tool[] = [
       ],
     },
   },
+  {
+    id: 'compound-interest',
+    name: 'Compound interest',
+    tagline: 'What a balance grows to with monthly contributions',
+    description:
+      'A starting amount plus a monthly deposit at a fixed annual rate, with a year-by-year table and a toggle for the currency symbol. Nothing is uploaded.',
+    path: '/compound-interest',
+    tags: ['Finance', 'Calculator', 'Offline'],
+    flag: 'compound-interest',
+    subCategory: 'Compound interest calculator',
+    appCategory: 'FinanceApplication',
+    browserRequirements: 'Requires JavaScript',
+    seo: {
+      title: `Compound Interest Calculator: Monthly Contributions | RandomUtils`,
+      description:
+        'See what a starting balance plus monthly contributions grows to at a fixed annual rate, with a year-by-year table. No upload.',
+      anchor: 'Compound interest calculator',
+      features: [
+        'Future value from a starting balance and monthly contributions',
+        'Fixed annual rate, compounded monthly',
+        'Year-by-year balance, contributions and interest',
+        'Currency symbol toggle',
+        'No upload: nothing you enter leaves your machine',
+      ],
+    },
+  },
 ]
 
 /** Everything whose flag is on, what the grid, the count and the routes use. */

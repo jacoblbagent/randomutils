@@ -29,14 +29,16 @@ export default function About() {
 
       <Text as="p" type="large" color="secondary">
         {SITE.name} is a small set of single-purpose tools: convert a DVR recording or a QuickTime
-        clip to MP4, extract a video&rsquo;s audio, or generate a UUID. Each does one job.
+        clip to MP4, extract a video&rsquo;s audio, generate a UUID, or work out compound interest.
+        Each does one job.
       </Text>
 
       <VStack gap={2}>
         <Heading level={2}>Everything runs in your browser</Heading>
         <Text as="p" color="secondary">
-          The video converters run on FFmpeg compiled to WebAssembly, and the UUID generator uses
-          the browser&rsquo;s cryptographic random source. Files are read and written
+          The video converters run on FFmpeg compiled to WebAssembly, the UUID generator uses
+          the browser&rsquo;s cryptographic random source, and the calculator is arithmetic in
+          the page. Files are read and written
           on your own machine, with no upload step and no server to upload to. There are no
           accounts, no queue on someone else&rsquo;s disk, and no copy of your file anywhere you
           cannot see. Close the tab and it is gone.

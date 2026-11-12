@@ -13,10 +13,11 @@ holding your files, no accounts.
 | **MOV → MP4** | `/mov-to-mp4` | Batch-convert QuickTime (`.mov`, `.qt`). H.264/HEVC/AAC/MP3 are copied untouched; ProRes, DV, Motion JPEG and PCM/ALAC are re-encoded. No size floor. |
 | **Video → Audio** | `/audio-extract` | Extract a video's audio track as **WAV** (lossless) or **MP3**. |
 | **UUID generator** | `/uuid-generator` | v4 and v7 UUIDs from the CSPRNG, up to 100 at a time, with hyphens, braces and case as options. v7 batches sort in generation order. |
+| **Compound interest** | `/compound-interest` | Future value from a starting balance, a monthly contribution and a fixed annual rate, with a year-by-year table. 8% default, currency symbol on a checkbox. |
 
 The three video tools run on FFmpeg compiled to WebAssembly, bundled with the site rather than
-fetched from a CDN. The UUID generator is plain JavaScript on Web Crypto, so it carries none of that
-32 MB payload.
+fetched from a CDN. The UUID generator is plain JavaScript on Web Crypto and the calculator is
+plain arithmetic, so neither carries any of that 32 MB payload.
 
 ## Requirements and scripts
 
@@ -148,6 +149,7 @@ and can copy a preview link. Console: `randomutils.flags.set('tool-search', true
 | `mov-to-mp4` | on | Grid card, footer count and `/mov-to-mp4`. |
 | `audio-extract` | on | Grid card, footer count and `/audio-extract`. |
 | `uuid-generator` | on | Grid card, footer count and `/uuid-generator`. |
+| `compound-interest` | on | Grid card, footer count and `/compound-interest`. |
 | `tool-search` | off | Filter box above the home grid. |
 
 Runtime flags are UI gating only. A flag that carries MBs of assets or a dependency must also be
@@ -269,7 +271,7 @@ src/
 │                            ScrollToTop, PageMetaSync, CookieBanner
 ├── pages/                   Home, About, Faq, Privacy, Terms, Contact, NotFound
 └── tools/                   video/ (shared kit), ts-to-mp4/, mov-to-mp4/, audio-extract/,
-                             uuid-generator/
+                             uuid-generator/, compound-interest/
 
 scripts/
 ├── deploy.sh                publish dist/ to gh-pages
@@ -289,7 +291,7 @@ consumer goes.
 ## Local checks before shipping
 
 ```bash
-npm run build     # prerender lists every route, sitemap reports "10 URLs (all routes)"
+npm run build     # prerender lists every route, sitemap reports "11 URLs (all routes)"
 npm run lint      # only the pre-existing ConvertQueue/AudioExtract warnings
 npm run preview -- --port 4199
 curl -s -o /dev/null -w '%{http_code}\n' http://localhost:4199/privacy/   # trailing slash matters

@@ -17,6 +17,7 @@ import AudioExtract from './tools/audio-extract/AudioExtract'
 import MovToMp4 from './tools/mov-to-mp4/MovToMp4'
 import TsToMp4 from './tools/ts-to-mp4/TsToMp4'
 import UuidGenerator from './tools/uuid-generator/UuidGenerator'
+import CompoundInterest from './tools/compound-interest/CompoundInterest'
 import CookieBanner from './components/CookieBanner/CookieBanner'
 
 // Production is served at the apex of randomutils.com; dev runs at the root too.
@@ -58,6 +59,9 @@ export function AppShell() {
           {flags['audio-extract'] && <Route path="/audio-extract" element={<AudioExtract />} />}
           {flags['uuid-generator'] && (
             <Route path="/uuid-generator" element={<UuidGenerator />} />
+          )}
+          {flags['compound-interest'] && (
+            <Route path="/compound-interest" element={<CompoundInterest />} />
           )}
           <Route path="*" element={<NotFound />} />
         </Routes>

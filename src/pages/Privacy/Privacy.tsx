@@ -30,8 +30,9 @@ export default function Privacy() {
 
       <Text as="p" type="large" color="secondary">
         {SITE.name} is a set of tools that run inside your browser. Every file you open is
-        processed on your own machine by FFmpeg compiled to WebAssembly, and every UUID is drawn
-        from your browser&rsquo;s own random source. Nothing is uploaded,
+        processed on your own machine by FFmpeg compiled to WebAssembly, every UUID is drawn
+        from your browser&rsquo;s own random source, and the interest calculator is arithmetic in
+        the page. Nothing is uploaded,
         transmitted or stored: no account, no server-side processing, no copy of your file leaving
         your device.
       </Text>

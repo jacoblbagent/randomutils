@@ -1,7 +1,7 @@
 {
   "name": "RandomUtils",
   "short_name": "RandomUtils",
-  "description": "Convert TS and MOV video to MP4, extract audio, and generate UUIDs. Runs in your browser; nothing is uploaded.",
+  "description": "Convert TS and MOV video to MP4, extract audio, generate UUIDs, and work out compound interest. Runs in your browser; nothing is uploaded.",
   "id": "/",
   "start_url": "/",
   "scope": "/",
@@ -33,6 +33,12 @@
   "shortcuts": [
     { "name": "TS → MP4", "short_name": "TS → MP4", "url": "/ts-to-mp4" },
     { "name": "MOV → MP4", "short_name": "MOV → MP4", "url": "/mov-to-mp4" },
-    { "name": "Video → Audio", "short_name": "Audio", "url": "/audio-extract" }
+    { "name": "Video → Audio", "short_name": "Audio", "url": "/audio-extract" },
+    { "name": "UUID generator", "short_name": "UUID", "url": "/uuid-generator" },
+    {
+      "name": "Compound interest",
+      "short_name": "Interest",
+      "url": "/compound-interest"
+    }
   ]
 }

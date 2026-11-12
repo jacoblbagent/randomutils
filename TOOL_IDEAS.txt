@@ -27,8 +27,9 @@ Shipped — live on randomutils.com today, one tool per route:
   MOV->MP4                           /mov-to-mp4
   video->audio (MP3/WAV/M4A)         /audio-extract
   UUID generator                     /uuid-generator
+  compound interest                  /compound-interest
 
-  The four above are marked [shipped] in the list below; everything else in this
+  The five above are marked [shipped] in the list below; everything else in this
   file is still a candidate, not a promise. A new tool is appended to
   src/data/tools.ts, given a route in src/App.tsx and a flag in
   src/config/flags.ts — see the "Adding a tool" section of README.md.
@@ -486,7 +487,7 @@ CALCULATORS
   discount/sale price
   VAT/sales tax
   loan/mortgage
-  compound interest
+  compound interest                  [shipped]
   savings goal
   inflation
   BMI

@@ -69,9 +69,10 @@ export default function Home() {
       </VStack>
 
       <Text color="secondary">
-        The video tools run on FFmpeg compiled to WebAssembly; the UUID generator uses
-        your browser&rsquo;s own crypto. Nothing you open or generate is uploaded, and nothing
-        survives closing the tab. <Link href="/about">How that works</Link>.
+        The video tools run on FFmpeg compiled to WebAssembly, the UUID generator uses
+        your browser&rsquo;s own crypto, and the interest calculator is plain arithmetic in
+        the page. Nothing you open or enter is uploaded, and nothing survives closing the tab.{' '}
+        <Link href="/about">How that works</Link>.
       </Text>
     </Page>
   )
